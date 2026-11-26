@@ -136,6 +136,14 @@ def register() -> bool:
         async def kdx_console_builder_save(request):
             return await run(api.post_builder_save, store, await body(request))
 
+        @routes.post("/kdx_console/keep")
+        async def kdx_console_keep(request):
+            return await run(api.post_keep, store, await body(request))
+
+        @routes.post("/kdx_console/keep/build")
+        async def kdx_console_keep_build(request):
+            return await run(api.post_keep_build, store, await body(request))
+
         @routes.get("/kdx_console/builder/pool/edit")
         async def kdx_console_pool_edit(request):
             return await run(api.get_pool_edit, store, dict(request.query))

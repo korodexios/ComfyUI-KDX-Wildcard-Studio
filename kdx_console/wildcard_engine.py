@@ -82,6 +82,7 @@ class Entry:
 class Expansion:
     text: str
     missing: list[str] = field(default_factory=list)
+    trace: Trace | None = None
 
 
 class Library:
@@ -164,26 +165,33 @@ class Library:
 
     # ------------------------------------------------------------------ expansion
 
-    def expand(self, text: str, seed: int | None = None) -> Expansion:
+    def expand(self, text: str, seed: int | None = None, trace: bool = False) -> Expansion:
+        """Expand ``text`` with ``seed``. ``trace=True`` also records which pick produced which part of the
+        result (:class:`Trace`); the picks, their order and the text are exactly the same as without it."""
         rng = random.Random(seed)
         missing: list[str] = []
         s = _strip_comment_lines(str(text or ""))
         for k, v in _ESCAPES.items():
             s = s.replace(k, v)
+        tr = Trace(s) if trace else None
         for _ in range(MAX_PASSES):
-            new = self._pass(s, rng, missing)
+            new = self._pass(s, rng, missing, tr)
             if new == s:
                 break
             s = new
         for k, v in _UNESCAPE.items():
             s = s.replace(k, v)
-        return Expansion(s, sorted(set(missing)))
+        return Expansion(s, sorted(set(missing)), tr)
 
-    def _pass(self, s: str, rng: random.Random, missing: list[str]) -> str:
-        # 1) innermost option groups, left to right
-        s = _INNER_BRACE_RE.sub(lambda m: self._options(m.group(1), rng, missing), s)
-        # 2) wildcard tokens; each occurrence is an independent pick
-        return _TOKEN_RE.sub(lambda m: self._token(m, rng, missing), s)
+    def _pass(self, s: str, rng: random.Random, missing: list[str], tr: Trace | None = None) -> str:
+        if tr is None:
+            # 1) innermost option groups, left to right
+            s = _INNER_BRACE_RE.sub(lambda m: self._options(m.group(1), rng, missing), s)
+            # 2) wildcard tokens; each occurrence is an independent pick
+            return _TOKEN_RE.sub(lambda m: self._token(m, rng, missing), s)
+        # the same two steps, the same matches in the same order, with a record of every replacement
+        s = tr.sub(_INNER_BRACE_RE, s, "options", lambda m: self._options_pick(m.group(1), rng, missing))
+        return tr.sub(_TOKEN_RE, s, "token", lambda m: self._token(m, rng, missing))
 
     def _token(self, m: re.Match, rng: random.Random, missing: list[str]) -> str:
         entries = self.pool(m.group(1))
@@ -193,6 +201,11 @@ class Library:
         return _pick(entries, rng).value
 
     def _options(self, body: str, rng: random.Random, missing: list[str]) -> str:
+        return self._options_pick(body, rng, missing)[0]
+
+    def _options_pick(self, body: str, rng: random.Random, missing: list[str]):
+        """``(text, picks)``: the expanded group and ``([(start, end)], separator)``, where the chosen options lie
+        in ``body`` in pick order, or ``None`` when the text does not come from the body (lines of a wildcard)."""
         count_part, sep, rest = None, DEFAULT_SEPARATOR, body
         if "$$" in body:
             parts = body.split("$$")
@@ -201,11 +214,21 @@ class Library:
             elif _COUNT_RE.match(parts[0]):
                 count_part, rest = parts[0], "$$".join(parts[1:])
         options = []
+        spans = []
+        pos = len(body) - len(rest)
         for opt in rest.split("|"):
             w, value = parse_weight(opt)
             options.append(Entry(value, w))
+            end = pos + len(opt)
+            spans.append((end - len(value), end))
+            pos = end + 1
+
+        def where(chosen):
+            return [spans[next(i for i, o in enumerate(options) if o is e)] for e in chosen], sep
+
         if count_part is None:
-            return _pick(options, rng).value
+            e = _pick(options, rng)
+            return e.value, where([e])
         # multi-select over one wildcard: choose among its lines
         if len(options) == 1:
             t = _TOKEN_RE.fullmatch(options[0].value.strip())
@@ -213,11 +236,14 @@ class Library:
                 pool = self.pool(t.group(1))
                 if not pool:
                     missing.append(t.group(1))
-                    return options[0].value.replace("_", _UNRESOLVED)
-                options = list(pool)
+                    return options[0].value.replace("_", _UNRESOLVED), None
+                lo, hi = _parse_count(count_part, len(pool))
+                n = rng.randint(lo, hi) if hi >= lo else 0
+                return sep.join(e.value for e in _sample(list(pool), n, rng)), None
         lo, hi = _parse_count(count_part, len(options))
         n = rng.randint(lo, hi) if hi >= lo else 0
-        return sep.join(e.value for e in _sample(options, n, rng))
+        chosen = _sample(options, n, rng)
+        return sep.join(e.value for e in chosen), where(chosen)
 
 
 # ---------------------------------------------------------------------------- helpers
@@ -289,6 +315,140 @@ def _parse_count(part: str, available: int) -> tuple[int, int]:
     if lo > hi:
         lo, hi = hi, lo
     return min(lo, available), min(hi, available)
+
+
+# ---------------------------------------------------------------------------- trace (which pick made what)
+
+
+@dataclass
+class TraceNode:
+    """One pick of an expansion: a ``__token__`` or an ``{option|group}`` (or the input itself, the root)."""
+
+    id: int
+    kind: str  # "root" | "options" | "token"
+    name: str  # token name, or the body of the option group (internal characters)
+    source: str  # the syntax this pick replaced, as written (picks nested in it are back in their own syntax)
+    parent: int  # -1 for the root
+    value: str = ""  # what the pick produced, before later passes expanded it further
+    missing: bool = False  # a token that matched no file
+    absorbed: bool = False  # consumed by a later pick; its text is part of that pick's source now
+
+
+class Trace:
+    """Record of an expansion. The text is kept as *cells* ``(node id, character)``: every character of the
+    working text knows which pick produced it, and a pick that produced nothing keeps one empty cell, so its
+    place is known. Each replacement records a node whose parent is the innermost pick that contains all of
+    what it replaced. ``fragile`` is set when a replacement cut through another pick (a value with an
+    unbalanced brace, for example); the tree is then not reliable."""
+
+    def __init__(self, s: str):
+        self.nodes: list[TraceNode] = [TraceNode(0, "root", "", s, -1, s)]
+        self.cells: list[tuple[int, str]] = [(0, c) for c in s]
+        self.fragile = False
+
+    def sub(self, regex: re.Pattern, s: str, kind: str, fn) -> str:
+        """``regex.sub(fn, s)`` with a record. ``fn`` runs once per match, left to right, as in ``re.sub``; it
+        returns the replacement, or ``(replacement, (spans, separator))``: where in the body (group 1) the
+        chosen options lie and what joins them."""
+        matches = list(regex.finditer(s))
+        if not matches:
+            return s
+        reps = [fn(m) for m in matches]
+        reps = [r if isinstance(r, tuple) else (r, None) for r in reps]
+        idx = [i for i, (_o, ch) in enumerate(self.cells) if ch]  # character position -> cell
+        if len(idx) != len(s):  # cannot happen; never trust a record that lost track
+            self.fragile = True
+            it = iter(reps)
+            return regex.sub(lambda _m: next(it)[0], s)
+        out: list[tuple[int, str]] = []
+        last = 0
+        for m, (rep, picks) in zip(matches, reps, strict=True):
+            c0, c1 = idx[m.start()], idx[m.end() - 1] + 1
+            out.extend(self.cells[last:c0])
+            keep = None
+            if picks is not None:  # the cells between the delimiters around each chosen option
+                off = m.start(1)
+                keep = ([(idx[off + a - 1] + 1, idx[off + b]) for a, b in picks[0]], picks[1])
+            out.extend(self._node(kind, m.group(1), rep, c0, c1, keep))
+            last = c1
+        out.extend(self.cells[last:])
+        self.cells = out
+        return "".join(ch for _o, ch in out)
+
+    def _chain(self, n: int) -> list[int]:
+        out = []
+        while n >= 0:
+            out.append(n)
+            n = self.nodes[n].parent
+        return out
+
+    def _lca(self, owners: set[int]) -> int:
+        it = iter(owners)
+        common = self._chain(next(it))
+        for o in it:
+            chain = set(self._chain(o))
+            common = [n for n in common if n in chain]
+        return common[0]
+
+    def _child_of(self, n: int, ancestor: int) -> int:
+        while self.nodes[n].parent != ancestor:
+            n = self.nodes[n].parent
+        return n
+
+    def _node(self, kind: str, name: str, rep: str, c0: int, c1: int, keep) -> list[tuple[int, str]]:
+        """Record one replacement of ``cells[c0:c1]`` and return the cells that take its place. ``keep``: cell
+        ranges of the chosen options; their picks stay alive under the new node (an option chosen by an outer
+        group keeps the picks made inside it), everything else of the match is consumed."""
+        cells = self.cells[c0:c1]
+        lca = self._lca({o for o, _ch in cells})
+        nid = len(self.nodes)
+        parts: list[str] = []
+        subs: list[int] = []
+        prev = None
+        for o, ch in cells:
+            if o == lca:
+                parts.append(ch)
+                prev = None
+                continue
+            sub = self._child_of(o, lca)
+            if sub != prev:
+                if sub in subs:  # the same pick twice, with other text between: it was cut apart
+                    self.fragile = True
+                subs.append(sub)
+                parts.append(self.nodes[sub].source)
+                prev = sub
+        self.nodes.append(TraceNode(nid, kind, name, "".join(parts), lca, rep,
+                                    missing=kind == "token" and _UNRESOLVED in rep))
+        new = None
+        if keep:
+            spans, sep = keep
+            flat = [i for lo, hi in spans for i in range(lo, hi)]
+            pieces = [self.cells[lo:hi] for lo, hi in spans]
+            if (len(set(flat)) == len(flat) and all(c0 <= lo <= hi <= c1 for lo, hi in spans)
+                    and sep.join("".join(ch for _o, ch in p) for p in pieces) == rep):
+                new = []
+                for k, piece in enumerate(pieces):
+                    if k:
+                        new.extend((nid, ch) for ch in sep)
+                    new.extend((nid if o == lca else o, ch) for o, ch in piece)
+        kept = {i for lo, hi in keep[0] for i in range(lo, hi)} if new is not None else set()
+        for sub in subs:
+            inside = [i for i in range(c0, c1) if sub in self._chain(self.cells[i][0])]
+            if kept and all(i in kept for i in inside):
+                self.nodes[sub].parent = nid
+            else:
+                if any(i in kept for i in inside):
+                    self.fragile = True
+                self.nodes[sub].absorbed = True
+            for i, (o, _ch) in enumerate(self.cells):  # a consumed pick must lie wholly inside the match
+                if (i < c0 or i >= c1) and sub in self._chain(o):
+                    self.fragile = True
+                    break
+        if new is None:
+            new = [(nid, ch) for ch in rep]
+        if not new:
+            new.append((nid, ""))  # a pick that produced nothing keeps its place
+        return new
 
 
 # ---------------------------------------------------------------------------- cached library

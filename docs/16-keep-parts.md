@@ -1,0 +1,75 @@
+# Keep parts
+
+You like the pose, the clothes or the place in one image and want more images like it, with a different face or a
+different light. **🔒 Keep parts** takes the image's prompt apart into the wildcard picks that made it. You click the
+parts you want to keep, and the result is a new template: the kept parts are fixed text and everything else is
+still wildcards.
+
+It opens from two places, and both open the same window:
+
+- **Gallery**: open an image, then click **🔒 Keep parts** in the viewer's header.
+- **Template builder**: click **🔒 Keep parts** on one of the random samples.
+
+It works for template images and for images made from your own text with wildcards (`user_text` / `user_prompt`).
+
+## The window
+
+**Left: the prompt in parts.** Each pick is underlined with dots. Hover over a part to see which wildcard it came
+from. Click a part to keep it (blue) and click it again to let it vary. When parts sit inside each other, a click
+keeps the innermost one. The **Keep** row above the prompt lists the parts around your last click, from the whole
+value down to the small part, so you can keep the whole value or just one part of it.
+
+**Quick choices** keep a whole group in one click: *Whole person*, *Face & hair*, *Body & age*, *Clothing*,
+*Pose & action*, *Camera*, *Environment & light*, *Style & mood*, *Other people*, *Subject*. Only the groups that
+this prompt has are shown. The groups follow the pool names (`person/hair` belongs to Face & hair, `core/light_sky`
+to Environment & light). **⇄ Invert** keeps what varies now and lets vary what is kept now, so "keep the place,
+change the people" takes two clicks. **Clear** lets everything vary again.
+
+**Right: the result.** A few variants made with the current choices update as you click. The kept text is marked,
+**⟳ Again** draws new variants, and **Template line** shows the line that will be used.
+
+## Choices around a kept part
+
+A template often makes a choice that holds several parts, for example
+`{her expression is __person/expression_positive__. The mood is __core/mood__|her expression is __person/expression_negative__. The mood is __core/mood_somber__}`.
+When you keep the expression, that whole option is kept too. Without it, the next image could take the other
+option, and the kept expression would drop out. The mood is still picked again, from the pool of the kept option
+(`core/mood`, not `core/mood_somber`). In the prompt, a dashed outline marks a choice that is kept because a part
+inside it is kept.
+
+The same applies to a pool value that has wildcards inside it: keeping its inner part keeps the value it sits in.
+The template line that the image's seed picked is kept too.
+
+## Actions
+
+- **Use on node** writes the template into `user_text` of the KDX Wildcard Studio node and switches
+  `use_user_text` on. From then on, every run picks the parts that are not kept again. When the workflow has several
+  Studio nodes, select one first. A connected `user_prompt` still wins over `user_text` (see
+  [Your own prompt](13-your-own-prompt.md)). Nothing is written until you click.
+- **Save as template…** writes `templates/<name>.txt`. **Save into** can add the template to a category of the
+  panel. An existing file is replaced only after you confirm, and the old one is kept as `.bak`. A template is one
+  line; a prompt of several lines can only be used on the node.
+- **Open in Builder** loads the line into the [Template builder](11-template-builder.md) as a new, unsaved
+  template, ready for further changes.
+
+## When the prompt does not match
+
+The window runs the image's template and seed again and compares the result with the prompt stored in the image.
+When a wildcard file has changed since the image was made, they differ. The window then says so, shows the stored
+prompt, and keeps nothing until you click **Use today's picks anyway**, because the parts would come from today's
+picks, not the image's.
+
+Older images (before 0.6.9) stored no prompt text. For these, the window says that the parts are today's expansion.
+If a wildcard value cuts through another one (an unbalanced brace in a pool, for example), its parts cannot be told
+apart reliably, and the window does not keep any of them.
+
+## LLM
+
+With the LLM on, the image's final prompt is the LLM's rewrite. The image still stores the prompt from the Studio,
+and Keep parts works on that prompt. Your kept template therefore goes through the LLM again on the next run, as
+before.
+
+## NSFW
+
+Images of NSFW templates open only while the panel's **NSFW** switch is on, the same rule as in the Gallery and the
+Builder.

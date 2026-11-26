@@ -2,14 +2,22 @@
 // template. Opens full window from the panel; a click on an image opens the shared KDX lightbox with what made
 // it (template, seed, file, prompt). Loads on open and on ⟳ / filter change; no polling.
 import { api } from "../../../scripts/api.js";
-import { ACCENT, ensureTheme } from "./theme.mjs?v=0.7.3";
-import { call, getSnap, toast } from "./client.mjs?v=0.7.3";
-import { openLightbox } from "./lightbox.mjs?v=0.7.3";
+import { ACCENT, ensureTheme } from "./theme.mjs?v=0.7.4";
+import { call, getSnap, toast } from "./client.mjs?v=0.7.4";
+import { openLightbox } from "./lightbox.mjs?v=0.7.4";
 
 const VIEW_KEY = "kdx_console.gallery";
 const RANGES = [["1h", "last hour", 3600], ["6h", "last 6 hours", 6 * 3600], ["today", "today", 0],
   ["24h", "last 24 hours", 86400], ["7d", "last 7 days", 7 * 86400], ["all", "everything", -1], ["custom", "since …", 0]];
 let win = null;
+let keepIsOpen = () => false;
+
+/** What made the image, for Keep parts: its template, or the user's own text; null when it cannot be found again. */
+function keepInput(it) {
+  if (!Number.isInteger(it.seed)) return null;
+  if (it.template === "user_prompt") return it.user_text ? { text: it.user_text } : null;
+  return { template: it.template };
+}
 
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
@@ -157,8 +165,19 @@ export async function openGallery(opts = {}) {
         { label: "File", value: `${it.subfolder ? `${it.subfolder}/` : ""}${it.filename}`, mono: true, copy: true },
         { label: "Prompt", value: it.prompt || "(no prompt text in this image)", long: true, copy: !!it.prompt },
       ],
-      actions: () => [{ id: "pin", label: "Pin in Studio", title: "Switch the Studio to pin mode with this template and seed (exact repeat). Switch the mode back in the panel afterwards." }],
+      actions: (it) => [
+        keepInput(it) ? { id: "keep", label: "🔒 Keep parts", primary: true, title: "Keep the parts of this prompt you like (pose, clothing, place, light …) and let the rest vary" } : null,
+        { id: "pin", label: "Pin in Studio", title: "Switch the Studio to pin mode with this template and seed (exact repeat). Switch the mode back in the panel afterwards." },
+      ].filter(Boolean),
+      onKey: () => keepIsOpen(), // the Keep parts window on top owns the keys
       onAction: async (id, it) => {
+        if (id === "keep") {
+          const { openKeep, keepOpen } = await import("./keep.mjs?v=0.7.4");
+          keepIsOpen = keepOpen;
+          openKeep({ ...keepInput(it), seed: it.seed, expected: it.prompt || "", llm: !!it.llm_enabled, category: it.category,
+            name: it.template === "user_prompt" ? "own_prompt" : it.template, image: viewUrl(it), from: "gallery" });
+          return;
+        }
         if (id !== "pin") return;
         const d = await call("POST", "/kdx_console/select", { category: it.category, template: it.template, mode: "pin", pin_seed: it.seed });
         if (!d.ok) toast(d.error); else toast(`Pinned ${it.template} · seed ${it.seed}`, "success");

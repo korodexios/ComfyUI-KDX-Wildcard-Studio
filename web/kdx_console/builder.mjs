@@ -5,9 +5,9 @@
 // take bubbles too. The palette on the left offers pools, ready sentences and shapes; drag them in or click ＋.
 // The server owns the syntax: it turns a line into bubbles, writes bubbles back as a line, checks and expands it.
 // No external libraries; no polling (the preview is asked for after a change, debounced).
-import { ensureTheme } from "./theme.mjs?v=0.7.3";
-import { call, getSnap, refresh, toast } from "./client.mjs?v=0.7.3";
-import { askConfirm, askText } from "./dialog.mjs?v=0.7.3";
+import { ensureTheme } from "./theme.mjs?v=0.7.4";
+import { call, getSnap, refresh, toast } from "./client.mjs?v=0.7.4";
+import { askConfirm, askText } from "./dialog.mjs?v=0.7.4";
 
 let win = null;
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -68,8 +68,11 @@ function summary(items, max = 60) {
 
 export function closeBuilder() { win?.close(); }
 
-export async function openBuilder() {
+/** Open the builder; `opts.text` (a template line) starts it with that line, `opts.name` with that name. An open
+ * builder takes the line over (asking first when it has unsaved changes). */
+export async function openBuilder(opts = {}) {
   ensureTheme();
+  if (opts.text != null && win?.loadText) { win.loadText(opts.text, opts.name || ""); return; }
   closeBuilder();
   const el = document.createElement("div");
   el.className = "kdx-root kdx-gal kdx-bb";
@@ -250,7 +253,8 @@ export async function openBuilder() {
     return `<div class="kdx-row"><b>Checks</b>${warns.length ? "" : ` <span class="kdx-ok">✅ all rules met</span>`}</div>
       ${warns.map((w) => `<div class="${w.level === "error" ? "kdx-err" : "kdx-warn"}">${w.level === "error" ? "⛔" : "⚠"} ${esc(w.msg)}</div>`).join("")}
       <div class="kdx-row"><b>3 random images</b><span class="kdx-sp"></span><button class="kdx-btn" data-b="again" title="Expand again with new random seeds">⟳ Again</button></div>
-      ${(pv.samples || []).map((s) => `<div class="kdx-bb-sample"><div class="kdx-muted">seed ${s.seed}${s.missing?.length ? ` · <span class="kdx-err">unknown: ${esc(s.missing.join(", "))}</span>` : ""}</div>${esc(s.text)}</div>`).join("")}
+      ${(pv.samples || []).map((s, i) => `<div class="kdx-bb-sample"><div class="kdx-row kdx-muted">seed ${s.seed}${s.missing?.length ? ` · <span class="kdx-err">unknown: ${esc(s.missing.join(", "))}</span>` : ""}
+        <span class="kdx-sp"></span><button class="kdx-btn" data-b="keep" data-i="${i}" title="Keep parts of this sample (pose, clothing, place …) and let the rest vary">🔒 Keep parts</button></div>${esc(s.text)}</div>`).join("")}
       <details class="kdx-bb-line"><summary>Template line</summary><div class="kdx-row"><span class="kdx-sp"></span><button class="kdx-btn" data-b="copy" title="Copy the line">Copy</button></div>
         <div class="kdx-bb-text">${esc(pv.text)}</div></details>`;
   }
@@ -445,7 +449,7 @@ export async function openBuilder() {
 
   // ------------------------------------------------------------------ pool editor (phase 2)
   async function editPool(key, dir = "") {
-    const m = await import("./pooledit.mjs?v=0.7.3");
+    const m = await import("./pooledit.mjs?v=0.7.4");
     const folders = [...new Set(cat.pools.map((p) => dirOf(p.key)))].filter((d) => !d.startsWith("packs/") && d !== "(top)").sort();
     const folder = dir || (v.pool && !key ? dirOf(v.pool.key) : ""); // the folder it was opened from, else none
     m.openPoolEditor({ key, folder, folders, onSaved: (saved) => reloadPalette(saved) });
@@ -566,6 +570,13 @@ export async function openBuilder() {
       return;
     }
     if (act === "again") { v.seed = newSeed(); runPreview(); return; }
+    if (act === "keep") {
+      const s = v.preview?.samples?.[Number(b.dataset.i)];
+      if (!s || !v.preview?.text) return;
+      const { openKeep } = await import("./keep.mjs?v=0.7.4");
+      openKeep({ text: v.preview.text, seed: s.seed, expected: s.text, from: "builder", name: v.name || v.loaded, category: v.category });
+      return;
+    }
     if (act === "copy") { try { await navigator.clipboard.writeText(v.preview?.text || ""); toast("Copied.", "success"); } catch (_e) { toast("Copy failed."); } return; }
     if (act === "del") { select(b.dataset.path); removeSel(); return; }
     if (act === "delsel") { removeSel(); return; }
@@ -679,6 +690,22 @@ export async function openBuilder() {
     el.remove();
     win = null;
   }
-  win = { close };
-  if (cat.ok) { render(); schedule(0); }
+  /** A line from Keep parts: parse it into bubbles and load it as a new, unsaved template. */
+  async function loadText(text, name = "") {
+    if (!cat.ok) return;
+    el.style.zIndex = "9750"; // above the Gallery and its viewer it came from, below Keep parts and dialogs
+    document.body.appendChild(el);
+    if (!(await discardOk())) return;
+    const r = await call("POST", "/kdx_console/builder/parse", { text });
+    if (!r.ok) { toast(r.error); return; }
+    load(r.nodes, "", "From Keep parts: kept parts are plain text, the rest are still pools and groups.");
+    v.name = name;
+    v.dirty = true;
+    paintHead();
+  }
+  win = { close, loadText };
+  if (cat.ok) {
+    if (opts.text != null) await loadText(opts.text, opts.name || "");
+    else { render(); schedule(0); }
+  }
 }

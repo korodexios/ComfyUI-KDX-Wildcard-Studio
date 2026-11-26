@@ -80,7 +80,8 @@ A warning looks like this; the template can still be saved, but read it first:
 ![A check warning](images/builder-check-warning.webp)
 
 **3 random images** shows three prompts with random seeds; **⟳ Again** draws new ones. **Template line** shows the
-line that will be written.
+line that will be written. **🔒 Keep parts** on a sample keeps parts of that prompt and lets the rest vary
+([Keep parts](16-keep-parts.md)); its **Open in Builder** brings the result back here as a new template.
 
 ## Save
 
