@@ -83,6 +83,13 @@ A warning looks like this; the template can still be saved, but read it first:
 line that will be written. **🔒 Keep parts** on a sample keeps parts of that prompt and lets the rest vary
 ([Keep parts](16-keep-parts.md)); its **Open in Builder** brings the result back here as a new template.
 
+## Use on node without saving
+
+**Use on node** in the header sends the current line to the KDX Wildcard Studio node as your own prompt, without
+writing a template file: every run picks its wildcards again. It writes where the node reads your text (see
+[Your own prompt](13-your-own-prompt.md)) and asks before it replaces text there; **↶ Restore previous text**
+under the checks puts the old text back.
+
 ## Save
 
 ![Add to, Save and Save as…](images/builder-save.webp)

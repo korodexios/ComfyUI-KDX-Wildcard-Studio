@@ -32,6 +32,9 @@ _LITERAL = {"{": "\\{", "}": "\\}", "|": "\\|"}
 _SOLO_SPLIT = re.compile(r"\||\$\$")
 
 
+MAX_SWAP = 2000  # characters of one replacement or of the added text
+
+
 class KeepError(ValueError):
     """A request the keep tool cannot answer (readable message for the user)."""
 
@@ -185,21 +188,42 @@ class Decomposition:
                 ids.add(i)
         return {i for i in ids if not any(a in ids for a in self.ancestors(i))}
 
-    def render(self, locks) -> str:
-        """The template line with ``locks`` kept (see the module docstring)."""
+    def clean_swaps(self, swaps, locks) -> dict[int, str]:
+        """Known ids -> replacement text (one line, wildcards allowed, empty = drop the part). A swap inside a kept or
+        another swapped part is dropped."""
         locked = self.clean_locks(locks)
+        out: dict[int, str] = {}
+        for k, val in (swaps or {}).items() if isinstance(swaps, dict) else []:
+            try:
+                i = int(k)
+            except (TypeError, ValueError):
+                continue
+            if i in self.parts and i != 0 and isinstance(val, str):
+                out[i] = " ".join(val.split()).strip()[:MAX_SWAP] if val.strip() else ""
+        out = {i: t for i, t in out.items() if i not in locked and not any(a in locked for a in self.ancestors(i))}
+        return {i: t for i, t in out.items() if not any(a in out for a in self.ancestors(i))}
+
+    def render(self, locks, swaps=None, append: str = "") -> str:
+        """The template line with ``locks`` kept and ``swaps`` (id -> wildcard text) put in place of those parts; the
+        choices around a kept or swapped part are kept. ``append`` goes at the end (see the module docstring)."""
+        swapped = self.clean_swaps(swaps, locks)
+        locked = {i for i in self.clean_locks(locks) if not any(a in swapped for a in self.ancestors(i))}
         pinned: set[int] = set()
-        for i in locked:
+        for i in [*locked, *swapped]:
             pinned.update(self.ancestors(i))
 
         def out(p: Part) -> str:
+            if p.id in swapped:
+                return swapped[p.id]
             if p.id in locked:
                 return _lit(self.text_of(p))
             if p.id in pinned or p.id == 0:
                 return "".join(_lit(s) if isinstance(s, str) else out(s) for s in p.segs)
             return _src(p.source)
 
-        return out(self.root)
+        text = out(self.root)
+        extra = " ".join(str(append or "").splitlines()).strip()[:MAX_SWAP]
+        return f"{text.rstrip()} {extra}" if extra else text
 
     def leaves(self) -> list[int]:
         return [p.id for p in self.walk() if p.id != 0 and not self.children(p)]

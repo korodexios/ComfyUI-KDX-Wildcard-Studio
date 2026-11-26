@@ -6,12 +6,13 @@
 // of every pick, checks it against the prompt stored in the image, and turns the kept parts into a template line
 // (kept parts as fixed text, the choices around them kept, everything else still wildcards). This view only shows
 // the parts and sends the ids that are kept. Writes to the node happen on the user's click only.
-import { app } from "../../../scripts/app.js";
-import { ensureTheme } from "./theme.mjs?v=0.7.8";
-import { call, consoleNodes, getSnap, refresh, toast } from "./client.mjs?v=0.7.8";
-import { askConfirm, askPick, askText } from "./dialog.mjs?v=0.7.8";
+import { ensureTheme } from "./theme.mjs?v=0.7.9";
+import { call, getSnap, refresh, toast } from "./client.mjs?v=0.7.9";
+import { askConfirm, askText } from "./dialog.mjs?v=0.7.9";
+import { restoreText, useTextOnNode } from "./nodewrite.mjs?v=0.7.9";
 
 let win = null;
+let poolCache = null; // the library's pools for Replace / Add (loaded on first use)
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const newSeed = () => Math.floor(Math.random() * 2 ** 31);
 const short = (s, n = 70) => { const t = String(s || "").trim(); return t.length > n ? `${t.slice(0, n - 1)}…` : t; };
@@ -35,6 +36,11 @@ const CSS = `
 .kdx-kp-p.pin{outline:1px dashed var(--kdx-acc);outline-offset:1px}
 .kdx-kp-p.foc{box-shadow:0 0 0 2px var(--kdx-warn)}
 .kdx-kp-p.miss{color:var(--kdx-err)}
+.kdx-kp-p.swap{border:1px dashed var(--kdx-acc);padding:0 4px;font-style:italic;color:var(--kdx-acc-text)}
+.kdx-kp-pool{display:flex;flex-direction:column;gap:2px;max-height:50vh;overflow:auto}
+.kdx-kp-pool button{appearance:none;text-align:left;border:1px solid transparent;background:none;color:var(--kdx-fg);font:inherit;
+ padding:3px 6px;border-radius:5px;cursor:pointer}
+.kdx-kp-pool button:hover,.kdx-kp-pool button:focus-visible{border-color:var(--kdx-acc);outline:none}
 .kdx-kp-empty{font-size:10px;opacity:.75;padding:0 3px}
 .kdx-kp-off .kdx-kp-p{cursor:default;border-bottom-color:transparent}
 .kdx-kp-off .kdx-kp-p:hover{background:none;outline:none}
@@ -80,8 +86,8 @@ export async function openKeep(opts = {}) {
   document.body.appendChild(el);
   const input = opts.template ? { template: opts.template } : { text: opts.text || "" };
   const v = {
-    data: null, locks: new Set(), focus: null, override: false, built: null, sampleSeed: newSeed(), count: 4,
-    category: opts.category || "",
+    data: null, locks: new Set(), swaps: new Map(), append: "", focus: null, override: false, built: null,
+    sampleSeed: newSeed(), count: 4, category: opts.category || "", undo: null,
   };
   const parts = new Map(); // id -> view node
   const parent = new Map(); // id -> parent id
@@ -113,14 +119,29 @@ export async function openKeep(opts = {}) {
   const lockedBy = (id) => (v.locks.has(id) ? id : ancestors(id).find((a) => v.locks.has(a)) ?? null);
   const canLock = () => v.data && v.data.reliable && (v.data.matches !== false || v.override);
   const lockable = [...parts.values()].filter((n) => !transparent(n));
-  const pinned = () => { const s = new Set(); for (const id of v.locks) for (const a of ancestors(id)) s.add(a); return s; };
-
-  function lock(id) { // keep exactly this part: drop locks of its parts and of what contains it
-    for (const a of ancestors(id)) v.locks.delete(a);
-    for (const x of [...v.locks]) if (ancestors(x).includes(id)) v.locks.delete(x);
+  const pinned = () => {
+    const s = new Set();
+    for (const id of [...v.locks, ...v.swaps.keys()]) for (const a of ancestors(id)) s.add(a);
+    return s;
+  };
+  /** Forget locks and replacements on `id`, on what contains it and on its parts. */
+  function free(id) {
+    for (const set of [v.locks, v.swaps]) {
+      for (const x of [...set.keys()]) if (x === id || ancestors(id).includes(x) || ancestors(x).includes(id)) set.delete(x);
+    }
+  }
+  function lock(id) { // keep exactly this part
+    free(id);
     v.locks.add(id);
   }
+  function swap(id, text) { // put other wildcards (or words) in place of this part
+    free(id);
+    v.swaps.set(id, text);
+    v.focus = id;
+    changed();
+  }
   function toggle(id) {
+    if (v.swaps.has(id)) { v.focus = id; changed(); return; } // a replaced part: its buttons are in the Keep row
     const by = lockedBy(id);
     if (by != null) v.locks.delete(by);
     else lock(id);
@@ -138,7 +159,7 @@ export async function openKeep(opts = {}) {
     const pins = pinned();
     const next = new Set();
     (function walk(n) {
-      if (was.has(n.id)) return;
+      if (was.has(n.id) || v.swaps.has(n.id)) return;
       if (!transparent(n) && !pins.has(n.id)) { next.add(n.id); return; }
       for (const s of n.segs) if (typeof s !== "string") walk(s);
     })(v.data.tree);
@@ -148,6 +169,10 @@ export async function openKeep(opts = {}) {
 
   // ------------------------------------------------------------------ rendering
   function partHtml(n, pins) {
+    if (v.swaps.has(n.id)) {
+      const t = v.swaps.get(n.id);
+      return `<span class="kdx-kp-p swap ${v.focus === n.id ? "foc" : ""}" data-id="${n.id}" title="${esc(`Replaced: ${n.src}\n→ ${t || "(removed)"}`)}">⇄ ${esc(t || "(removed)")}</span>`;
+    }
     const inner = n.segs.map((s) => (typeof s === "string" ? esc(s) : partHtml(s, pins))).join("")
       || (transparent(n) ? "" : `<span class="kdx-kp-empty" aria-label="picked nothing">∅</span>`);
     if (transparent(n)) return inner;
@@ -177,7 +202,7 @@ export async function openKeep(opts = {}) {
   }
 
   function chainHtml() {
-    if (v.focus == null || !parts.has(v.focus)) return `<span class="kdx-muted">Click a part of the prompt to keep it; click it again to let it vary. Dotted underline = a pick.</span>`;
+    if (v.focus == null || !parts.has(v.focus)) return `<span class="kdx-muted">Click a part of the prompt to keep it; click it again to let it vary. Dotted underline = a pick. To put other wildcards in its place, click it and use ⇄ Replace.</span>`;
     const chain = [v.focus, ...ancestors(v.focus)].filter((id) => !transparent(parts.get(id))).reverse();
     return `<span class="kdx-muted">Keep</span>${chain.map((id, i) => {
       const n = parts.get(id);
@@ -185,7 +210,9 @@ export async function openKeep(opts = {}) {
       const covered = !on && lockedBy(id) != null;
       return `${i ? `<span class="kdx-muted">›</span>` : ""}<button class="kdx-go ${on ? "on" : ""}" data-k="level" data-id="${id}"
         title="${esc(`${on ? "Let it vary again" : "Keep exactly this"}: ${n.src}\n→ ${short(n.text, 200)}`)}"${covered ? ' style="opacity:.7"' : ""}>${on ? "🔒 " : ""}${esc(n.label)}${chain.length > 1 && i === 0 ? " (whole)" : ""}</button>`;
-    }).join("")}`;
+    }).join("")}<span class="kdx-sp"></span>
+      <button class="kdx-btn" data-k="replace" title="Put another pool, wildcards or your own words in place of ${esc(parts.get(v.focus).label)} (the parts around it stay)">⇄ Replace…</button>
+      ${v.swaps.has(v.focus) ? `<button class="kdx-btn" data-k="original" title="Back to the original part">↺ Original</button>` : ""}`;
   }
 
   function leftHtml() {
@@ -201,15 +228,20 @@ export async function openKeep(opts = {}) {
             ${off ? "disabled" : ""} title="${esc(`${g.ids.length} part${g.ids.length === 1 ? "" : "s"}: ${g.ids.map((i) => parts.get(i)?.label).join(", ")}`)}">${esc(g.label)}</button>`).join("")
             : `<span class="kdx-muted">no groups in this prompt</span>`}</div>
           <div class="kdx-row"><button class="kdx-btn" data-k="invert" ${off || !lockable.length ? "disabled" : ""} title="Keep what varies now and let vary what is kept now">⇄ Invert</button>
-            <button class="kdx-btn" data-k="clear" ${v.locks.size ? "" : "disabled"} title="Let everything vary again">Clear</button>
-            <span class="kdx-muted">${v.locks.size} kept</span></div>
+            <button class="kdx-btn" data-k="clear" ${v.locks.size || v.swaps.size ? "" : "disabled"} title="Let everything vary again and undo the replacements">Clear</button>
+            <span class="kdx-muted">${v.locks.size} kept${v.swaps.size ? ` · ${v.swaps.size} replaced` : ""}</span></div>
         </div></div>
       <div class="kdx-kp-chain" data-col="chain">${chainHtml()}</div>
       ${lockable.length ? `<div class="kdx-kp-prompt ${off ? "kdx-kp-off" : ""}" data-col="prompt">${partHtml(d.tree, pins)}</div>`
         : `<div class="kdx-kp-prompt">${esc(d.prompt)}</div><p class="kdx-muted">This prompt has no wildcards: nothing varies, so there is nothing to keep.</p>`}
       <div class="kdx-kp-legend"><span><i style="background:var(--kdx-acc)"></i>kept</span>
         <span><i style="outline:1px dashed var(--kdx-acc)"></i>choice kept because a part inside is kept</span>
-        <span><i style="border-bottom:1px dotted var(--kdx-muted)"></i>varies</span></div>`;
+        <span><i style="border-bottom:1px dotted var(--kdx-muted)"></i>varies</span>
+        <span><i style="border:1px dashed var(--kdx-acc)"></i>replaced</span></div>
+      <div class="kdx-row"><b title="Text or wildcards added after the prompt, e.g. in the style of __art/style__">＋ Add at the end</b>
+        <input class="kdx-sel" data-k="append" type="text" spellcheck="false" style="flex:1;min-width:160px" value="${esc(v.append)}"
+          placeholder="text or wildcards, e.g. __art/style__" ${off ? "disabled" : ""}>
+        <button class="kdx-btn" data-k="appendpool" ${off ? "disabled" : ""} title="Add a pool from the library">＋ Pool…</button></div>`;
   }
 
   function markKept(text) {
@@ -275,7 +307,9 @@ export async function openKeep(opts = {}) {
   function schedule(delay = 220) { clearTimeout(timer); timer = setTimeout(build, delay); }
   async function build() {
     const my = ++ticket;
-    const r = await call("POST", "/kdx_console/keep/build", { ...input, seed: opts.seed, locks: canLock() ? [...v.locks] : [],
+    const on = canLock();
+    const r = await call("POST", "/kdx_console/keep/build", { ...input, seed: opts.seed, locks: on ? [...v.locks] : [],
+      swaps: on ? Object.fromEntries(v.swaps) : {}, append: on ? v.append : "",
       fingerprint: v.data.fingerprint, count: v.count, sample_seed: v.sampleSeed });
     if (my !== ticket || !win) return;
     v.built = r.ok ? r : { error: r.error || "could not compose" };
@@ -283,94 +317,63 @@ export async function openKeep(opts = {}) {
   }
 
   // ------------------------------------------------------------------ actions
-  function targetNode() {
-    const nodes = consoleNodes();
-    if (!nodes.length) { toast("No KDX Wildcard Studio node in the open workflow."); return null; }
-    const sel = Object.values(app.canvas?.selected_nodes || {}).filter((n) => nodes.includes(n));
-    if (sel.length === 1) return sel[0];
-    if (nodes.length === 1) return nodes[0];
-    toast("Several KDX Wildcard Studio nodes: select the one to write into, then click again.");
-    return null;
-  }
-  /** The text node wired into user_prompt, with the string widget it sends (null when there is none). */
-  /** The node wired into the input `name` (user_prompt, or user_text shown as a socket), with the string widget
-   * that holds its text; null when nothing is wired, widget null when that node has no text to write into. */
-  function wiredSource(node, name) {
-    const slot = node.inputs?.findIndex((i) => i.name === name && i.link != null) ?? -1;
-    if (slot < 0) return null;
-    const src = node.getInputNode?.(slot);
-    if (!src) return null;
-    const strings = (src.widgets || []).filter((w) => typeof w.value === "string" && !w.hidden && w.type !== "combo");
-    const widget = strings.find((w) => ["text", "value", "string", "prompt"].includes(w.name)) || strings[0] || null;
-    return { node: src, widget, muted: src.mode === 2 || src.mode === 4, title: src.title || src.type };
-  }
-  function writeWidget(node, w, value) {
-    w.value = value;
-    w.callback?.(value);
-    node.setDirtyCanvas?.(true, true);
-  }
-  function graphChanged() {
-    app.graph?.change?.();
-    try { app.extensionManager?.workflow?.activeWorkflow?.changeTracker?.checkState?.(); } catch (_e) { /* older frontend */ }
-  }
-  /** Write the result where the Studio reads it, never over other text without asking (old text can be restored).
-   * The Studio reads, in this order: a text wired into user_prompt; user_text (typed, or wired into its socket) while
-   * use_user_text is on; the template. A wired input ignores the typed value, so the text goes into the wired node. */
   async function useOnNode() {
-    const text = v.built?.template;
-    const node = text && targetNode();
-    if (!node) return;
-    const ut = node.widgets?.find((x) => x.name === "user_text");
-    const sw = node.widgets?.find((x) => x.name === "use_user_text");
-    if (!ut || !sw) { toast("This node has no user_text / use_user_text widgets."); return; }
-    const up = wiredSource(node, "user_prompt");
-    const tw = wiredSource(node, "user_text");
-    const wins = up && !up.muted ? "user_prompt is connected and wins over user_text: mute or bypass its source to use this." : "";
-    const options = [];
-    if (up?.widget) {
-      options.push({ id: "prompt", label: `Text node "${up.title}" (#${up.node.id}) on user_prompt`, current: up.widget.value,
-        note: up.muted ? "It is muted or bypassed, so the Studio does not read it now." : "", items: [[up.node, up.widget, text]] });
-    }
-    if (tw?.widget) {
-      options.push({ id: "text_src", label: `Text node "${tw.title}" (#${tw.node.id}) on user_text, use_user_text on`, current: tw.widget.value,
-        note: wins || (tw.muted ? "It is muted or bypassed, so user_text receives nothing now." : ""), items: [[tw.node, tw.widget, text], [node, sw, true]] });
-    }
-    if (!tw) {
-      options.push({ id: "user_text", label: `user_text field of the Studio node (#${node.id}), use_user_text on`, current: ut.value,
-        note: wins, items: [[node, ut, text], [node, sw, true]] });
-    }
-    if (!options.length) {
-      toast(`user_text gets its text from "${tw.title}", which has no text field to write into. Disconnect it or wire a text node.`);
-      return;
-    }
-    const pick = options.find((o) => !o.note) || options[0];
-    const differs = (o) => String(o.current || "").trim() && String(o.current).trim() !== text.trim();
-    let chosen = pick;
-    if (options.length > 1 || differs(pick)) {
-      const id = await askPick({ title: "Use on node", options, value: pick.id,
-        text: "Where should the template go? Text that is there now is replaced; ↶ Restore previous text (or Ctrl+Z) brings it back.",
-        okLabel: (o) => (differs(o) ? "Replace" : "Write") });
-      if (!id) return;
-      chosen = options.find((o) => o.id === id);
-    }
-    const where = chosen.id === "user_text" ? "user_text" : `"${chosen.id === "prompt" ? up.title : tw.title}"`;
-    v.undo = { label: where, items: chosen.items.map(([n, w]) => [n, w, w.value]) };
-    for (const [n, w, val] of chosen.items) writeWidget(n, w, val);
-    graphChanged();
-    node._kdxRender?.();
-    paint("right", rightHtml);
-    toast(chosen.note ? `Written to ${where}. ${chosen.note}` : `Written to ${where}. Every run now varies only the parts not kept.`,
-      chosen.note ? "warn" : "success");
+    const undo = await useTextOnNode(v.built?.template);
+    if (undo) { v.undo = undo; paint("right", rightHtml); }
   }
   function restore() {
-    const u = v.undo;
-    if (!u) return;
-    for (const [n, w, val] of u.items) if (n.graph) writeWidget(n, w, val);
+    restoreText(v.undo);
     v.undo = null;
-    graphChanged();
-    for (const [n] of u.items) n._kdxRender?.();
     paint("right", rightHtml);
-    toast(`Previous text of ${u.label} restored.`, "success");
+  }
+  /** Choose a pool of the library, or type wildcards / words. Resolves to the text or null. */
+  async function pickPool(title, now = "") {
+    if (!poolCache) {
+      const r = await call("GET", "/kdx_console/builder");
+      if (!r.ok) { toast(r.error); return null; }
+      poolCache = r.pools.filter((p) => !p.key.startsWith("templates/"));
+    }
+    return new Promise((resolve) => {
+      const wrap = document.createElement("div");
+      wrap.className = "kdx-root kdx-modal";
+      wrap.innerHTML = `<div class="kdx-modal-box" role="dialog" aria-modal="true" aria-label="${esc(title)}" style="width:min(640px,100%)">
+        <div class="kdx-modal-title">${esc(title)}</div>
+        ${now ? `<div class="kdx-modal-text">Now: ${esc(now)}</div>` : ""}
+        <input class="kdx-field" type="text" spellcheck="false" placeholder="search pools, or type wildcards / words: {oil|ink} painting, __art/style__">
+        <div class="kdx-kp-pool"></div>
+        <div class="kdx-row kdx-modal-btns"><span class="kdx-muted">A pool picks one value per image.</span><span class="kdx-sp"></span>
+          <button class="kdx-btn" data-no>Cancel</button><button class="kdx-btn kdx-primary" data-typed title="Use what is typed, as it is">Use as typed</button></div></div>`;
+      document.body.appendChild(wrap);
+      const field = wrap.querySelector("input");
+      const list = wrap.querySelector(".kdx-kp-pool");
+      const paintList = () => {
+        const q = field.value.trim().toLowerCase().replace(/^_+|_+$/g, "");
+        const rank = (p) => (!q ? 0 : p.key === q ? 0 : p.key.endsWith(`/${q}`) ? 1 : p.key.includes(q) ? 2 : (p.desc || "").toLowerCase().includes(q) ? 3 : 9);
+        const hits = poolCache.map((p) => [rank(p), p]).filter(([r]) => r < 9).sort((x, y) => x[0] - y[0] || x[1].key.localeCompare(y[1].key))
+          .slice(0, 200).map(([, p]) => p); // name matches first, then description matches
+        list.innerHTML = hits.map((p) => `<button data-key="${esc(p.key)}" title="${esc(p.desc || "")}"><b>${esc(p.key)}</b>
+          <span class="kdx-muted">${p.count} values${p.desc ? ` · ${esc(short(p.desc, 90))}` : ""}</span></button>`).join("")
+          || `<span class="kdx-muted">No pool matches; "Use as typed" puts the text in as it is.</span>`;
+      };
+      paintList();
+      let done = false;
+      const close = (val) => { if (done) return; done = true; wrap.remove(); resolve(val); };
+      field.addEventListener("input", paintList);
+      list.addEventListener("click", (e) => { const b = e.target.closest("[data-key]"); if (b) close(`__${b.dataset.key}__`); });
+      wrap.querySelector("[data-no]").addEventListener("click", () => close(null));
+      wrap.querySelector("[data-typed]").addEventListener("click", () => close(field.value.trim()));
+      wrap.addEventListener("pointerdown", (e) => { if (e.target === wrap) close(null); });
+      wrap.addEventListener("keydown", (e) => {
+        e.stopPropagation();
+        if (e.key === "Escape") { e.preventDefault(); close(null); }
+        else if (e.key === "Enter" && e.target === field) {
+          e.preventDefault();
+          const q = field.value.trim().replace(/^_+|_+$/g, "");
+          close(poolCache.some((p) => p.key === q) ? `__${q}__` : field.value.trim());
+        }
+      });
+      field.focus();
+    });
   }
   function suggestName() {
     const base = String(opts.name || "kept").toLowerCase().replace(/^templates\//, "").replace(/[^a-z0-9_]+/g, "_").replace(/^_+|_+$/g, "") || "kept";
@@ -397,7 +400,7 @@ export async function openKeep(opts = {}) {
   async function toBuilder() {
     const text = v.built?.template;
     if (!text) return;
-    const { openBuilder } = await import("./builder.mjs?v=0.7.8");
+    const { openBuilder } = await import("./builder.mjs?v=0.7.9");
     close();
     openBuilder({ text, name: suggestName() });
   }
@@ -413,15 +416,31 @@ export async function openKeep(opts = {}) {
     if (k === "group") { const g = v.data.groups.find((x) => x.id === b.dataset.g); if (g && canLock()) toggleGroup(g); return; }
     if (k === "level") { if (!canLock()) return; const id = Number(b.dataset.id); if (v.locks.has(id)) v.locks.delete(id); else lock(id); v.focus = id; changed(); return; }
     if (k === "invert") { if (canLock()) invert(); return; }
-    if (k === "clear") { v.locks.clear(); changed(); return; }
+    if (k === "clear") { v.locks.clear(); v.swaps.clear(); changed(); return; }
     if (k === "again") { v.sampleSeed = newSeed(); build(); return; }
     if (k === "copy") { try { await navigator.clipboard.writeText(v.built?.template || ""); toast("Copied.", "success"); } catch (_e) { toast("Copy failed."); } return; }
     if (k === "node") { useOnNode(); return; }
     if (k === "restore") { restore(); return; }
+    if (k === "replace") {
+      const id = v.focus;
+      if (id == null || !canLock()) return;
+      const t = await pickPool(`Replace ${parts.get(id).label}`, v.swaps.has(id) ? v.swaps.get(id) : parts.get(id).src);
+      if (t != null) swap(id, t);
+      return;
+    }
+    if (k === "original") { v.swaps.delete(v.focus); changed(); return; }
+    if (k === "appendpool") {
+      const t = await pickPool("Add at the end");
+      if (t) { v.append = `${v.append.trim()} ${t}`.trim(); changed(); }
+      return;
+    }
     if (k === "save") { save(); return; }
     if (k === "builder") { toBuilder(); return; }
     const p = e.target.closest(".kdx-kp-p");
     if (p && canLock()) toggle(Number(p.dataset.id));
+  });
+  el.addEventListener("input", (e) => {
+    if (e.target.dataset.k === "append") { v.append = e.target.value; schedule(400); } // never repaint the field being typed in
   });
   el.addEventListener("change", (e) => {
     const k = e.target.dataset.k;

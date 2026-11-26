@@ -158,7 +158,7 @@ with what made it next to it (template, category, seed, image number, size, file
 ← → to move, a click on the image for 1:1 zoom, I to hide the details, Esc or a click beside the image to close.
 "Pin in Studio" switches the panel to pin mode with that template and seed to repeat the image exactly.
 "🔒 Keep parts" takes the prompt apart into its wildcard picks: keep the pose, the clothes, the place or the light, and
-the rest (face, hair, expression …) keeps varying. The result goes onto the node, into a new template or into the
+the rest (face, hair, expression …) keeps varying; any part can also be replaced by other pools or words. The result goes onto the node, into a new template or into the
 builder; see [Keep parts](docs/16-keep-parts.md).
 Images of NSFW templates (a word of the name starts with `nsfw`, `akt` or `sheer`: `nsfw_detail`, `outdoor_nsfw`) appear only while the panel's **NSFW** switch
 is on; the same switch lets you add and import those templates.

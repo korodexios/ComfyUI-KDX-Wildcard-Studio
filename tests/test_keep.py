@@ -267,3 +267,56 @@ def test_rest_hides_a_template_with_nsfw_at_the_end(server, tmp_path):
     st, d = _post(api.post_keep, server, {"template": "outdoor_nsfw", "seed": 1})
     assert st == 400 and "NSFW" in d["error"]
     assert "outdoor_nsfw" not in api.get_templates(server)[1]["templates"]
+
+
+# ------------------------------------------------------------------ replacing parts with other wildcards
+
+
+def test_swap_puts_other_wildcards_in_place_and_keeps_the_choice_around():
+    lb = lib()
+    seed = _seed_with(lb, "__templates/portrait__", ["photo of a Leica", "expression is smiling"])
+    d = keep.decompose(lb, "__templates/portrait__", seed)
+    medium = _find(d, "core/medium")[0]
+    expr = _find(d, "person/expression_positive")[0]
+    t = d.render([], {medium.id: "a {watercolour|ink} drawing", expr.id: "__core/mood__"})
+    assert t.startswith("a {watercolour|ink} drawing. Her hair is __person/hair__, her expression is __core/mood__.")
+    assert "a second line" not in t  # the template line stays the one the seed picked
+    for s in range(20):
+        text = lb.expand(t, s).text
+        assert text.split(".")[0] in ("a watercolour drawing", "a ink drawing")
+
+
+def test_swap_and_lock_do_not_overlap_and_empty_drops_the_part():
+    lb = lib()
+    seed = _seed_with(lb, "__templates/portrait__", ["photo of a Leica"])
+    d = keep.decompose(lb, "__templates/portrait__", seed)
+    gear = _find(d, "core/gear")[0]
+    medium = _find(d, "core/medium")[0]
+    assert d.clean_swaps({gear.id: "x"}, [medium.id]) == {}  # inside a kept part
+    assert d.clean_swaps({medium.id: "x", gear.id: "y", "bad": "z", 0: "r"}, []) == {medium.id: "x"}
+    assert d.render([gear.id], {medium.id: "a sketch"}).startswith("a sketch.")  # the lock inside the swap goes
+    assert d.render([], {medium.id: ""}).startswith(". Her hair is")
+    assert d.render([], {medium.id: "two\nlines"}).startswith("two lines.")
+
+
+def test_append_adds_text_at_the_end():
+    lb = lib()
+    d = keep.decompose(lb, "__templates/portrait__", 3)
+    t = d.render([], None, "  in the style of __core/medium__ \n")
+    assert t == "__templates/portrait__ in the style of __core/medium__"
+
+
+def test_rest_build_with_swaps_and_append(server):
+    st, d = _post(api.post_keep, server, {"template": "portrait", "seed": 11})
+    hair = next(n for n in _walk_view(d["tree"]) if n["src"] == "__person/hair__")
+    st, b = _post(api.post_keep_build, server, {"template": "portrait", "seed": 11, "locks": [],
+                                                "swaps": {str(hair["id"]): "__core/place__"}, "append": "by night"})
+    assert st == 200 and "Her hair is __core/place__" in b["template"] and b["template"].endswith(" by night")
+    assert b["swaps"] == {str(hair["id"]): "__core/place__"}
+
+
+def _walk_view(n):
+    yield n
+    for s in n["segs"]:
+        if isinstance(s, dict):
+            yield from _walk_view(s)

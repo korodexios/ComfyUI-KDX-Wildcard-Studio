@@ -28,6 +28,19 @@ change the people" takes two clicks. **Clear** lets everything vary again.
 **Right: the result.** A few variants made with the current choices update as you click. The kept text is marked,
 **⟳ Again** draws new variants, and **Template line** shows the line that will be used.
 
+## Other wildcards in place of a part
+
+Sometimes you want to keep some parts and take others from other pools, for example keep the pose but make the
+picture a painting. Click the part, then **⇄ Replace…** in the Keep row. Search the pools of your library and click
+one, or type wildcards or words (`{oil|ink} painting`, `__art/style__`) and press **Use as typed**. An empty text
+removes the part. The part then shows with a dashed border; **↺ Original** brings it back. The choices around a
+replaced part are kept, the same as for a kept part.
+
+**＋ Add at the end** puts text or wildcards after the prompt (**＋ Pool…** picks a pool). Use it for what the
+prompt has no place for yet, such as `in the style of __art/style__`.
+
+**Clear** lets everything vary again and undoes the replacements.
+
 ## Choices around a kept part
 
 A template often makes a choice that holds several parts, for example
@@ -55,7 +68,11 @@ The template line that the image's seed picked is kept too.
   panel. An existing file is replaced only after you confirm, and the old one is kept as `.bak`. A template is one
   line; a prompt of several lines can only be used on the node.
 - **Open in Builder** loads the line into the [Template builder](11-template-builder.md) as a new, unsaved
-  template, ready for further changes.
+  template, ready for further changes. The builder's **Use on node** sends it to the node from there, without
+  saving a template.
+
+If you like the images made this way, open one in the [Gallery](10-gallery.md) and use **Save as template…** to keep
+its prompt as a template.
 
 ## When the prompt does not match
 
