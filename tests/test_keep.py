@@ -359,3 +359,56 @@ def test_bad_text_keys_are_dropped():
     lb = lib()
     d = keep.decompose(lb, "plain words, more", 1)
     assert d.clean_swaps({"0.0.9": "x", "0.5.0": "x", "a.b.c": "x", "0.0.0": "ok"}, []) == {"0.0.0": "ok"}
+
+
+# ------------------------------------------------------------------ marked text, the rest left out
+
+PLAIN = "The image is a photo. She is wearing a linen tunic, standing in __core/place__, soft light, 4:5."
+
+
+def _ids(d):
+    return {p["core"]: p["id"] for s in d.view()["segs"] if s["kind"] == "text" for p in s["pieces"] if p["core"]}
+
+
+def test_drop_text_keeps_marked_text_and_the_wildcards():
+    lb = lib()
+    d = keep.decompose(lb, PLAIN, 1)
+    ids = _ids(d)
+    t = d.render([], None, "", [ids["She is wearing a linen tunic"], ids["4:5"]], True)
+    assert t == "She is wearing a linen tunic, __core/place__, 4:5."
+    assert d.render([], None, "", [], True) == "__core/place__"
+    assert d.render([], None, "", [ids["4:5"]], False) == PLAIN  # marks alone change nothing in plain text
+
+
+def test_drop_text_with_a_replacement_and_a_template_line():
+    lb = lib()
+    d = keep.decompose(lb, PLAIN, 1)
+    ids = _ids(d)
+    t = d.render([], {ids["soft light"]: "__core/light_sky__"}, "in the rain", [], True)
+    assert t == "__core/place__, __core/light_sky__ in the rain"
+    seed = _seed_with(lb, "__templates/portrait__", ["Her hair is"])
+    d = keep.decompose(lb, "__templates/portrait__", seed)
+    t = d.render([], None, "", [], True)
+    assert "Her hair is" not in t and "__person/hair__" in t and "a second line" not in t
+    # the picks inside the option group are untouched: the option group still varies
+    assert "{3::her expression is" in t
+
+
+def test_marks_pin_the_template_line():
+    lb = lib()
+    seed = _seed_with(lb, "__templates/portrait__", ["Her hair is"])
+    d = keep.decompose(lb, "__templates/portrait__", seed)
+    line = next(p for p in d.walk() if p.kind == "token" and p.name == "templates/portrait")
+    key = next(f"{line.id}.{si}.{k}" for si, s in enumerate(line.segs) if isinstance(s, str)
+               for k, (_a, c, _t) in enumerate(keep.pieces(s)) if c.startswith("Her hair is"))
+    t = d.render([], None, "", [key])
+    assert "Her hair is __person/hair__" in t and t != "__templates/portrait__"
+
+
+def test_tidy():
+    assert keep.tidy(" , a, , b . , c,  ") == "a, b. c"
+
+
+def test_tidy_leaves_wildcard_syntax_alone():
+    t = r" , {3::a, , b|c :: d}  , __x/y__ ,, \{lit\} ."
+    assert keep.tidy(t) == r"{3::a, , b|c :: d}, __x/y__, \{lit\}."

@@ -5,8 +5,8 @@
 // Nothing is written without the user's click, and nothing is replaced without asking; the old values are returned
 // so the caller can offer "Restore previous text" (Ctrl+Z works as well).
 import { app } from "../../../scripts/app.js";
-import { consoleNodes, toast } from "./client.mjs?v=0.7.10";
-import { askPick } from "./dialog.mjs?v=0.7.10";
+import { consoleNodes, toast } from "./client.mjs?v=0.7.11";
+import { askPick } from "./dialog.mjs?v=0.7.11";
 
 function targetNode() {
   const nodes = consoleNodes();

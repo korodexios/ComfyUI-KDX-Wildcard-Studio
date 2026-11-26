@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.7.11 - 2026-11-26
+
+### Added
+- **Keep parts: keep several pieces of plain text.** A click marks a piece as kept (blue), any number of them;
+  ⇄ Replace still works on the piece you clicked. **✂ Remove unmarked text** leaves out the plain text you did not
+  mark, so only the wildcards, kept parts, marked text and replacements stay (spaces and commas tidied, wildcard
+  syntax untouched); then add new wildcards.
+- REST: `keep/build` takes `marks` and `drop_text`.
+
 ## 0.7.10 - 2026-11-26
 
 ### Added
