@@ -348,7 +348,9 @@ export async function openKeep(opts = {}) {
       const list = wrap.querySelector(".kdx-kp-pool");
       const paintList = () => {
         const q = field.value.trim().toLowerCase().replace(/^_+|_+$/g, "");
-        const hits = poolCache.filter((p) => !q || p.key.includes(q) || (p.desc || "").toLowerCase().includes(q)).slice(0, 200);
+        const rank = (p) => (!q ? 0 : p.key === q ? 0 : p.key.endsWith(`/${q}`) ? 1 : p.key.includes(q) ? 2 : (p.desc || "").toLowerCase().includes(q) ? 3 : 9);
+        const hits = poolCache.map((p) => [rank(p), p]).filter(([r]) => r < 9).sort((x, y) => x[0] - y[0] || x[1].key.localeCompare(y[1].key))
+          .slice(0, 200).map(([, p]) => p); // name matches first, then description matches
         list.innerHTML = hits.map((p) => `<button data-key="${esc(p.key)}" title="${esc(p.desc || "")}"><b>${esc(p.key)}</b>
           <span class="kdx-muted">${p.count} values${p.desc ? ` · ${esc(short(p.desc, 90))}` : ""}</span></button>`).join("")
           || `<span class="kdx-muted">No pool matches; "Use as typed" puts the text in as it is.</span>`;
