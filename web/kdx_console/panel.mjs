@@ -3,9 +3,9 @@
 // Everything shown comes from the server snapshot; every change goes back over REST and
 // the server's event repaints all open views. No timers, no polling.
 import { action, call, consoleNodes, editConfig, getScope, getSnap, newChannel, previewPrompt, setPick, setScope, subscribe,
-  toast } from "./client.mjs?v=0.7.11";
-import { askConfirm, askText } from "./dialog.mjs?v=0.7.11";
-import { ensureTheme } from "./theme.mjs?v=0.7.11";
+  toast } from "./client.mjs?v=0.7.12";
+import { askConfirm, askText } from "./dialog.mjs?v=0.7.12";
+import { ensureTheme } from "./theme.mjs?v=0.7.12";
 
 const MODES = [["sequential", "Sequential"], ["manual", "Manual"], ["pin", "Pin"]];
 const ON_END = [["next", "next category"], ["loop", "loop category"], ["stop", "stop"]];
@@ -25,6 +25,14 @@ function slugKey(text) {
   const s = String(text || "").normalize("NFKD").replace(/[^\x00-\x7f]/g, "").trim().toLowerCase()
     .replace(/[^a-z0-9_-]+/g, "_").replace(/^_+|_+$/g, "");
   return s || "category";
+}
+
+// Folded categories: a view preference of this browser (localStorage), not part of the config or the workflow.
+const FOLD_KEY = "kdx_console.panel.folded";
+let folded = new Set();
+try { folded = new Set(JSON.parse(localStorage.getItem(FOLD_KEY) || "[]")); } catch (_e) { /* fresh start */ }
+function saveFolded() {
+  try { localStorage.setItem(FOLD_KEY, JSON.stringify([...folded])); } catch (_e) { /* private mode */ }
 }
 
 /** Small icon button (move / rename / remove). */
@@ -150,11 +158,21 @@ function catCard(cat, ci, s, profiles, avail, scope) {
   if (cat.system_prompt && !profiles.includes(cat.system_prompt)) profs.push(cat.system_prompt);
   const sp = profs.map((p) => `<option value="${esc(p)}" ${cat.system_prompt === p ? "selected" : ""}>${p ? esc(p) : "— no system prompt —"}</option>`).join("");
   const isCurCat = st.category === cat.key;
-  return `<div class="kdx-card kdx-cat ${catOn ? "" : "off"}">
-    <div class="kdx-row">
+  const fold = folded.has(cat.key);
+  const head = `<div class="kdx-row">
+      <button class="kdx-go kdx-ico kdx-fold" data-act="fold" data-key="${esc(cat.key)}" aria-expanded="${!fold}"
+        title="${fold ? "Unfold: show the templates" : "Fold: show only this line"}">${fold ? "▸" : "▾"}</button>
       <button class="kdx-pill ${catOn ? "on" : ""} ${catOwn ? "own" : ""}" data-act="cat" data-ci="${ci}"
         title="Category ${esc(cat.key)}${catOwn ? " – this workflow only" : ""}">${esc(cat.name)}</button>
-      <span class="kdx-muted">${esc(cat.key)}${isCurCat ? " · current" : ""}</span><span class="kdx-sp"></span>
+      <span class="kdx-muted">${esc(cat.key)}${isCurCat ? " · current" : ""}</span><span class="kdx-sp"></span>`;
+  if (fold) {
+    const on = cat.templates.filter((t) => eff(scope, `${cat.key}.${t.name}`, t.enabled)).length;
+    const nextHere = next && next.category === cat.key ? ` · next: <b>${esc(next.template)}</b>` : "";
+    return `<div class="kdx-card kdx-cat kdx-folded ${catOn ? "" : "off"}">${head}
+      <span class="kdx-muted kdx-fold-sum" data-act="fold" data-key="${esc(cat.key)}" title="Unfold">${cat.templates.length} template${cat.templates.length === 1 ? "" : "s"}, ${on} on${nextHere}</span></div></div>`;
+  }
+  return `<div class="kdx-card kdx-cat ${catOn ? "" : "off"}">
+    ${head}
       ${ci > 0 ? ico("cat_move", "▲", "Move category up", `data-ci="${ci}" data-d="-1"`) : ""}
       ${ci < nCats - 1 ? ico("cat_move", "▼", "Move category down", `data-ci="${ci}" data-d="1"`) : ""}
       ${ico("cat_rename", "✎", "Rename (the key used by overrides stays the same)", `data-ci="${ci}"`)}
@@ -236,8 +254,12 @@ export function mountPanel(el) {
     view.dirty = false;
     const avail = available(s.config);
     const scope = getScope();
-    const cats = s.config.categories.map((c, ci) => catCard(c, ci, s, view.profiles, avail, scope)).join("")
-      || `<div class="kdx-card kdx-muted">No categories yet. Click “Import templates” or “New category”.</div>`;
+    const n = s.config.categories.length;
+    const foldRow = n > 1 ? `<div class="kdx-row kdx-fold-all"><span class="kdx-muted">${n} categories</span><span class="kdx-sp"></span>
+      <button class="kdx-btn" data-act="fold_all" data-on="1" title="Show every category as one line">▸ Fold all</button>
+      <button class="kdx-btn" data-act="fold_all" data-on="0" title="Show the templates of every category">▾ Unfold all</button></div>` : "";
+    const cats = foldRow + (s.config.categories.map((c, ci) => catCard(c, ci, s, view.profiles, avail, scope)).join("")
+      || `<div class="kdx-card kdx-muted">No categories yet. Click “Import templates” or “New category”.</div>`);
     root.innerHTML = `<div class="kdx-h"><span class="kdx-dot"></span>KDX Wildcard Studio</div>
       ${scopeCard(scope)}${nowCard(s)}${modeCard(s)}${cats}${previewCard(s, view)}${wildcardsCard(s)}`;
   }
@@ -250,9 +272,22 @@ export function mountPanel(el) {
     const ti = Number(b.dataset.ti);
     const cfg = getSnap()?.config;
     if (!cfg) return;
-    if (act === "gallery") { import("./gallery.mjs?v=0.7.11").then((m) => m.openGallery()); return; }
-    if (act === "builder") { import("./builder.mjs?v=0.7.11").then((m) => m.openBuilder()); return; }
-    if (act === "packs") { import("./packs.mjs?v=0.7.11").then((m) => m.openPacks()); return; }
+    if (act === "gallery") { import("./gallery.mjs?v=0.7.12").then((m) => m.openGallery()); return; }
+    if (act === "builder") { import("./builder.mjs?v=0.7.12").then((m) => m.openBuilder()); return; }
+    if (act === "packs") { import("./packs.mjs?v=0.7.12").then((m) => m.openPacks()); return; }
+    if (act === "fold") {
+      const k = b.dataset.key;
+      if (folded.has(k)) folded.delete(k); else folded.add(k);
+      saveFolded();
+      paint(getSnap());
+      return;
+    }
+    if (act === "fold_all") {
+      folded = b.dataset.on === "1" ? new Set(cfg.categories.map((c) => c.key)) : new Set();
+      saveFolded();
+      paint(getSnap());
+      return;
+    }
     if (act === "skip") action("/kdx_console/skip");
     else if (act === "reset") action("/kdx_console/reset");
     else if (act === "import") {

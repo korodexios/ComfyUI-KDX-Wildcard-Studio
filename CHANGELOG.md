@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.12 - 2026-11-26
+
+### Added
+- **Panel: fold categories.** ▾ / ▸ before a category's name folds it to one line (on/off, template count, how many
+  are on, the next template when it is there); **▸ Fold all** / **▾ Unfold all** above the categories. Remembered in
+  this browser only; the config and the workflow are not touched.
+
 ## 0.7.11 - 2026-11-26
 
 ### Added

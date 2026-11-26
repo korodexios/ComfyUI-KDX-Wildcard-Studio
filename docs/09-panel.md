@@ -42,6 +42,11 @@ A pill with a strike-through is off.
 
 ![A category with one template](images/panel-cars-category.webp)
 
+**▾ / ▸** before the name folds a category to one line: its name, on/off, how many templates it has and how many
+are on, and which one runs next when it is this category. **▸ Fold all** / **▾ Unfold all** above the categories
+fold or open all of them. Folding is only how this browser shows the panel; it changes nothing in the config or the
+workflow, and a folded category runs as before.
+
 | Control | What it does |
 |---|---|
 | Category pill (**Cars**) | Switch the whole category on or off. The grey text next to it is its key (`cars`), used by [overrides](03-overrides.md) |
