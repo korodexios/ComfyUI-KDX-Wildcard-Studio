@@ -693,6 +693,8 @@ export async function openBuilder(opts = {}) {
   /** A line from Keep parts: parse it into bubbles and load it as a new, unsaved template. */
   async function loadText(text, name = "") {
     if (!cat.ok) return;
+    el.style.zIndex = "9750"; // above the Gallery and its viewer it came from, below Keep parts and dialogs
+    document.body.appendChild(el);
     if (!(await discardOk())) return;
     const r = await call("POST", "/kdx_console/builder/parse", { text });
     if (!r.ok) { toast(r.error); return; }

@@ -18,6 +18,7 @@ const short = (s, n = 70) => { const t = String(s || "").trim(); return t.length
 
 const CSS = `
 .kdx-kp{z-index:9800}
+.kdx-kp .kdx-pill:not(.on){text-decoration:none;color:var(--kdx-fg)}
 .kdx-kp-body{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,1fr);gap:14px;padding:10px 14px 16px}
 .kdx-kp-col{min-height:0;overflow:auto;display:flex;flex-direction:column;gap:10px}
 .kdx-kp-col > *{flex:none}
