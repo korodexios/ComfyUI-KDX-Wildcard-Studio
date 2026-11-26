@@ -2,9 +2,9 @@
 // template. Opens full window from the panel; a click on an image opens the shared KDX lightbox with what made
 // it (template, seed, file, prompt). Loads on open and on ⟳ / filter change; no polling.
 import { api } from "../../../scripts/api.js";
-import { ACCENT, ensureTheme } from "./theme.mjs?v=0.7.2";
-import { call, getSnap, toast } from "./client.mjs?v=0.7.2";
-import { openLightbox } from "./lightbox.mjs?v=0.7.2";
+import { ACCENT, ensureTheme } from "./theme.mjs?v=0.7.3";
+import { call, getSnap, toast } from "./client.mjs?v=0.7.3";
+import { openLightbox } from "./lightbox.mjs?v=0.7.3";
 
 const VIEW_KEY = "kdx_console.gallery";
 const RANGES = [["1h", "last hour", 3600], ["6h", "last 6 hours", 6 * 3600], ["today", "today", 0],

@@ -64,7 +64,7 @@ html.kdx-light .kdx-root{--kdx-acc:${ACCENT.light.acc};--kdx-on-acc:${ACCENT.lig
 .kdx-node{display:flex;flex-direction:column;gap:4px;padding:6px 8px;background:var(--kdx-card);border-radius:6px;
  border:1px solid var(--kdx-border);height:100%;overflow:hidden}
 .kdx-node .kdx-line{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.kdx-node .kdx-gear{margin-left:auto}
+.kdx-node .kdx-end{margin-left:auto;display:inline-flex;align-items:center;gap:6px}
 .kdx-flash{animation:kdx-flash .6s ease-out}
 @keyframes kdx-flash{from{box-shadow:0 0 0 2px var(--kdx-acc)}to{box-shadow:0 0 0 0 transparent}}
 .kdx-float{position:fixed;z-index:9000;width:430px;max-width:calc(100vw - 32px);max-height:80vh;display:flex;flex-direction:column;

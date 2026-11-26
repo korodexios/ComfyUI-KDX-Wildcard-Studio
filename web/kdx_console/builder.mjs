@@ -5,9 +5,9 @@
 // take bubbles too. The palette on the left offers pools, ready sentences and shapes; drag them in or click ＋.
 // The server owns the syntax: it turns a line into bubbles, writes bubbles back as a line, checks and expands it.
 // No external libraries; no polling (the preview is asked for after a change, debounced).
-import { ensureTheme } from "./theme.mjs?v=0.7.2";
-import { call, getSnap, refresh, toast } from "./client.mjs?v=0.7.2";
-import { askConfirm, askText } from "./dialog.mjs?v=0.7.2";
+import { ensureTheme } from "./theme.mjs?v=0.7.3";
+import { call, getSnap, refresh, toast } from "./client.mjs?v=0.7.3";
+import { askConfirm, askText } from "./dialog.mjs?v=0.7.3";
 
 let win = null;
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -445,7 +445,7 @@ export async function openBuilder() {
 
   // ------------------------------------------------------------------ pool editor (phase 2)
   async function editPool(key, dir = "") {
-    const m = await import("./pooledit.mjs?v=0.7.2");
+    const m = await import("./pooledit.mjs?v=0.7.3");
     const folders = [...new Set(cat.pools.map((p) => dirOf(p.key)))].filter((d) => !d.startsWith("packs/") && d !== "(top)").sort();
     const folder = dir || (v.pool && !key ? dirOf(v.pool.key) : ""); // the folder it was opened from, else none
     m.openPoolEditor({ key, folder, folders, onSaved: (saved) => reloadPalette(saved) });

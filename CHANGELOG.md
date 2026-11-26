@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.7.3 - 2026-11-26
+
+### Added
+- **Your own prompt can go through the LLM.** New widget `user_system_prompt` on the node picks the KDX-LLM system
+  prompt for `user_text` / `user_prompt`.
+- **LLM button on the node body**, the same switch as the LLM pill in the panel.
+
+### Changed
+- With LLM on, your own prompt now sets `llm_enabled` = true (before it was always false), so KDX-LLM Chat rewrites
+  it. Turn LLM off to use your text as it is. Saved workflows load unchanged.
+
 ## 0.7.2 - 2026-11-26
 
 ### Added

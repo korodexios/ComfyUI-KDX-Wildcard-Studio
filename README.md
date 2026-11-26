@@ -16,7 +16,8 @@ mute groups and chains of switch nodes.
   Set/Get nodes, plus a REST API.
 - **Reproducible images**: dragging a generated image back into ComfyUI repeats the same prompt.
 - **Your own prompt**: connect a text node to `user_prompt` (mute it to go back to the templates) or type
-  into the node's `user_text` box and flip `use_user_text`; wildcards work there too.
+  into the node's `user_text` box and flip `use_user_text`; wildcards work there too. With the LLM switch on, your
+  text goes through KDX-LLM with the system prompt picked in `user_system_prompt`.
 - **LLM ready**: each category can carry a KDX-LLM system-prompt profile; the `llm_enabled` output switches
   KDX-LLM Chat off (prompt passed on unchanged) while the LLM pill is off.
 - **Side panel** with pill toggles, live preview of the next runs and no polling (server events only).
@@ -100,12 +101,12 @@ In ComfyUI: **Templates → Custom nodes → ComfyUI-KDX-Wildcard-Studio** (or o
 | Output | Type | Meaning |
 |---|---|---|
 | `prompt` | STRING | the expanded template |
-| `system_prompt` | STRING | the category's KDX-LLM profile text (empty while LLM is off) |
+| `system_prompt` | STRING | KDX-LLM profile text of the category, or of `user_system_prompt` for your own text (empty while LLM is off) |
 | `category` | STRING | category key |
 | `template` | STRING | template name |
 | `index` | INT | image number within the template's `repeat` (from 1) |
 | `repeat_left` | INT | images left for this template |
-| `llm_enabled` | BOOLEAN | LLM switch from the panel or `overrides` — connect to KDX-LLM Chat's `llm_enabled` |
+| `llm_enabled` | BOOLEAN | LLM switch from the node, panel or `overrides` — connect to KDX-LLM Chat's `llm_enabled` |
 | `state_json` | STRING | the state used for this run, as JSON |
 
 ### Your own prompt instead of a template
@@ -115,7 +116,9 @@ In ComfyUI: **Templates → Custom nodes → ComfyUI-KDX-Wildcard-Studio** (or o
 - Or type into the node's `user_text` box and turn `use_user_text` on ("user text"); off = templates again.
 - Wildcards work in your text: `a portrait, __core/light_sky__, {red|blue} dress`.
 - The template counter waits meanwhile. Outputs: `category` = `user`, `template` = `user_prompt` (handy in
-  KDX Filename and the Gallery), `llm_enabled` = false. Dragging such an image back repeats its prompt.
+  KDX Filename and the Gallery). Dragging such an image back repeats its prompt.
+- The **LLM** button on the node (the same switch as in the panel) sends your text through KDX-LLM Chat too: pick
+  its instructions in `user_system_prompt`. Off = your text is the final prompt.
 
 ### Switching the LLM on and off
 

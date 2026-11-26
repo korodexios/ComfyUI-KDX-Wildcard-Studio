@@ -4,9 +4,9 @@
 // or while a workflow loads. The only writes are the user's own clicks: "Clear pin" clears the
 // hidden `pin` widget, the panel's per-workflow settings fill the hidden `scope` widget.
 // The body only renders server state.
-import { getSnap, onRun, subscribe } from "./client.mjs?v=0.7.2";
-import { mountPanel } from "./panel.mjs?v=0.7.2";
-import { ensureTheme } from "./theme.mjs?v=0.7.2";
+import { editConfig, getSnap, onRun, subscribe } from "./client.mjs?v=0.7.3";
+import { mountPanel } from "./panel.mjs?v=0.7.3";
+import { ensureTheme } from "./theme.mjs?v=0.7.3";
 
 const BODY_H = 74;
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -78,6 +78,7 @@ function renderBody(node, root, s) {
   const next = (s?.preview?.upcoming || [])[0];
   let line;
   const userOn = node.widgets?.find((w) => w.name === "use_user_text")?.value === true;
+  const llm = !!s?.config?.llm_enabled;
   if (pin?.user) line = `📌 <b>user prompt</b> · seed ${esc(pin.seed)} <span class="kdx-muted">(from image)</span>`;
   else if (pin) line = `📌 <b>${esc(pin.template)}</b> · seed ${esc(pin.seed)} <span class="kdx-muted">(from image)</span>`;
   else if (userOn) line = `✍ <b>user text</b> <span class="kdx-muted">· the template counter waits</span>`;
@@ -93,7 +94,9 @@ function renderBody(node, root, s) {
   root.innerHTML = `<div class="kdx-line">${line}</div>
     <div class="kdx-row"><span class="kdx-muted kdx-line">${pin ? "Pin: exact reproduction, counter paused" : `Last: ${last}`}</span>
       ${pin ? '<button class="kdx-btn" data-unpin title="Return the node to normal mode">Clear pin</button>' : ""}
-      <button class="kdx-btn kdx-gear" data-gear title="KDX Wildcard Studio settings">⚙</button></div>`;
+      <span class="kdx-end">${s?.config ? `<button class="kdx-pill ${llm ? "on" : ""}" data-llm aria-pressed="${llm}"
+        title="LLM ${llm ? "on" : "off"} (same switch as in the panel). Templates send the system prompt of their category, your own prompt the one in user_system_prompt">LLM</button>` : ""}
+      <button class="kdx-btn kdx-gear" data-gear title="KDX Wildcard Studio settings">⚙</button></span></div>`;
 }
 
 export function setupNode(node) {
@@ -105,7 +108,7 @@ export function setupNode(node) {
   const root = document.createElement("div");
   root.className = "kdx-root kdx-node";
   const widget = node.addDOMWidget("kdx_console_ui", "kdx_console", root, {
-    serialize: false, // the DOM body owns no state; widgets_values stays [pin, scope, user_text, use_user_text]
+    serialize: false, // the DOM body owns no state; widgets_values stays [pin, scope, user_text, use_user_text, user_system_prompt]
     getValue: () => undefined,
     setValue: () => {},
     getMinHeight: () => BODY_H,
@@ -120,6 +123,7 @@ export function setupNode(node) {
 
   root.addEventListener("click", (e) => {
     if (e.target.closest("[data-gear]")) openWindow(e.target.closest("[data-gear]"));
+    else if (e.target.closest("[data-llm]")) editConfig((c) => { c.llm_enabled = !c.llm_enabled; }, 0);
     else if (e.target.closest("[data-unpin]")) {
       const w = pinWidget(node);
       if (w) {

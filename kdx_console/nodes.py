@@ -9,9 +9,11 @@ Inputs (positional ``widgets_values`` — never rename/reorder, new ones only at
   * ``user_prompt`` optional STRING socket: a connected, non-empty text replaces the template prompt.
                    A muted or bypassed source node sends nothing, so the Studio prompt is used again.
   * ``user_text`` / ``use_user_text``  the same typed into the node itself, used only while the switch is on.
+  * ``user_system_prompt``  combo widget: the KDX-LLM profile sent with the user's own text while LLM is on.
 
 User text may hold wildcards (``__core/light_sky__``, ``{a|b}``); they are expanded with a fresh seed. The
-template counter does not move and the LLM output is off (the text is the prompt). The image records the
+template counter does not move. The LLM switch (panel or ``llm=`` override) applies as for templates; the
+system prompt comes from ``user_system_prompt`` because the text belongs to no category. The image records the
 text and the seed (pin ``{"user": true, "seed": ...}``), so dragging it back gives the same prompt.
 """
 
@@ -29,6 +31,7 @@ log = logging.getLogger("KDX-Wildcard-Studio")
 
 USER_TEMPLATE = "user_prompt"
 USER_CATEGORY = "user"
+NO_PROFILE = "(no system prompt)"
 _WILDCARD_SYNTAX = ("__", "{")
 
 _STORE: Store | None = None
@@ -67,7 +70,8 @@ class KDX_Console:
                     "state_json")
     OUTPUT_TOOLTIPS = (
         "Expanded template prompt",
-        "System prompt text of the category (KDX-LLM profile); empty when LLM is off",
+        "System prompt text (KDX-LLM profile of the category, or user_system_prompt for your own text); "
+        "empty when LLM is off",
         "Category key",
         "Template name (templates/<name>)",
         "Image number within the template repeat (from 1)",
@@ -99,29 +103,45 @@ class KDX_Console:
                                                     "is on. Wildcards allowed. A connected user_prompt wins."}),
                 "use_user_text": ("BOOLEAN", {"default": False, "label_on": "user text", "label_off": "templates",
                                               "tooltip": "On = use the text above instead of the template."}),
+                "user_system_prompt": ([NO_PROFILE, *profiles.names()],
+                                       {"default": NO_PROFILE,
+                                        "tooltip": "KDX-LLM system prompt for your own prompt (user_text or "
+                                                   "user_prompt) while LLM is on. Templates use their category's. "
+                                                   "Press R to list new profiles."}),
             },
             "hidden": {"unique_id": "UNIQUE_ID", "extra_pnginfo": "EXTRA_PNGINFO"},
         }
 
     @classmethod
+    def VALIDATE_INPUTS(cls, user_system_prompt=None):
+        # A deleted profile must not block runs that do not use it; a run that does raises a readable error.
+        return True
+
+    @classmethod
     def IS_CHANGED(cls, pin="", overrides="", scope="", user_prompt=None, user_text="", use_user_text=False,
-                   **kwargs):
+                   user_system_prompt=NO_PROFILE, **kwargs):
         text = user_text_of(user_prompt, user_text, use_user_text)
         if text is not None:
             if _user_pin_seed(pin) is None and any(t in text for t in _WILDCARD_SYNTAX):
                 return f"user:{random_seed()}"  # wildcards: a new pick every run
-            return "user:" + hashlib.sha256(f"{text}\0{pin}".encode("utf-8")).hexdigest()
+            try:
+                llm, _name, sp_text = user_llm(get_store(), overrides, scope, user_system_prompt)
+            except Exception as e:  # the run itself will raise the readable error
+                return f"error:{e}"
+            key = f"{text}\0{pin}\0{llm}\0{sp_text}"
+            return "user:" + hashlib.sha256(key.encode("utf-8")).hexdigest()
         try:
             return get_store().fingerprint(overrides=overrides or "", pin=pin or "", scope=scope or "")
         except Exception as e:  # the run itself will raise the readable error
             return f"error:{e}"
 
     def run(self, pin="", overrides=None, scope="", user_prompt=None, user_text="", use_user_text=False,
-            unique_id=None, extra_pnginfo=None):
+            user_system_prompt=NO_PROFILE, unique_id=None, extra_pnginfo=None):
         store = get_store()
         text = user_text_of(user_prompt, user_text, use_user_text)
         if text is not None:
-            return user_result(text, pin, unique_id, extra_pnginfo)
+            llm = user_llm(store, overrides, scope, user_system_prompt)
+            return user_result(text, pin, unique_id, extra_pnginfo, *llm)
         if _user_pin_seed(pin) is not None:
             pin = ""  # an image made from user text, but no user text now: normal run
         try:
@@ -165,7 +185,20 @@ def _user_pin_seed(pin) -> int | None:
     return None
 
 
-def user_result(text: str, pin, unique_id, extra_pnginfo) -> dict:
+def user_llm(store: Store, overrides, scope, profile) -> tuple[bool, str, str]:
+    """``(llm_enabled, profile name, system prompt text)`` for a run with the user's own text. Name and text
+    are empty while LLM is off, so a missing profile only matters when it would really be sent."""
+    cfg = store.effective(overrides or "", scope or "")[0]
+    if not cfg.get("llm_enabled"):
+        return False, "", ""
+    name = str(profile or "").strip()
+    if name == NO_PROFILE:
+        name = ""
+    return True, name, profiles.resolve(name)
+
+
+def user_result(text: str, pin, unique_id, extra_pnginfo, llm_enabled: bool = False, system_prompt: str = "",
+                system_prompt_text: str = "") -> dict:
     """Run with the user's own text: expand wildcards in it, leave the template counter alone."""
     seed = _user_pin_seed(pin)
     pinned = seed is not None
@@ -174,15 +207,18 @@ def user_result(text: str, pin, unique_id, extra_pnginfo) -> dict:
     prompt = wildcards.expand(text, seed) if any(t in text for t in _WILDCARD_SYNTAX) else text
     if not isinstance(prompt, str) or not prompt.strip():
         raise ConsoleError("KDX Wildcard Studio: the user prompt expanded to empty text.")
-    used = {"category": USER_CATEGORY, "template": USER_TEMPLATE, "seed": seed, "user_text": text}
+    used = {"category": USER_CATEGORY, "template": USER_TEMPLATE, "seed": seed, "user_text": text,
+            "system_prompt": system_prompt, "llm_enabled": llm_enabled}
     try:
         embed.embed(extra_pnginfo, unique_id, json.dumps({"user": True, "seed": seed}), {**used, "prompt": prompt})
     except Exception as e:  # metadata is a bonus; never fail the run on it
         log.warning("[KDX-Wildcard-Studio] metadata not embedded: %s", e)
-    summary = f"✍ user prompt · seed {seed}" + (" · from image" if pinned else "")
+    summary = (f"✍ user prompt · seed {seed}" + (" · LLM" if llm_enabled else "")
+               + (" · from image" if pinned else ""))
     return {
         "ui": {"kdx_console": [{"summary": summary, "used": used}]},
-        "result": (prompt, "", USER_CATEGORY, USER_TEMPLATE, 1, 0, False, json.dumps(used, ensure_ascii=False)),
+        "result": (prompt, system_prompt_text, USER_CATEGORY, USER_TEMPLATE, 1, 0, llm_enabled,
+                   json.dumps(used, ensure_ascii=False)),
     }
 
 

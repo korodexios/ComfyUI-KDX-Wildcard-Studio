@@ -28,6 +28,19 @@ to the `user_prompt` input. While it sends text, that text is the `prompt` outpu
 
 - A connected `user_prompt` wins over the `user_text` box.
 
+## Your own prompt through the LLM
+
+The **LLM** button on the node is the same switch as the LLM pill in the panel (an `llm=on|off` override still
+wins).
+
+- **Off**: your text is the final prompt, KDX-LLM Chat passes it on unchanged.
+- **On**: KDX-LLM Chat rewrites your text. Pick the instructions in **`user_system_prompt`** on the node: it
+  lists your KDX-LLM system prompts (press **R** after adding one). Your own text belongs to no category, so the
+  category system prompts are not used; with `(no system prompt)` none is sent.
+
+Connect `prompt`, `system_prompt` and `llm_enabled` to the Chat as in the
+[quick start](01-quick-start.md), and use the Chat's `response` as the final prompt.
+
 ## What the outputs say
 
 While your own text is used:
@@ -37,7 +50,8 @@ While your own text is used:
 | `prompt` | your text with its wildcards expanded |
 | `category` | `user` |
 | `template` | `user_prompt` (handy in **KDX • Filename** and in the [Gallery](10-gallery.md)) |
-| `llm_enabled` | false: your text is the final prompt, KDX-LLM Chat passes it on unchanged |
+| `system_prompt` | the profile picked in `user_system_prompt` while LLM is on, else empty |
+| `llm_enabled` | the LLM switch (node, panel or `overrides`), the same as for templates |
 
 The image records the text, the expanded prompt and the seed, so dragging it back onto the canvas repeats the same
 prompt (see [Reproducible images](04-reproducible-images.md)). If the text node is gone by then, the node simply runs

@@ -1,9 +1,9 @@
 // KDX Wildcard Studio - Pool editor (Template builder, phase 2): create a pool, edit its values, weights and order, retire
 // values or the whole pool. Nothing is deleted: the server moves what leaves a pool into wildcards_archive/ (outside
 // the library) and keeps <pool>.txt.bak. Every rule is checked on the server; this window only edits the list.
-import { call, toast } from "./client.mjs?v=0.7.2";
-import { askConfirm } from "./dialog.mjs?v=0.7.2";
-import { NEW_FOLDER, newPoolKey, startFolder } from "./poolname.mjs?v=0.7.2";
+import { call, toast } from "./client.mjs?v=0.7.3";
+import { askConfirm } from "./dialog.mjs?v=0.7.3";
+import { NEW_FOLDER, newPoolKey, startFolder } from "./poolname.mjs?v=0.7.3";
 
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 

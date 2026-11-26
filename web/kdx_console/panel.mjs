@@ -3,9 +3,9 @@
 // Everything shown comes from the server snapshot; every change goes back over REST and
 // the server's event repaints all open views. No timers, no polling.
 import { action, call, consoleNodes, editConfig, getScope, getSnap, newChannel, previewPrompt, setPick, setScope, subscribe,
-  toast } from "./client.mjs?v=0.7.2";
-import { askConfirm, askText } from "./dialog.mjs?v=0.7.2";
-import { ensureTheme } from "./theme.mjs?v=0.7.2";
+  toast } from "./client.mjs?v=0.7.3";
+import { askConfirm, askText } from "./dialog.mjs?v=0.7.3";
+import { ensureTheme } from "./theme.mjs?v=0.7.3";
 
 const MODES = [["sequential", "Sequential"], ["manual", "Manual"], ["pin", "Pin"]];
 const ON_END = [["next", "next category"], ["loop", "loop category"], ["stop", "stop"]];
@@ -114,7 +114,7 @@ function modeCard(s) {
            <input class="kdx-rep kdx-num" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" data-min="0" data-act="pin_seed" value="${cfg.pin_seed ?? ""}"></div>`
         : "");
   return `<div class="kdx-card kdx-cat"><div class="kdx-row"><span class="kdx-seg">${seg}</span><span class="kdx-sp"></span>
-    <button class="kdx-pill ${cfg.llm_enabled ? "on" : ""}" data-act="llm" title="Send the category system_prompt to KDX-LLM">LLM</button>
+    <button class="kdx-pill ${cfg.llm_enabled ? "on" : ""}" data-act="llm" title="LLM on/off for KDX-LLM Chat. Templates send the system prompt of their category, your own prompt the one picked on the node">LLM</button>
     <button class="kdx-pill ${cfg.show_nsfw ? "on" : ""}" data-act="nsfw" title="Show NSFW templates (names starting with nsfw, akt, sheer) in Add template, Import and the Gallery">NSFW</button></div>${extra}
     ${bulkRepeat(cfg.categories.flatMap((c) => c.templates), "all", "Images per template, all:")}</div>`;
 }
@@ -250,9 +250,9 @@ export function mountPanel(el) {
     const ti = Number(b.dataset.ti);
     const cfg = getSnap()?.config;
     if (!cfg) return;
-    if (act === "gallery") { import("./gallery.mjs?v=0.7.2").then((m) => m.openGallery()); return; }
-    if (act === "builder") { import("./builder.mjs?v=0.7.2").then((m) => m.openBuilder()); return; }
-    if (act === "packs") { import("./packs.mjs?v=0.7.2").then((m) => m.openPacks()); return; }
+    if (act === "gallery") { import("./gallery.mjs?v=0.7.3").then((m) => m.openGallery()); return; }
+    if (act === "builder") { import("./builder.mjs?v=0.7.3").then((m) => m.openBuilder()); return; }
+    if (act === "packs") { import("./packs.mjs?v=0.7.3").then((m) => m.openPacks()); return; }
     if (act === "skip") action("/kdx_console/skip");
     else if (act === "reset") action("/kdx_console/reset");
     else if (act === "import") {

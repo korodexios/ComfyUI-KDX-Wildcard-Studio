@@ -104,8 +104,9 @@ def test_pin_roundtrip_through_image_metadata(store):
 def test_input_contract_is_stable():
     it = nodes.KDX_Console.INPUT_TYPES()
     assert list(it["required"]) == ["pin"]
-    # widgets_values are positional: [pin, scope, user_text, use_user_text]; new inputs only at the end
-    assert list(it["optional"]) == ["overrides", "scope", "user_prompt", "user_text", "use_user_text"]
+    # widgets_values are positional: [pin, scope, user_text, use_user_text, user_system_prompt]; new at the end
+    assert list(it["optional"]) == ["overrides", "scope", "user_prompt", "user_text", "use_user_text",
+                                    "user_system_prompt"]
     assert it["optional"]["user_prompt"][1].get("forceInput") is True
     assert "forceInput" not in it["optional"]["scope"][1]
     assert it["optional"]["overrides"][1].get("forceInput") is True
@@ -328,3 +329,57 @@ def test_finished_without_blocker_support_raises_readable_error(store, monkeypat
     monkeypatch.setattr(nodes, "_blocker", lambda: None)
     with pytest.raises(ConsoleError, match="is finished"):
         run_node()
+
+
+def _llm_on(store):
+    raw = store.load_config()
+    raw["llm_enabled"] = True
+    store.save_config(raw)
+
+
+def test_user_system_prompt_combo_lists_profiles(store):
+    options, meta = nodes.KDX_Console.INPUT_TYPES()["optional"]["user_system_prompt"]
+    assert options == [nodes.NO_PROFILE, "sp_a"]
+    assert meta["default"] == nodes.NO_PROFILE
+
+
+def test_user_prompt_with_llm_on_sends_chosen_system_prompt(store):
+    _llm_on(store)
+    out = run_node(pin="", user_text="typed", use_user_text=True, user_system_prompt="sp_a")
+    res = out["result"]
+    assert (res[0], res[1], res[6]) == ("typed", "SYS A", True)
+    used = json.loads(res[7])
+    assert (used["system_prompt"], used["llm_enabled"]) == ("sp_a", True)
+    assert " · LLM" in out["ui"]["kdx_console"][0]["summary"]
+    assert store.load_state()["channels"].get("main", {}).get("runs", 0) == 0  # counter waits
+    res = run_node(pin="", user_prompt="wired", user_system_prompt=nodes.NO_PROFILE)["result"]
+    assert (res[1], res[6]) == ("", True)
+
+
+def test_user_prompt_llm_follows_panel_and_overrides(store):
+    off = run_node(pin="", user_prompt="p", user_system_prompt="sp_a")["result"]
+    assert (off[1], off[6]) == ("", False)
+    on = run_node(pin="", user_prompt="p", user_system_prompt="sp_a", overrides="llm=on")["result"]
+    assert (on[1], on[6]) == ("SYS A", True)
+    _llm_on(store)
+    off = run_node(pin="", user_prompt="p", user_system_prompt="sp_a", overrides="llm=off")["result"]
+    assert (off[1], off[6]) == ("", False)
+
+
+def test_user_prompt_missing_profile_only_matters_with_llm_on(store):
+    assert nodes.KDX_Console.VALIDATE_INPUTS(user_system_prompt="gone") is True
+    assert run_node(pin="", user_prompt="p", user_system_prompt="gone")["result"][6] is False
+    _llm_on(store)
+    with pytest.raises(ConsoleError, match="gone"):
+        run_node(pin="", user_prompt="p", user_system_prompt="gone")
+
+
+def test_is_changed_with_user_prompt_follows_llm_and_profile(store):
+    def key(**kw):
+        return nodes.KDX_Console.IS_CHANGED(pin="", user_prompt="plain", **kw)
+
+    off = key(user_system_prompt="sp_a")
+    assert off == key(user_system_prompt=nodes.NO_PROFILE)  # nothing is sent while LLM is off
+    _llm_on(store)
+    assert off != key(user_system_prompt=nodes.NO_PROFILE)
+    assert key(user_system_prompt=nodes.NO_PROFILE) != key(user_system_prompt="sp_a")
