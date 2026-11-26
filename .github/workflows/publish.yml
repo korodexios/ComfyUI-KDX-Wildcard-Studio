@@ -1,0 +1,25 @@
+name: Publish to Comfy Registry
+
+# Runs when a GitHub release is published (or by hand). Needs the repository secret
+# REGISTRY_ACCESS_TOKEN: an API key of the publisher in pyproject.toml ([tool.comfy] PublisherId),
+# created on https://registry.comfy.org.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  publish-node:
+    name: Publish Custom Node to registry
+    runs-on: ubuntu-latest
+    if: ${{ github.repository_owner == 'korodexios' }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: Publish Custom Node
+        uses: Comfy-Org/publish-node-action@v1
+        with:
+          personal_access_token: ${{ secrets.REGISTRY_ACCESS_TOKEN }}

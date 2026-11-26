@@ -1,0 +1,7 @@
+# shot size for portrait and selfie: never a macro detail
+# the last value after the comma is the ratio for the empty latent
+3::a head-and-shoulders portrait, 4:5
+1::a portrait framed from the waist up, 3:4
+2::a portrait from the shoulders up with space above the head, 2:3
+1::a square portrait of the head and shoulders, 1:1
+1::a close portrait with the top of the head just cropped, 4:5

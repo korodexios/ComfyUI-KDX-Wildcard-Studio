@@ -1,0 +1,11 @@
+# weather WITH its light, used in place of a light pool in outdoor templates; no season words, no snow, no heat
+3::light rain under a flat grey sky, wet surfaces shining and drops caught in the air
+2::a fine drizzle, soft grey light, everything slightly glossy
+2::thick fog, soft shadowless light, the background fading to white a few metres away
+2::a strong wind under broken cloud, the hair pulled to one side, the light flickering
+2::the moment after rain, puddles reflecting a brightening sky, the air clear and wet
+1::a storm building, a dark slate sky with one break of hard light on the subject
+1::low cloud dragging across, damp cool light and a soft haze in the distance
+1::sea mist rolling in, pale diffused light and salt haze
+1::heavy rain, streaks of water in the air, the light dim and blue-grey
+1::gusts of wind under a bright overcast sky, the light even and white

@@ -1,0 +1,8 @@
+4::soft daylight from one side, gentle falloff into shadow on the far side
+3::low golden-hour sun at a shallow angle, warm light, long soft shadows
+2::high hard sun, short sharp shadows, bright highlights, high contrast
+2::backlight from behind, the front in open shade with a bright edge on the hair
+1::rippling reflected light moving across the subject and the surface behind it
+3::overcast daylight, flat and directionless, everything evenly lit
+2::open shade, soft and even, the subject in reflected light
+2::dappled light, irregular shadow patches moving across the subject

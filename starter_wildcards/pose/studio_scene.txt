@@ -1,0 +1,2 @@
+# SCENE BUNDLE for fashion: pose + studio set + shot + viewpoint picked together; template reads "She is {…}." / "He is {…}."
+3::__pose/studio_seat__. The scene is __core/place_studio_set__. This is __core/shot_furniture__, shot __core/camera_angle_seated__

@@ -1,0 +1,6 @@
+# SCENE BUNDLE like pose/furniture_scene but without head-down poses: for everyday and person templates (people in ordinary clothes, a uniform or a wedding dress do not hang upside down off a bench)
+2::__pose/seat_sofa__. The scene is __core/place_room_living__. This is __core/shot_furniture__, shot __core/camera_angle_seated__
+2::__pose/seat_armchair__. The scene is __core/place_room_living__. This is __core/shot_furniture__, shot __core/camera_angle_seated__
+1::__pose/seat_floor__. The scene is __core/place_room_living__. This is __core/shot_furniture__, shot __core/camera_angle_seated__
+1::__pose/seat_chair__. The scene is __core/place_room_kitchen__. This is __core/shot_furniture__, shot __core/camera_angle_seated__
+1::__pose/seat_table__. The scene is __core/place_room_kitchen__. This is __core/shot_furniture__, shot __core/camera_angle_seated__

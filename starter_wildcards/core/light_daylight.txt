@@ -1,0 +1,11 @@
+4::soft daylight from one side, gentle falloff into shadow on the far side
+4::diffused daylight from a large window, low contrast, no direct sun
+3::overcast daylight, flat and directionless, no defined shadow anywhere
+3::low golden-hour sun at a shallow angle, warm light, long soft shadows
+2::high hard sun, short sharp shadows, bright highlights, high contrast
+2::open shade, soft and even, with no direct sun
+2::hard light through a blind, hard bands of shadow across the subject
+2::dappled light, irregular shadow patches moving across the skin
+2::backlight from behind, the front in open shade with a bright edge on the hair
+1::rippling reflected light moving across the subject and the surface behind it
+1::bright window light from one side, the background falling into soft shadow behind

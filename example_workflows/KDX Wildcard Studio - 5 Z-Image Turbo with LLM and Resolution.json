@@ -1,0 +1,2518 @@
+{
+ "revision": 0,
+ "last_node_id": 19,
+ "last_link_id": 23,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "KDX_Console",
+   "pos": [
+    0,
+    60
+   ],
+   "size": [
+    420,
+    330
+   ],
+   "flags": {},
+   "order": 6,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "overrides",
+     "name": "overrides",
+     "shape": 7,
+     "type": "STRING",
+     "link": null
+    },
+    {
+     "localized_name": "user_prompt",
+     "name": "user_prompt",
+     "shape": 7,
+     "type": "STRING",
+     "link": 1
+    },
+    {
+     "localized_name": "pin",
+     "name": "pin",
+     "type": "STRING",
+     "widget": {
+      "name": "pin"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "scope",
+     "name": "scope",
+     "shape": 7,
+     "type": "STRING",
+     "widget": {
+      "name": "scope"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "user_text",
+     "name": "user_text",
+     "shape": 7,
+     "type": "STRING",
+     "widget": {
+      "name": "user_text"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "use_user_text",
+     "name": "use_user_text",
+     "shape": 7,
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "use_user_text"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "prompt",
+     "name": "prompt",
+     "type": "STRING",
+     "links": [
+      2
+     ]
+    },
+    {
+     "localized_name": "system_prompt",
+     "name": "system_prompt",
+     "type": "STRING",
+     "links": [
+      3
+     ]
+    },
+    {
+     "localized_name": "category",
+     "name": "category",
+     "type": "STRING",
+     "links": null
+    },
+    {
+     "localized_name": "template",
+     "name": "template",
+     "type": "STRING",
+     "links": null
+    },
+    {
+     "localized_name": "index",
+     "name": "index",
+     "type": "INT",
+     "links": null
+    },
+    {
+     "localized_name": "repeat_left",
+     "name": "repeat_left",
+     "type": "INT",
+     "links": null
+    },
+    {
+     "localized_name": "llm_enabled",
+     "name": "llm_enabled",
+     "type": "BOOLEAN",
+     "links": [
+      4
+     ]
+    },
+    {
+     "localized_name": "state_json",
+     "name": "state_json",
+     "type": "STRING",
+     "links": [
+      5
+     ]
+    }
+   ],
+   "title": "KDX Wildcard Studio - picks the next template",
+   "properties": {
+    "cnr_id": "comfyui_fearnworksnodes",
+    "ver": "0.1.2",
+    "ue_properties": {
+     "version": "8.0.1",
+     "widget_ue_connectable": {},
+     "input_ue_unconnectable": {},
+     "title_regex": null,
+     "input_regex": null,
+     "group_regex": null,
+     "title_regex_invert": false,
+     "input_regex_invert": false,
+     "group_regex_invert": false,
+     "apply_to_unrepeated": 0,
+     "send_to_any": 0,
+     "string_to_combo": 0,
+     "repeated_type_rule": 0,
+     "group_restricted": 0,
+     "color_restricted": 0
+    },
+    "Node name for S&R": "KDX_Console"
+   },
+   "widgets_values": [
+    "",
+    "",
+    "",
+    false
+   ],
+   "widgets_values_named": {
+    "pin": "",
+    "scope": "",
+    "user_text": "",
+    "use_user_text": false
+   }
+  },
+  {
+   "id": 2,
+   "type": "PrimitiveStringMultiline",
+   "pos": [
+    0,
+    460
+   ],
+   "size": [
+    420,
+    140
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 2,
+   "inputs": [
+    {
+     "localized_name": "value",
+     "name": "value",
+     "type": "STRING",
+     "widget": {
+      "name": "value"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "STRING",
+     "name": "STRING",
+     "type": "STRING",
+     "links": [
+      1
+     ]
+    }
+   ],
+   "title": "Your own prompt (unmute to use it instead of the templates)",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.46.0",
+    "ue_properties": {
+     "version": "8.0.1",
+     "widget_ue_connectable": {},
+     "input_ue_unconnectable": {},
+     "title_regex": null,
+     "input_regex": null,
+     "group_regex": null,
+     "title_regex_invert": false,
+     "input_regex_invert": false,
+     "group_regex_invert": false,
+     "apply_to_unrepeated": 0,
+     "send_to_any": 0,
+     "string_to_combo": 0,
+     "repeated_type_rule": 0,
+     "group_restricted": 0,
+     "color_restricted": 0
+    },
+    "Node name for S&R": "PrimitiveStringMultiline"
+   },
+   "widgets_values": [
+    "a red vintage roadster parked on a wet cobblestone street at dusk, neon reflections, 16:9"
+   ],
+   "widgets_values_named": {
+    "value": "a red vintage roadster parked on a wet cobblestone street at dusk, neon reflections, 16:9"
+   }
+  },
+  {
+   "id": 3,
+   "type": "KDX_Console_Filename",
+   "pos": [
+    0,
+    670
+   ],
+   "size": [
+    420,
+    58
+   ],
+   "flags": {},
+   "order": 9,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "state_json",
+     "name": "state_json",
+     "type": "STRING",
+     "link": 5
+    },
+    {
+     "localized_name": "pattern",
+     "name": "pattern",
+     "type": "STRING",
+     "widget": {
+      "name": "pattern"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "filename_prefix",
+     "name": "filename_prefix",
+     "type": "STRING",
+     "links": [
+      23
+     ]
+    }
+   ],
+   "title": "File name from the template",
+   "properties": {
+    "cnr_id": "comfyui_fearnworksnodes",
+    "ver": "0.1.2",
+    "ue_properties": {
+     "version": "8.0.1",
+     "widget_ue_connectable": {},
+     "input_ue_unconnectable": {},
+     "title_regex": null,
+     "input_regex": null,
+     "group_regex": null,
+     "title_regex_invert": false,
+     "input_regex_invert": false,
+     "group_regex_invert": false,
+     "apply_to_unrepeated": 0,
+     "send_to_any": 0,
+     "string_to_combo": 0,
+     "repeated_type_rule": 0,
+     "group_restricted": 0,
+     "color_restricted": 0
+    },
+    "Node name for S&R": "KDX_Console_Filename"
+   },
+   "widgets_values": [
+    "%template%_%date:yyyyMMdd_hhmmss%"
+   ],
+   "widgets_values_named": {
+    "pattern": "%template%_%date:yyyyMMdd_hhmmss%"
+   }
+  },
+  {
+   "id": 4,
+   "type": "KDX_LLM_Client",
+   "pos": [
+    500,
+    60
+   ],
+   "size": [
+    440,
+    298
+   ],
+   "flags": {},
+   "order": 1,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "base_url",
+     "name": "base_url",
+     "type": "STRING",
+     "widget": {
+      "name": "base_url"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "model",
+     "name": "model",
+     "shape": 7,
+     "type": "STRING",
+     "widget": {
+      "name": "model"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "context_length",
+     "name": "context_length",
+     "shape": 7,
+     "type": "COMBO",
+     "widget": {
+      "name": "context_length"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "api_key",
+     "name": "api_key",
+     "shape": 7,
+     "type": "STRING",
+     "widget": {
+      "name": "api_key"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "api_key_env",
+     "name": "api_key_env",
+     "shape": 7,
+     "type": "STRING",
+     "widget": {
+      "name": "api_key_env"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "timeout",
+     "name": "timeout",
+     "shape": 7,
+     "type": "INT",
+     "widget": {
+      "name": "timeout"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "max_retries",
+     "name": "max_retries",
+     "shape": 7,
+     "type": "INT",
+     "widget": {
+      "name": "max_retries"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "provider",
+     "name": "provider",
+     "shape": 7,
+     "type": "COMBO",
+     "widget": {
+      "name": "provider"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "client",
+     "name": "client",
+     "type": "KDX_LLM_CLIENT",
+     "links": [
+      6
+     ]
+    }
+   ],
+   "title": "LLM server (set yours)",
+   "properties": {
+    "aux_id": "korodexios/ComfyUI-KDX-LLM",
+    "ver": "45b6600078f0156792ea2aa89d8eb95da5d1e7e9",
+    "ue_properties": {
+     "version": "8.0.1",
+     "widget_ue_connectable": {},
+     "input_ue_unconnectable": {},
+     "title_regex": null,
+     "input_regex": null,
+     "group_regex": null,
+     "title_regex_invert": false,
+     "input_regex_invert": false,
+     "group_regex_invert": false,
+     "apply_to_unrepeated": 0,
+     "send_to_any": 0,
+     "string_to_combo": 0,
+     "repeated_type_rule": 0,
+     "group_restricted": 0,
+     "color_restricted": 0
+    },
+    "Node name for S&R": "KDX_LLM_Client"
+   },
+   "widgets_values": [
+    "http://127.0.0.1:8080",
+    "",
+    "4096",
+    "",
+    "KDX_LLM_API_KEY",
+    300,
+    2,
+    "auto",
+    "",
+    "",
+    ""
+   ],
+   "widgets_values_named": {
+    "base_url": "http://127.0.0.1:8080",
+    "model": "",
+    "context_length": "4096",
+    "api_key": "",
+    "api_key_env": "KDX_LLM_API_KEY",
+    "timeout": 300,
+    "max_retries": 2,
+    "provider": "auto",
+    "📡 select model": "",
+    "▶ load": "",
+    "⏹ unload": ""
+   },
+   "color": "#223",
+   "bgcolor": "#335"
+  },
+  {
+   "id": 5,
+   "type": "KDX_LLM_Chat",
+   "pos": [
+    500,
+    428
+   ],
+   "size": [
+    440,
+    712
+   ],
+   "flags": {},
+   "order": 8,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "client",
+     "name": "client",
+     "shape": 7,
+     "type": "KDX_LLM_CLIENT",
+     "link": 6
+    },
+    {
+     "localized_name": "thinking_sampling",
+     "name": "thinking_sampling",
+     "shape": 7,
+     "type": "KDX_LLM_OPTIONS",
+     "link": null
+    },
+    {
+     "localized_name": "non_thinking_sampling",
+     "name": "non_thinking_sampling",
+     "shape": 7,
+     "type": "KDX_LLM_OPTIONS",
+     "link": null
+    },
+    {
+     "localized_name": "image",
+     "name": "image",
+     "shape": 7,
+     "type": "IMAGE",
+     "link": null
+    },
+    {
+     "localized_name": "media_settings",
+     "name": "media_settings",
+     "shape": 7,
+     "type": "KDX_LLM_MEDIA",
+     "link": null
+    },
+    {
+     "localized_name": "session",
+     "name": "session",
+     "shape": 7,
+     "type": "KDX_LLM_SESSION",
+     "link": null
+    },
+    {
+     "localized_name": "tools",
+     "name": "tools",
+     "shape": 7,
+     "type": "KDX_LLM_TOOLS",
+     "link": null
+    },
+    {
+     "localized_name": "llm_enabled",
+     "name": "llm_enabled",
+     "shape": 7,
+     "type": "BOOLEAN",
+     "link": 4
+    },
+    {
+     "localized_name": "task_prompt",
+     "name": "task_prompt",
+     "shape": 7,
+     "type": "STRING",
+     "link": null
+    },
+    {
+     "localized_name": "prompt",
+     "name": "prompt",
+     "type": "STRING",
+     "widget": {
+      "name": "prompt"
+     },
+     "link": 2
+    },
+    {
+     "localized_name": "model_preset",
+     "name": "model_preset",
+     "type": "COMBO",
+     "widget": {
+      "name": "model_preset"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "thinking",
+     "name": "thinking",
+     "shape": 7,
+     "type": "COMBO",
+     "widget": {
+      "name": "thinking"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "reasoning_mode",
+     "name": "reasoning_mode",
+     "shape": 7,
+     "type": "COMBO",
+     "widget": {
+      "name": "reasoning_mode"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "reasoning_custom",
+     "name": "reasoning_custom",
+     "shape": 7,
+     "type": "STRING",
+     "widget": {
+      "name": "reasoning_custom"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "system_prompt",
+     "name": "system_prompt",
+     "shape": 7,
+     "type": "STRING",
+     "widget": {
+      "name": "system_prompt"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "system_prompt_profile",
+     "name": "system_prompt_profile",
+     "shape": 7,
+     "type": "STRING",
+     "widget": {
+      "name": "system_prompt_profile"
+     },
+     "link": 3
+    },
+    {
+     "localized_name": "stream",
+     "name": "stream",
+     "shape": 7,
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "stream"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "media_mode",
+     "name": "media_mode",
+     "shape": 7,
+     "type": "COMBO",
+     "widget": {
+      "name": "media_mode"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "reset_session",
+     "name": "reset_session",
+     "shape": 7,
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "reset_session"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "session_id",
+     "name": "session_id",
+     "shape": 7,
+     "type": "STRING",
+     "widget": {
+      "name": "session_id"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "max_history",
+     "name": "max_history",
+     "shape": 7,
+     "type": "INT",
+     "widget": {
+      "name": "max_history"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "max_prompt_tokens",
+     "name": "max_prompt_tokens",
+     "shape": 7,
+     "type": "INT",
+     "widget": {
+      "name": "max_prompt_tokens"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "token_counter",
+     "name": "token_counter",
+     "shape": 7,
+     "type": "COMBO",
+     "widget": {
+      "name": "token_counter"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "sampling_json_thinking",
+     "name": "sampling_json_thinking",
+     "shape": 7,
+     "type": "STRING",
+     "widget": {
+      "name": "sampling_json_thinking"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "sampling_json_non_thinking",
+     "name": "sampling_json_non_thinking",
+     "shape": 7,
+     "type": "STRING",
+     "widget": {
+      "name": "sampling_json_non_thinking"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "extra_request_json",
+     "name": "extra_request_json",
+     "shape": 7,
+     "type": "STRING",
+     "widget": {
+      "name": "extra_request_json"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "json_mode",
+     "name": "json_mode",
+     "shape": 7,
+     "type": "COMBO",
+     "widget": {
+      "name": "json_mode"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "load_before",
+     "name": "load_before",
+     "shape": 7,
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "load_before"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "unload_after",
+     "name": "unload_after",
+     "shape": 7,
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "unload_after"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "load_timeout",
+     "name": "load_timeout",
+     "shape": 7,
+     "type": "INT",
+     "widget": {
+      "name": "load_timeout"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "history_media",
+     "name": "history_media",
+     "shape": 7,
+     "type": "COMBO",
+     "widget": {
+      "name": "history_media"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "response",
+     "name": "response",
+     "type": "STRING",
+     "links": [
+      7
+     ]
+    },
+    {
+     "localized_name": "thinking",
+     "name": "thinking",
+     "type": "STRING",
+     "links": null
+    },
+    {
+     "localized_name": "json",
+     "name": "json",
+     "type": "STRING",
+     "links": null
+    },
+    {
+     "localized_name": "raw",
+     "name": "raw",
+     "type": "STRING",
+     "links": null
+    },
+    {
+     "localized_name": "model_used",
+     "name": "model_used",
+     "type": "STRING",
+     "links": null
+    },
+    {
+     "localized_name": "profile_key",
+     "name": "profile_key",
+     "type": "STRING",
+     "links": null
+    },
+    {
+     "localized_name": "profile_json",
+     "name": "profile_json",
+     "type": "STRING",
+     "links": null
+    },
+    {
+     "localized_name": "request_info",
+     "name": "request_info",
+     "type": "STRING",
+     "links": null
+    },
+    {
+     "localized_name": "response_obj",
+     "name": "response_obj",
+     "type": "ANY",
+     "links": null
+    },
+    {
+     "localized_name": "session",
+     "name": "session",
+     "type": "KDX_LLM_SESSION",
+     "links": null
+    },
+    {
+     "localized_name": "tool_calls",
+     "name": "tool_calls",
+     "type": "STRING",
+     "links": null
+    }
+   ],
+   "title": "LLM - improves the prompt (LLM pill off = prompt unchanged)",
+   "properties": {
+    "aux_id": "korodexios/ComfyUI-KDX-LLM",
+    "ver": "45b6600078f0156792ea2aa89d8eb95da5d1e7e9",
+    "ue_properties": {
+     "version": "8.0.1",
+     "widget_ue_connectable": {},
+     "input_ue_unconnectable": {},
+     "title_regex": null,
+     "input_regex": null,
+     "group_regex": null,
+     "title_regex_invert": false,
+     "input_regex_invert": false,
+     "group_regex_invert": false,
+     "apply_to_unrepeated": 0,
+     "send_to_any": 0,
+     "string_to_combo": 0,
+     "repeated_type_rule": 0,
+     "group_restricted": 0,
+     "color_restricted": 0
+    },
+    "Node name for S&R": "KDX_LLM_Chat"
+   },
+   "widgets_values": [
+    "",
+    "generic",
+    "auto",
+    "",
+    "",
+    "You rewrite short image prompts into one rich, concrete image prompt. Keep the subject, setting and style of the input, add specific detail about light, composition, materials and colour, and never add text or watermarks. Answer ONLY with JSON: {\"rewritten_prompt\": \"...\", \"aspect_ratio\": \"W:H\"} where aspect_ratio is one of 1:1, 4:5, 2:3, 3:4, 16:9, 9:16, 3:2, chosen to suit the scene.",
+    "",
+    true,
+    "auto",
+    true,
+    "",
+    40,
+    0,
+    "heuristic",
+    "",
+    "",
+    "",
+    "auto",
+    false,
+    false,
+    300,
+    "latest",
+    false,
+    ""
+   ],
+   "widgets_values_named": {
+    "prompt": "",
+    "model_preset": "generic",
+    "thinking": "auto",
+    "reasoning_mode": "",
+    "reasoning_custom": "",
+    "system_prompt": "You rewrite short image prompts into one rich, concrete image prompt. Keep the subject, setting and style of the input, add specific detail about light, composition, materials and colour, and never add text or watermarks. Answer ONLY with JSON: {\"rewritten_prompt\": \"...\", \"aspect_ratio\": \"W:H\"} where aspect_ratio is one of 1:1, 4:5, 2:3, 3:4, 16:9, 9:16, 3:2, chosen to suit the scene.",
+    "system_prompt_profile": "",
+    "stream": true,
+    "media_mode": "auto",
+    "reset_session": true,
+    "session_id": "",
+    "max_history": 40,
+    "max_prompt_tokens": 0,
+    "token_counter": "heuristic",
+    "sampling_json_thinking": "",
+    "sampling_json_non_thinking": "",
+    "extra_request_json": "",
+    "json_mode": "auto",
+    "load_before": false,
+    "unload_after": false,
+    "load_timeout": 300,
+    "history_media": "latest",
+    "🔧 advanced": false,
+    "🎲 new session": ""
+   },
+   "color": "#233",
+   "bgcolor": "#355"
+  },
+  {
+   "id": 6,
+   "type": "KDX_Prompt_Extractor",
+   "pos": [
+    1020,
+    60
+   ],
+   "size": [
+    420,
+    600
+   ],
+   "flags": {},
+   "order": 10,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "input_text",
+     "name": "input_text",
+     "type": "STRING",
+     "widget": {
+      "name": "input_text"
+     },
+     "link": 7
+    },
+    {
+     "localized_name": "extract_ar",
+     "name": "extract_ar",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "extract_ar"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "extract_resolution",
+     "name": "extract_resolution",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "extract_resolution"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "pick",
+     "name": "pick",
+     "type": "COMBO",
+     "widget": {
+      "name": "pick"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "remove_found",
+     "name": "remove_found",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "remove_found"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "custom_key",
+     "name": "custom_key",
+     "type": "STRING",
+     "widget": {
+      "name": "custom_key"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "fallback_ar",
+     "name": "fallback_ar",
+     "type": "STRING",
+     "widget": {
+      "name": "fallback_ar"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "fallback_width",
+     "name": "fallback_width",
+     "type": "INT",
+     "widget": {
+      "name": "fallback_width"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "fallback_height",
+     "name": "fallback_height",
+     "type": "INT",
+     "widget": {
+      "name": "fallback_height"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "ar_key",
+     "name": "ar_key",
+     "type": "STRING",
+     "widget": {
+      "name": "ar_key"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "resolution_key",
+     "name": "resolution_key",
+     "type": "STRING",
+     "widget": {
+      "name": "resolution_key"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "prompt_key",
+     "name": "prompt_key",
+     "type": "STRING",
+     "widget": {
+      "name": "prompt_key"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "prompt",
+     "name": "prompt",
+     "type": "STRING",
+     "links": [
+      9,
+      10
+     ]
+    },
+    {
+     "localized_name": "ar",
+     "name": "ar",
+     "type": "STRING",
+     "links": [
+      8
+     ]
+    },
+    {
+     "localized_name": "width",
+     "name": "width",
+     "type": "INT",
+     "links": null
+    },
+    {
+     "localized_name": "height",
+     "name": "height",
+     "type": "INT",
+     "links": null
+    },
+    {
+     "localized_name": "custom_value",
+     "name": "custom_value",
+     "type": "STRING",
+     "links": null
+    },
+    {
+     "localized_name": "found_ar",
+     "name": "found_ar",
+     "type": "BOOLEAN",
+     "links": null
+    },
+    {
+     "localized_name": "found_resolution",
+     "name": "found_resolution",
+     "type": "BOOLEAN",
+     "links": null
+    },
+    {
+     "localized_name": "found_custom",
+     "name": "found_custom",
+     "type": "BOOLEAN",
+     "links": null
+    },
+    {
+     "localized_name": "found_prompt",
+     "name": "found_prompt",
+     "type": "BOOLEAN",
+     "links": null
+    }
+   ],
+   "title": "Prompt + aspect ratio from the text",
+   "properties": {
+    "aux_id": "korodexios/ComfyUI-KDX-Resolution",
+    "ver": "f7e191a8244dc74e08dfb45456dbeae03ce18b15",
+    "ue_properties": {
+     "version": "8.0.1",
+     "widget_ue_connectable": {},
+     "input_ue_unconnectable": {},
+     "title_regex": null,
+     "input_regex": null,
+     "group_regex": null,
+     "title_regex_invert": false,
+     "input_regex_invert": false,
+     "group_regex_invert": false,
+     "apply_to_unrepeated": 0,
+     "send_to_any": 0,
+     "string_to_combo": 0,
+     "repeated_type_rule": 0,
+     "group_restricted": 0,
+     "color_restricted": 0
+    },
+    "Node name for S&R": "KDX_Prompt_Extractor"
+   },
+   "widgets_values": [
+    "",
+    true,
+    false,
+    "first",
+    true,
+    "",
+    "1:1",
+    1024,
+    1024,
+    "aspect_ratio",
+    "",
+    "rewritten_prompt"
+   ],
+   "widgets_values_named": {
+    "input_text": "",
+    "extract_ar": true,
+    "extract_resolution": false,
+    "pick": "first",
+    "remove_found": true,
+    "custom_key": "",
+    "fallback_ar": "1:1",
+    "fallback_width": 1024,
+    "fallback_height": 1024,
+    "ar_key": "aspect_ratio",
+    "resolution_key": "",
+    "prompt_key": "rewritten_prompt"
+   },
+   "color": "#323",
+   "bgcolor": "#535"
+  },
+  {
+   "id": 7,
+   "type": "KDX_AutoResolution_Core",
+   "pos": [
+    1020,
+    730
+   ],
+   "size": [
+    420,
+    498.00000000000006
+   ],
+   "flags": {},
+   "order": 13,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "ar_input",
+     "name": "ar_input",
+     "type": "STRING",
+     "widget": {
+      "name": "ar_input"
+     },
+     "link": 8
+    },
+    {
+     "localized_name": "model_list",
+     "name": "model_list",
+     "type": "COMBO",
+     "widget": {
+      "name": "model_list"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "model_profile",
+     "name": "model_profile",
+     "type": "COMBO",
+     "widget": {
+      "name": "model_profile"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "target_megapixels",
+     "name": "target_megapixels",
+     "type": "FLOAT",
+     "widget": {
+      "name": "target_megapixels"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "custom_table",
+     "name": "custom_table",
+     "type": "STRING",
+     "widget": {
+      "name": "custom_table"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "mp_grid",
+     "name": "mp_grid",
+     "type": "STRING",
+     "widget": {
+      "name": "mp_grid"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "fallback_ar",
+     "name": "fallback_ar",
+     "type": "STRING",
+     "widget": {
+      "name": "fallback_ar"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "alignment",
+     "name": "alignment",
+     "type": "COMBO",
+     "widget": {
+      "name": "alignment"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "direct_override",
+     "name": "direct_override",
+     "shape": 7,
+     "type": "STRING",
+     "widget": {
+      "name": "direct_override"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "width",
+     "name": "width",
+     "type": "INT",
+     "links": [
+      17
+     ]
+    },
+    {
+     "localized_name": "height",
+     "name": "height",
+     "type": "INT",
+     "links": [
+      18
+     ]
+    },
+    {
+     "localized_name": "matched_ar",
+     "name": "matched_ar",
+     "type": "STRING",
+     "links": null
+    },
+    {
+     "localized_name": "actual_mp",
+     "name": "actual_mp",
+     "type": "FLOAT",
+     "links": null
+    },
+    {
+     "localized_name": "is_fallback",
+     "name": "is_fallback",
+     "type": "BOOLEAN",
+     "links": null
+    },
+    {
+     "localized_name": "info",
+     "name": "info",
+     "type": "STRING",
+     "links": null
+    }
+   ],
+   "title": "Aspect ratio to native Z-Image size",
+   "properties": {
+    "aux_id": "korodexios/ComfyUI-KDX-Resolution",
+    "ver": "f7e191a8244dc74e08dfb45456dbeae03ce18b15",
+    "ue_properties": {
+     "version": "8.0.1",
+     "widget_ue_connectable": {},
+     "input_ue_unconnectable": {},
+     "title_regex": null,
+     "input_regex": null,
+     "group_regex": null,
+     "title_regex_invert": false,
+     "input_regex_invert": false,
+     "group_regex_invert": false,
+     "apply_to_unrepeated": 0,
+     "send_to_any": 0,
+     "string_to_combo": 0,
+     "repeated_type_rule": 0,
+     "group_restricted": 0,
+     "color_restricted": 0
+    },
+    "Node name for S&R": "KDX_AutoResolution_Core"
+   },
+   "widgets_values": [
+    "1:1",
+    "image models",
+    "Z-Image (turbo/base)",
+    0,
+    "# Custom AR table:  AR = W, H\n# 21:9 = 3072, 1312\n# 1:2 = 1024, 2048",
+    "# Manual MP grid:  X MP = WxH\n# Used when target_megapixels > 0\n# 1.0 MP = 1024x1024\n# 4.0 MP = 2048x2048",
+    "1:1",
+    "default",
+    ""
+   ],
+   "widgets_values_named": {
+    "ar_input": "1:1",
+    "model_list": "image models",
+    "model_profile": "Z-Image (turbo/base)",
+    "target_megapixels": 0,
+    "custom_table": "# Custom AR table:  AR = W, H\n# 21:9 = 3072, 1312\n# 1:2 = 1024, 2048",
+    "mp_grid": "# Manual MP grid:  X MP = WxH\n# Used when target_megapixels > 0\n# 1.0 MP = 1024x1024\n# 4.0 MP = 2048x2048",
+    "fallback_ar": "1:1",
+    "alignment": "default",
+    "direct_override": ""
+   },
+   "color": "#232",
+   "bgcolor": "#353"
+  },
+  {
+   "id": 8,
+   "type": "PreviewAny",
+   "pos": [
+    1020,
+    1298
+   ],
+   "size": [
+    420,
+    180
+   ],
+   "flags": {},
+   "order": 11,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "source",
+     "name": "source",
+     "type": "*",
+     "link": 9
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "STRING",
+     "name": "STRING",
+     "type": "STRING",
+     "links": null
+    }
+   ],
+   "title": "Final prompt (goes to the sampler)",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.46.0",
+    "ue_properties": {
+     "version": "8.0.1",
+     "widget_ue_connectable": {},
+     "input_ue_unconnectable": {},
+     "title_regex": null,
+     "input_regex": null,
+     "group_regex": null,
+     "title_regex_invert": false,
+     "input_regex_invert": false,
+     "group_regex_invert": false,
+     "apply_to_unrepeated": 0,
+     "send_to_any": 0,
+     "string_to_combo": 0,
+     "repeated_type_rule": 0,
+     "group_restricted": 0,
+     "color_restricted": 0
+    },
+    "Node name for S&R": "PreviewAny"
+   },
+   "widgets_values": [],
+   "widgets_values_named": {}
+  },
+  {
+   "id": 9,
+   "type": "UNETLoader",
+   "pos": [
+    1520,
+    60
+   ],
+   "size": [
+    400,
+    82
+   ],
+   "flags": {},
+   "order": 2,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "unet_name",
+     "name": "unet_name",
+     "type": "COMBO",
+     "widget": {
+      "name": "unet_name"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "weight_dtype",
+     "name": "weight_dtype",
+     "type": "COMBO",
+     "widget": {
+      "name": "weight_dtype"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "MODEL",
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      12
+     ]
+    }
+   ],
+   "title": "Z-Image Turbo model",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.46.0",
+    "ue_properties": {
+     "version": "8.0.1",
+     "widget_ue_connectable": {},
+     "input_ue_unconnectable": {},
+     "title_regex": null,
+     "input_regex": null,
+     "group_regex": null,
+     "title_regex_invert": false,
+     "input_regex_invert": false,
+     "group_regex_invert": false,
+     "apply_to_unrepeated": 0,
+     "send_to_any": 0,
+     "string_to_combo": 0,
+     "repeated_type_rule": 0,
+     "group_restricted": 0,
+     "color_restricted": 0
+    },
+    "Node name for S&R": "UNETLoader",
+    "models": [
+     {
+      "name": "z_image_turbo_bf16.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/z_image_turbo/resolve/main/split_files/diffusion_models/z_image_turbo_bf16.safetensors",
+      "directory": "diffusion_models"
+     }
+    ]
+   },
+   "widgets_values": [
+    "z_image_turbo_bf16.safetensors",
+    "default"
+   ],
+   "widgets_values_named": {
+    "unet_name": "z_image_turbo_bf16.safetensors",
+    "weight_dtype": "default"
+   }
+  },
+  {
+   "id": 10,
+   "type": "CLIPLoader",
+   "pos": [
+    1520,
+    212
+   ],
+   "size": [
+    400,
+    106
+   ],
+   "flags": {},
+   "order": 3,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "clip_name",
+     "name": "clip_name",
+     "type": "COMBO",
+     "widget": {
+      "name": "clip_name"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "type",
+     "name": "type",
+     "type": "COMBO",
+     "widget": {
+      "name": "type"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "device",
+     "name": "device",
+     "shape": 7,
+     "type": "COMBO",
+     "widget": {
+      "name": "device"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "CLIP",
+     "name": "CLIP",
+     "type": "CLIP",
+     "links": [
+      11
+     ]
+    }
+   ],
+   "title": "Qwen3 4B text encoder",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.46.0",
+    "ue_properties": {
+     "version": "8.0.1",
+     "widget_ue_connectable": {},
+     "input_ue_unconnectable": {},
+     "title_regex": null,
+     "input_regex": null,
+     "group_regex": null,
+     "title_regex_invert": false,
+     "input_regex_invert": false,
+     "group_regex_invert": false,
+     "apply_to_unrepeated": 0,
+     "send_to_any": 0,
+     "string_to_combo": 0,
+     "repeated_type_rule": 0,
+     "group_restricted": 0,
+     "color_restricted": 0
+    },
+    "Node name for S&R": "CLIPLoader",
+    "models": [
+     {
+      "name": "qwen_3_4b.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/z_image_turbo/resolve/main/split_files/text_encoders/qwen_3_4b.safetensors",
+      "directory": "text_encoders"
+     }
+    ]
+   },
+   "widgets_values": [
+    "qwen_3_4b.safetensors",
+    "lumina2",
+    "default"
+   ],
+   "widgets_values_named": {
+    "clip_name": "qwen_3_4b.safetensors",
+    "type": "lumina2",
+    "device": "default"
+   }
+  },
+  {
+   "id": 11,
+   "type": "VAELoader",
+   "pos": [
+    1520,
+    388
+   ],
+   "size": [
+    400,
+    58
+   ],
+   "flags": {},
+   "order": 4,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "vae_name",
+     "name": "vae_name",
+     "type": "COMBO",
+     "widget": {
+      "name": "vae_name"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "VAE",
+     "name": "VAE",
+     "type": "VAE",
+     "links": [
+      21
+     ]
+    }
+   ],
+   "title": "VAE",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.46.0",
+    "ue_properties": {
+     "version": "8.0.1",
+     "widget_ue_connectable": {},
+     "input_ue_unconnectable": {},
+     "title_regex": null,
+     "input_regex": null,
+     "group_regex": null,
+     "title_regex_invert": false,
+     "input_regex_invert": false,
+     "group_regex_invert": false,
+     "apply_to_unrepeated": 0,
+     "send_to_any": 0,
+     "string_to_combo": 0,
+     "repeated_type_rule": 0,
+     "group_restricted": 0,
+     "color_restricted": 0
+    },
+    "Node name for S&R": "VAELoader",
+    "models": [
+     {
+      "name": "ae.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/z_image_turbo/resolve/main/split_files/vae/ae.safetensors",
+      "directory": "vae"
+     }
+    ]
+   },
+   "widgets_values": [
+    "ae.safetensors"
+   ],
+   "widgets_values_named": {
+    "vae_name": "ae.safetensors"
+   }
+  },
+  {
+   "id": 12,
+   "type": "ModelSamplingAuraFlow",
+   "pos": [
+    1520,
+    516
+   ],
+   "size": [
+    400,
+    82
+   ],
+   "flags": {},
+   "order": 7,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "model",
+     "name": "model",
+     "type": "MODEL",
+     "link": 12
+    },
+    {
+     "localized_name": "shift",
+     "name": "shift",
+     "type": "FLOAT",
+     "widget": {
+      "name": "shift"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "sampling",
+     "name": "sampling",
+     "shape": 7,
+     "type": "COMBO",
+     "widget": {
+      "name": "sampling"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "MODEL",
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      13
+     ]
+    }
+   ],
+   "title": "Shift",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.46.0",
+    "ue_properties": {
+     "version": "8.0.1",
+     "widget_ue_connectable": {},
+     "input_ue_unconnectable": {},
+     "title_regex": null,
+     "input_regex": null,
+     "group_regex": null,
+     "title_regex_invert": false,
+     "input_regex_invert": false,
+     "group_regex_invert": false,
+     "apply_to_unrepeated": 0,
+     "send_to_any": 0,
+     "string_to_combo": 0,
+     "repeated_type_rule": 0,
+     "group_restricted": 0,
+     "color_restricted": 0
+    },
+    "Node name for S&R": "ModelSamplingAuraFlow"
+   },
+   "widgets_values": [
+    3,
+    "flow"
+   ],
+   "widgets_values_named": {
+    "shift": 3,
+    "sampling": "flow"
+   }
+  },
+  {
+   "id": 13,
+   "type": "CLIPTextEncode",
+   "pos": [
+    1520,
+    668
+   ],
+   "size": [
+    400,
+    90
+   ],
+   "flags": {},
+   "order": 12,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "clip",
+     "name": "clip",
+     "type": "CLIP",
+     "link": 11
+    },
+    {
+     "localized_name": "text",
+     "name": "text",
+     "type": "STRING",
+     "widget": {
+      "name": "text"
+     },
+     "link": 10
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "CONDITIONING",
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      14,
+      15
+     ]
+    }
+   ],
+   "title": "Encode the prompt",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.46.0",
+    "ue_properties": {
+     "version": "8.0.1",
+     "widget_ue_connectable": {},
+     "input_ue_unconnectable": {},
+     "title_regex": null,
+     "input_regex": null,
+     "group_regex": null,
+     "title_regex_invert": false,
+     "input_regex_invert": false,
+     "group_regex_invert": false,
+     "apply_to_unrepeated": 0,
+     "send_to_any": 0,
+     "string_to_combo": 0,
+     "repeated_type_rule": 0,
+     "group_restricted": 0,
+     "color_restricted": 0
+    },
+    "Node name for S&R": "CLIPTextEncode"
+   },
+   "widgets_values": [
+    ""
+   ],
+   "widgets_values_named": {
+    "text": ""
+   }
+  },
+  {
+   "id": 14,
+   "type": "ConditioningZeroOut",
+   "pos": [
+    1520,
+    828
+   ],
+   "size": [
+    400,
+    26
+   ],
+   "flags": {},
+   "order": 14,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "conditioning",
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 15
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "CONDITIONING",
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      16
+     ]
+    }
+   ],
+   "title": "No negative prompt (Z-Image Turbo)",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.46.0",
+    "ue_properties": {
+     "version": "8.0.1",
+     "widget_ue_connectable": {},
+     "input_ue_unconnectable": {},
+     "title_regex": null,
+     "input_regex": null,
+     "group_regex": null,
+     "title_regex_invert": false,
+     "input_regex_invert": false,
+     "group_regex_invert": false,
+     "apply_to_unrepeated": 0,
+     "send_to_any": 0,
+     "string_to_combo": 0,
+     "repeated_type_rule": 0,
+     "group_restricted": 0,
+     "color_restricted": 0
+    },
+    "Node name for S&R": "ConditioningZeroOut"
+   }
+  },
+  {
+   "id": 15,
+   "type": "EmptySD3LatentImage",
+   "pos": [
+    1520,
+    924
+   ],
+   "size": [
+    400,
+    106
+   ],
+   "flags": {},
+   "order": 15,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "width",
+     "name": "width",
+     "type": "INT",
+     "widget": {
+      "name": "width"
+     },
+     "link": 17
+    },
+    {
+     "localized_name": "height",
+     "name": "height",
+     "type": "INT",
+     "widget": {
+      "name": "height"
+     },
+     "link": 18
+    },
+    {
+     "localized_name": "batch_size",
+     "name": "batch_size",
+     "type": "INT",
+     "widget": {
+      "name": "batch_size"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "LATENT",
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      19
+     ]
+    }
+   ],
+   "title": "Empty latent",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.46.0",
+    "ue_properties": {
+     "version": "8.0.1",
+     "widget_ue_connectable": {},
+     "input_ue_unconnectable": {},
+     "title_regex": null,
+     "input_regex": null,
+     "group_regex": null,
+     "title_regex_invert": false,
+     "input_regex_invert": false,
+     "group_regex_invert": false,
+     "apply_to_unrepeated": 0,
+     "send_to_any": 0,
+     "string_to_combo": 0,
+     "repeated_type_rule": 0,
+     "group_restricted": 0,
+     "color_restricted": 0
+    },
+    "Node name for S&R": "EmptySD3LatentImage"
+   },
+   "widgets_values": [
+    1024,
+    1024,
+    1
+   ],
+   "widgets_values_named": {
+    "width": 1024,
+    "height": 1024,
+    "batch_size": 1
+   }
+  },
+  {
+   "id": 16,
+   "type": "KSampler",
+   "pos": [
+    2000,
+    60
+   ],
+   "size": [
+    560,
+    262
+   ],
+   "flags": {},
+   "order": 16,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "model",
+     "name": "model",
+     "type": "MODEL",
+     "link": 13
+    },
+    {
+     "localized_name": "positive",
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 14
+    },
+    {
+     "localized_name": "negative",
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 16
+    },
+    {
+     "localized_name": "latent_image",
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 19
+    },
+    {
+     "localized_name": "seed",
+     "name": "seed",
+     "type": "INT",
+     "widget": {
+      "name": "seed"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "steps",
+     "name": "steps",
+     "type": "INT",
+     "widget": {
+      "name": "steps"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "cfg",
+     "name": "cfg",
+     "type": "FLOAT",
+     "widget": {
+      "name": "cfg"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "sampler_name",
+     "name": "sampler_name",
+     "type": "COMBO",
+     "widget": {
+      "name": "sampler_name"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "scheduler",
+     "name": "scheduler",
+     "type": "COMBO",
+     "widget": {
+      "name": "scheduler"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "denoise",
+     "name": "denoise",
+     "type": "FLOAT",
+     "widget": {
+      "name": "denoise"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "LATENT",
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      20
+     ]
+    }
+   ],
+   "title": "Sampler",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.46.0",
+    "ue_properties": {
+     "version": "8.0.1",
+     "widget_ue_connectable": {},
+     "input_ue_unconnectable": {},
+     "title_regex": null,
+     "input_regex": null,
+     "group_regex": null,
+     "title_regex_invert": false,
+     "input_regex_invert": false,
+     "group_regex_invert": false,
+     "apply_to_unrepeated": 0,
+     "send_to_any": 0,
+     "string_to_combo": 0,
+     "repeated_type_rule": 0,
+     "group_restricted": 0,
+     "color_restricted": 0
+    },
+    "Node name for S&R": "KSampler"
+   },
+   "widgets_values": [
+    0,
+    "randomize",
+    9,
+    1,
+    "res_multistep",
+    "simple",
+    1
+   ],
+   "widgets_values_named": {
+    "seed": 0,
+    "control_after_generate": "randomize",
+    "steps": 9,
+    "cfg": 1,
+    "sampler_name": "res_multistep",
+    "scheduler": "simple",
+    "denoise": 1
+   }
+  },
+  {
+   "id": 17,
+   "type": "VAEDecode",
+   "pos": [
+    2000,
+    392
+   ],
+   "size": [
+    560,
+    46
+   ],
+   "flags": {},
+   "order": 17,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "samples",
+     "name": "samples",
+     "type": "LATENT",
+     "link": 20
+    },
+    {
+     "localized_name": "vae",
+     "name": "vae",
+     "type": "VAE",
+     "link": 21
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "IMAGE",
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      22
+     ]
+    }
+   ],
+   "title": "Decode",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.46.0",
+    "ue_properties": {
+     "version": "8.0.1",
+     "widget_ue_connectable": {},
+     "input_ue_unconnectable": {},
+     "title_regex": null,
+     "input_regex": null,
+     "group_regex": null,
+     "title_regex_invert": false,
+     "input_regex_invert": false,
+     "group_regex_invert": false,
+     "apply_to_unrepeated": 0,
+     "send_to_any": 0,
+     "string_to_combo": 0,
+     "repeated_type_rule": 0,
+     "group_restricted": 0,
+     "color_restricted": 0
+    },
+    "Node name for S&R": "VAEDecode"
+   }
+  },
+  {
+   "id": 18,
+   "type": "SaveImage",
+   "pos": [
+    2000,
+    508
+   ],
+   "size": [
+    560,
+    560
+   ],
+   "flags": {},
+   "order": 18,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "images",
+     "name": "images",
+     "type": "IMAGE",
+     "link": 22
+    },
+    {
+     "localized_name": "filename_prefix",
+     "name": "filename_prefix",
+     "type": "STRING",
+     "widget": {
+      "name": "filename_prefix"
+     },
+     "link": 23
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "images",
+     "name": "images",
+     "type": "IMAGE",
+     "links": null
+    }
+   ],
+   "title": "Save image",
+   "properties": {
+    "cnr_id": "comfy-core",
+    "ver": "0.46.0",
+    "ue_properties": {
+     "version": "8.0.1",
+     "widget_ue_connectable": {},
+     "input_ue_unconnectable": {},
+     "title_regex": null,
+     "input_regex": null,
+     "group_regex": null,
+     "title_regex_invert": false,
+     "input_regex_invert": false,
+     "group_regex_invert": false,
+     "apply_to_unrepeated": 0,
+     "send_to_any": 0,
+     "string_to_combo": 0,
+     "repeated_type_rule": 0,
+     "group_restricted": 0,
+     "color_restricted": 0
+    },
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "ComfyUI"
+   ],
+   "widgets_values_named": {
+    "filename_prefix": "ComfyUI"
+   }
+  },
+  {
+   "id": 19,
+   "type": "MarkdownNote",
+   "pos": [
+    0,
+    -480
+   ],
+   "size": [
+    960,
+    440
+   ],
+   "flags": {},
+   "order": 5,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "title": "Read me",
+   "properties": {},
+   "widgets_values": [
+    "## KDX Wildcard Studio + LLM + Resolution - Z-Image Turbo\n\nA ready text-to-image graph with every KDX pack and only built-in ComfyUI nodes besides them.\n\n1. **KDX Wildcard Studio** (sidebar tab on the left): pick categories and templates, repeat count, Manual / Pin. Every Run makes the next prompt.\n2. **LLM pill** in the panel: off = the template goes straight to the sampler; on = **KDX LLM Chat** rewrites it first (set your OpenAI-compatible server in *LLM server*).\n3. **KDX Prompt Extractor** takes the aspect ratio written in the prompt (templates end with one, e.g. `16:9`) or the LLM's `aspect_ratio`, and **KDX AutoRes** turns it into a native Z-Image size.\n4. **Your own prompt**: unmute (Ctrl+M) the text node on the left and its text is used instead of the templates; mute it again to go back.\n5. Files are named after the template (`portrait_woman_20261126_101500`).\n\n**Models** (ComfyUI offers to download them when they are missing):\n- `diffusion_models/z_image_turbo_bf16.safetensors`\n- `text_encoders/qwen_3_4b.safetensors`\n- `vae/ae.safetensors`\n\nNeeds ComfyUI-KDX-Wildcard-Studio, ComfyUI-KDX-LLM and ComfyUI-KDX-Resolution."
+   ],
+   "widgets_values_named": {
+    "text": "## KDX Wildcard Studio + LLM + Resolution - Z-Image Turbo\n\nA ready text-to-image graph with every KDX pack and only built-in ComfyUI nodes besides them.\n\n1. **KDX Wildcard Studio** (sidebar tab on the left): pick categories and templates, repeat count, Manual / Pin. Every Run makes the next prompt.\n2. **LLM pill** in the panel: off = the template goes straight to the sampler; on = **KDX LLM Chat** rewrites it first (set your OpenAI-compatible server in *LLM server*).\n3. **KDX Prompt Extractor** takes the aspect ratio written in the prompt (templates end with one, e.g. `16:9`) or the LLM's `aspect_ratio`, and **KDX AutoRes** turns it into a native Z-Image size.\n4. **Your own prompt**: unmute (Ctrl+M) the text node on the left and its text is used instead of the templates; mute it again to go back.\n5. Files are named after the template (`portrait_woman_20261126_101500`).\n\n**Models** (ComfyUI offers to download them when they are missing):\n- `diffusion_models/z_image_turbo_bf16.safetensors`\n- `text_encoders/qwen_3_4b.safetensors`\n- `vae/ae.safetensors`\n\nNeeds ComfyUI-KDX-Wildcard-Studio, ComfyUI-KDX-LLM and ComfyUI-KDX-Resolution."
+   },
+   "color": "#432",
+   "bgcolor": "#653"
+  }
+ ],
+ "links": [
+  [
+   1,
+   2,
+   0,
+   1,
+   1,
+   "STRING"
+  ],
+  [
+   2,
+   1,
+   0,
+   5,
+   9,
+   "STRING"
+  ],
+  [
+   3,
+   1,
+   1,
+   5,
+   15,
+   "STRING"
+  ],
+  [
+   4,
+   1,
+   6,
+   5,
+   7,
+   "BOOLEAN"
+  ],
+  [
+   5,
+   1,
+   7,
+   3,
+   0,
+   "STRING"
+  ],
+  [
+   6,
+   4,
+   0,
+   5,
+   0,
+   "KDX_LLM_CLIENT"
+  ],
+  [
+   7,
+   5,
+   0,
+   6,
+   0,
+   "STRING"
+  ],
+  [
+   8,
+   6,
+   1,
+   7,
+   0,
+   "STRING"
+  ],
+  [
+   9,
+   6,
+   0,
+   8,
+   0,
+   "STRING"
+  ],
+  [
+   10,
+   6,
+   0,
+   13,
+   1,
+   "STRING"
+  ],
+  [
+   11,
+   10,
+   0,
+   13,
+   0,
+   "CLIP"
+  ],
+  [
+   12,
+   9,
+   0,
+   12,
+   0,
+   "MODEL"
+  ],
+  [
+   13,
+   12,
+   0,
+   16,
+   0,
+   "MODEL"
+  ],
+  [
+   14,
+   13,
+   0,
+   16,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   15,
+   13,
+   0,
+   14,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   16,
+   14,
+   0,
+   16,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   17,
+   7,
+   0,
+   15,
+   0,
+   "INT"
+  ],
+  [
+   18,
+   7,
+   1,
+   15,
+   1,
+   "INT"
+  ],
+  [
+   19,
+   15,
+   0,
+   16,
+   3,
+   "LATENT"
+  ],
+  [
+   20,
+   16,
+   0,
+   17,
+   0,
+   "LATENT"
+  ],
+  [
+   21,
+   11,
+   0,
+   17,
+   1,
+   "VAE"
+  ],
+  [
+   22,
+   17,
+   0,
+   18,
+   0,
+   "IMAGE"
+  ],
+  [
+   23,
+   3,
+   0,
+   18,
+   1,
+   "STRING"
+  ]
+ ],
+ "groups": [
+  {
+   "id": 1,
+   "title": "1  Prompt: KDX Wildcard Studio",
+   "bounding": [
+    -20,
+    0,
+    460,
+    778
+   ],
+   "color": "#3f789e",
+   "flags": {}
+  },
+  {
+   "id": 2,
+   "title": "2  LLM (optional)",
+   "bounding": [
+    480,
+    0,
+    480,
+    1190
+   ],
+   "color": "#8A8",
+   "flags": {}
+  },
+  {
+   "id": 3,
+   "title": "3  Prompt and size",
+   "bounding": [
+    1000,
+    0,
+    460,
+    1528
+   ],
+   "color": "#a1309b",
+   "flags": {}
+  },
+  {
+   "id": 4,
+   "title": "4  Models and conditioning",
+   "bounding": [
+    1500,
+    0,
+    440,
+    1080
+   ],
+   "color": "#b06634",
+   "flags": {}
+  },
+  {
+   "id": 5,
+   "title": "5  Sample and save",
+   "bounding": [
+    1980,
+    0,
+    600,
+    1118
+   ],
+   "color": "#444",
+   "flags": {}
+  }
+ ],
+ "config": {},
+ "extra": {
+  "ds": {
+   "scale": 0.45,
+   "offset": [
+    60,
+    560
+   ]
+  }
+ },
+ "extensions": {
+  "widget_idx_map": {
+   "44": {
+    "seed": 0,
+    "sampler_name": 4,
+    "scheduler": 5
+   },
+   "74": {
+    "seed": 5
+   }
+  },
+  "seed_widgets": {
+   "44": 0,
+   "74": 5
+  }
+ },
+ "version": 0.4
+}

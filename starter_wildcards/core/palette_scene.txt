@@ -1,0 +1,3 @@
+# palette for empty places and landscape: no skin or clothing words (derived from core/palette)
+40::__core/palette_scene_colour__
+1::__core/palette_scene_mono__

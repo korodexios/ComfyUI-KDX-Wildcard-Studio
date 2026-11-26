@@ -1,0 +1,25 @@
+# a person's movement, no gender; the template says "The frame catches {...}"; no furniture
+the subject mid-turn, the torso arriving before the head
+the subject walking, weight rolling heel to toe
+the subject stretching both arms overhead, spine lengthening
+the subject reaching for something above shoulder height
+the subject twisting to look behind, shoulders leading
+the subject stepping over something on the floor
+the subject leaning in, then pulling back
+the head turning fast, hair across the face
+the subject bending at the waist, hands toward the knees
+the subject laughing, one hand rising to the mouth
+the subject shrugging, both palms turned up
+the subject adjusting a bag strap on one shoulder
+the subject running a hand through the hair
+the subject stopping short, one foot still in the air
+the subject standing up from a crouch, one hand pushing off the knee
+the subject dropping into a crouch, the knees still bending
+the subject jumping down, both feet off the ground
+the subject spinning around at a sound, the hair lifting
+the subject dodging sideways, the shoulders turning first
+the subject tossing the hair back with a flick of the head
+the subject throwing a jacket over one shoulder in one movement
+the subject swinging round on one foot, one arm stretched out
+the subject ducking under something low, the knees bent
+the subject throwing both arms up in a cheer

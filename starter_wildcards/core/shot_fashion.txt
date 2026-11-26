@@ -1,0 +1,11 @@
+# shot size for fashion, fantasy and sci-fi: the whole figure dominates; the last value is the ratio
+5::a full-body shot from head to feet, the whole figure inside the frame, 9:16
+3::a three-quarter shot from the head to the knees, 2:3
+2::an upper-body shot from the head to the hips, 3:4
+2::a wide shot with the figure small in the set but head to feet visible, 16:9
+3::a full-length shot with room above the head and below the feet, 2:3
+2::a full-length shot from a little distance, the figure in the middle third, 3:4
+2::a cowboy shot from the head to mid-thigh, 4:5
+2::a waist-up shot with the hands in frame, 4:5
+1::a full-length shot in a square frame, the figure centred, 1:1
+1::a wide full-length shot with the figure off to one side, 3:2

@@ -1,0 +1,1578 @@
+{
+  "id": "8a3c1e52-4b7d-4f0e-9c61-2d5e7a9b0f14",
+  "revision": 0,
+  "last_node_id": 14,
+  "last_link_id": 19,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        0,
+        -560
+      ],
+      "size": [
+        640,
+        300
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Read me",
+      "properties": {},
+      "widgets_values": [
+        "## KDX – all nodes together\n\n**KDX Wildcard Studio** picks the next template (panel on the left: categories, repeat, Manual/Pin, LLM pill).\n**KDX LLM Chat** rewrites it while the LLM pill is on; with the pill off it passes the prompt on unchanged (Console `llm_enabled` → Chat `llm_enabled`). A category's `system_prompt` profile wins over the instruction in the Chat's `system_prompt` field.\n**KDX Prompt Extractor** takes `rewritten_prompt` and `aspect_ratio` from the LLM answer (or the ratio written in a template) and **KDX AutoRes** turns the ratio into width × height for the model.\n\nSet your LLM server and model in **KDX LLM Client** and your checkpoint in **Load Checkpoint**. Needs ComfyUI-KDX-Wildcard-Studio, ComfyUI-KDX-LLM (0.9.0+) and ComfyUI-KDX-Resolution."
+      ],
+      "widgets_values_named": {
+        "text": "## KDX – all nodes together\n\n**KDX Wildcard Studio** picks the next template (panel on the left: categories, repeat, Manual/Pin, LLM pill).\n**KDX LLM Chat** rewrites it while the LLM pill is on; with the pill off it passes the prompt on unchanged (Console `llm_enabled` → Chat `llm_enabled`). A category's `system_prompt` profile wins over the instruction in the Chat's `system_prompt` field.\n**KDX Prompt Extractor** takes `rewritten_prompt` and `aspect_ratio` from the LLM answer (or the ratio written in a template) and **KDX AutoRes** turns the ratio into width × height for the model.\n\nSet your LLM server and model in **KDX LLM Client** and your checkpoint in **Load Checkpoint**. Needs ComfyUI-KDX-Wildcard-Studio, ComfyUI-KDX-LLM (0.9.0+) and ComfyUI-KDX-Resolution."
+      },
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 2,
+      "type": "KDX_Console",
+      "pos": [
+        0,
+        -200
+      ],
+      "size": [
+        340,
+        250
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "overrides",
+          "name": "overrides",
+          "shape": 7,
+          "type": "STRING",
+          "link": null
+        },
+        {
+          "localized_name": "pin",
+          "name": "pin",
+          "type": "STRING",
+          "widget": {
+            "name": "pin"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "prompt",
+          "name": "prompt",
+          "type": "STRING",
+          "links": [
+            1
+          ]
+        },
+        {
+          "localized_name": "system_prompt",
+          "name": "system_prompt",
+          "type": "STRING",
+          "links": [
+            2
+          ]
+        },
+        {
+          "localized_name": "category",
+          "name": "category",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "localized_name": "template",
+          "name": "template",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "localized_name": "index",
+          "name": "index",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "localized_name": "repeat_left",
+          "name": "repeat_left",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "localized_name": "llm_enabled",
+          "name": "llm_enabled",
+          "type": "BOOLEAN",
+          "links": [
+            3
+          ]
+        },
+        {
+          "localized_name": "state_json",
+          "name": "state_json",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KDX_Console"
+      },
+      "widgets_values": [
+        "",
+        ""
+      ],
+      "widgets_values_named": {
+        "pin": "",
+        "kdx_console_ui": ""
+      }
+    },
+    {
+      "id": 3,
+      "type": "KDX_LLM_Client",
+      "pos": [
+        0,
+        100
+      ],
+      "size": [
+        340,
+        300
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "base_url",
+          "name": "base_url",
+          "type": "STRING",
+          "widget": {
+            "name": "base_url"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "model",
+          "name": "model",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "model"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "context_length",
+          "name": "context_length",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "context_length"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "api_key",
+          "name": "api_key",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "api_key"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "api_key_env",
+          "name": "api_key_env",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "api_key_env"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "timeout",
+          "name": "timeout",
+          "shape": 7,
+          "type": "INT",
+          "widget": {
+            "name": "timeout"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "max_retries",
+          "name": "max_retries",
+          "shape": 7,
+          "type": "INT",
+          "widget": {
+            "name": "max_retries"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "provider",
+          "name": "provider",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "provider"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "client",
+          "name": "client",
+          "type": "KDX_LLM_CLIENT",
+          "links": [
+            4
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KDX_LLM_Client"
+      },
+      "widgets_values": [
+        "http://127.0.0.1:8080",
+        "",
+        "4096",
+        "",
+        "KDX_LLM_API_KEY",
+        300,
+        2,
+        "auto",
+        "",
+        "",
+        ""
+      ],
+      "widgets_values_named": {
+        "base_url": "http://127.0.0.1:8080",
+        "model": "",
+        "context_length": "4096",
+        "api_key": "",
+        "api_key_env": "KDX_LLM_API_KEY",
+        "timeout": 300,
+        "max_retries": 2,
+        "provider": "auto",
+        "📡 select model": "",
+        "▶ load": "",
+        "⏹ unload": ""
+      },
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 4,
+      "type": "KDX_LLM_Chat",
+      "pos": [
+        380,
+        -200
+      ],
+      "size": [
+        400,
+        700
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "client",
+          "name": "client",
+          "shape": 7,
+          "type": "KDX_LLM_CLIENT",
+          "link": 4
+        },
+        {
+          "localized_name": "thinking_sampling",
+          "name": "thinking_sampling",
+          "shape": 7,
+          "type": "KDX_LLM_OPTIONS",
+          "link": null
+        },
+        {
+          "localized_name": "non_thinking_sampling",
+          "name": "non_thinking_sampling",
+          "shape": 7,
+          "type": "KDX_LLM_OPTIONS",
+          "link": null
+        },
+        {
+          "localized_name": "image",
+          "name": "image",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "localized_name": "media_settings",
+          "name": "media_settings",
+          "shape": 7,
+          "type": "KDX_LLM_MEDIA",
+          "link": null
+        },
+        {
+          "localized_name": "session",
+          "name": "session",
+          "shape": 7,
+          "type": "KDX_LLM_SESSION",
+          "link": null
+        },
+        {
+          "localized_name": "tools",
+          "name": "tools",
+          "shape": 7,
+          "type": "KDX_LLM_TOOLS",
+          "link": null
+        },
+        {
+          "localized_name": "prompt",
+          "name": "prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "prompt"
+          },
+          "link": 1
+        },
+        {
+          "localized_name": "model_preset",
+          "name": "model_preset",
+          "type": "COMBO",
+          "widget": {
+            "name": "model_preset"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "thinking",
+          "name": "thinking",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "thinking"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "reasoning_mode",
+          "name": "reasoning_mode",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "reasoning_mode"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "reasoning_custom",
+          "name": "reasoning_custom",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "reasoning_custom"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "system_prompt",
+          "name": "system_prompt",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "system_prompt"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "stream",
+          "name": "stream",
+          "shape": 7,
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "stream"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "media_mode",
+          "name": "media_mode",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "media_mode"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "reset_session",
+          "name": "reset_session",
+          "shape": 7,
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "reset_session"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "session_id",
+          "name": "session_id",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "session_id"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "max_history",
+          "name": "max_history",
+          "shape": 7,
+          "type": "INT",
+          "widget": {
+            "name": "max_history"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "max_prompt_tokens",
+          "name": "max_prompt_tokens",
+          "shape": 7,
+          "type": "INT",
+          "widget": {
+            "name": "max_prompt_tokens"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "token_counter",
+          "name": "token_counter",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "token_counter"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "sampling_json_thinking",
+          "name": "sampling_json_thinking",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "sampling_json_thinking"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "sampling_json_non_thinking",
+          "name": "sampling_json_non_thinking",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "sampling_json_non_thinking"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "extra_request_json",
+          "name": "extra_request_json",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "extra_request_json"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "json_mode",
+          "name": "json_mode",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "json_mode"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "load_before",
+          "name": "load_before",
+          "shape": 7,
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "load_before"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "unload_after",
+          "name": "unload_after",
+          "shape": 7,
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "unload_after"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "load_timeout",
+          "name": "load_timeout",
+          "shape": 7,
+          "type": "INT",
+          "widget": {
+            "name": "load_timeout"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "history_media",
+          "name": "history_media",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "history_media"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "llm_enabled",
+          "name": "llm_enabled",
+          "shape": 7,
+          "type": "BOOLEAN",
+          "link": 3
+        },
+        {
+          "localized_name": "system_prompt_profile",
+          "name": "system_prompt_profile",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "system_prompt_profile"
+          },
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "response",
+          "name": "response",
+          "type": "STRING",
+          "links": [
+            5
+          ]
+        },
+        {
+          "localized_name": "thinking",
+          "name": "thinking",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "localized_name": "json",
+          "name": "json",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "localized_name": "raw",
+          "name": "raw",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "localized_name": "model_used",
+          "name": "model_used",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "localized_name": "profile_key",
+          "name": "profile_key",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "localized_name": "profile_json",
+          "name": "profile_json",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "localized_name": "request_info",
+          "name": "request_info",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "localized_name": "response_obj",
+          "name": "response_obj",
+          "type": "ANY",
+          "links": null
+        },
+        {
+          "localized_name": "session",
+          "name": "session",
+          "type": "KDX_LLM_SESSION",
+          "links": null
+        },
+        {
+          "localized_name": "tool_calls",
+          "name": "tool_calls",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KDX_LLM_Chat"
+      },
+      "widgets_values": [
+        "",
+        "generic",
+        "auto",
+        "",
+        "",
+        "You rewrite short image prompts into one rich, concrete image prompt. Keep the subject, setting and style of the input, add specific detail about light, composition, materials and colour, and never add text or watermarks. Answer ONLY with JSON: {\"rewritten_prompt\": \"...\", \"aspect_ratio\": \"W:H\"} where aspect_ratio is one of 1:1, 4:5, 2:3, 3:4, 16:9, 9:16, 3:2, chosen to suit the scene.",
+        "",
+        true,
+        "auto",
+        true,
+        "",
+        40,
+        0,
+        "heuristic",
+        "",
+        "",
+        "",
+        "auto",
+        false,
+        false,
+        300,
+        "latest",
+        false,
+        ""
+      ],
+      "widgets_values_named": {
+        "prompt": "",
+        "model_preset": "generic",
+        "thinking": "auto",
+        "reasoning_mode": "",
+        "reasoning_custom": "",
+        "system_prompt": "You rewrite short image prompts into one rich, concrete image prompt. Keep the subject, setting and style of the input, add specific detail about light, composition, materials and colour, and never add text or watermarks. Answer ONLY with JSON: {\"rewritten_prompt\": \"...\", \"aspect_ratio\": \"W:H\"} where aspect_ratio is one of 1:1, 4:5, 2:3, 3:4, 16:9, 9:16, 3:2, chosen to suit the scene.",
+        "system_prompt_profile": "",
+        "stream": true,
+        "media_mode": "auto",
+        "reset_session": true,
+        "session_id": "",
+        "max_history": 40,
+        "max_prompt_tokens": 0,
+        "token_counter": "heuristic",
+        "sampling_json_thinking": "",
+        "sampling_json_non_thinking": "",
+        "extra_request_json": "",
+        "json_mode": "auto",
+        "load_before": false,
+        "unload_after": false,
+        "load_timeout": 300,
+        "history_media": "latest",
+        "🔧 advanced": false,
+        "🎲 new session": ""
+      },
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 5,
+      "type": "KDX_Prompt_Extractor",
+      "pos": [
+        820,
+        -200
+      ],
+      "size": [
+        400,
+        520
+      ],
+      "flags": {},
+      "order": 75,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "input_text",
+          "type": "STRING",
+          "widget": {
+            "name": "input_text"
+          },
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "links": [
+            7,
+            8
+          ]
+        },
+        {
+          "name": "ar",
+          "type": "STRING",
+          "links": [
+            6
+          ]
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "name": "custom_value",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "found_ar",
+          "type": "BOOLEAN",
+          "links": null
+        },
+        {
+          "name": "found_resolution",
+          "type": "BOOLEAN",
+          "links": null
+        },
+        {
+          "name": "found_custom",
+          "type": "BOOLEAN",
+          "links": null
+        },
+        {
+          "name": "found_prompt",
+          "type": "BOOLEAN",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KDX_Prompt_Extractor"
+      },
+      "widgets_values": [
+        "",
+        true,
+        false,
+        "first",
+        true,
+        "",
+        "1:1",
+        1024,
+        1024,
+        "aspect_ratio",
+        "",
+        "rewritten_prompt"
+      ],
+      "widgets_values_named": {
+        "input_text": "",
+        "extract_ar": true,
+        "extract_resolution": false,
+        "pick": "first",
+        "remove_found": true,
+        "custom_key": "",
+        "fallback_ar": "1:1",
+        "fallback_width": 1024,
+        "fallback_height": 1024,
+        "ar_key": "aspect_ratio",
+        "resolution_key": "",
+        "prompt_key": "rewritten_prompt"
+      },
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 6,
+      "type": "KDX_AutoResolution_Core",
+      "pos": [
+        820,
+        360
+      ],
+      "size": [
+        400,
+        420
+      ],
+      "flags": {},
+      "order": 89,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "ar_input",
+          "type": "STRING",
+          "widget": {
+            "name": "ar_input"
+          },
+          "link": 6
+        }
+      ],
+      "outputs": [
+        {
+          "name": "width",
+          "type": "INT",
+          "links": [
+            9
+          ]
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "links": [
+            10
+          ]
+        },
+        {
+          "name": "matched_ar",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "actual_mp",
+          "type": "FLOAT",
+          "links": null
+        },
+        {
+          "name": "is_fallback",
+          "type": "BOOLEAN",
+          "links": null
+        },
+        {
+          "name": "info",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KDX_AutoResolution_Core"
+      },
+      "widgets_values": [
+        "1:1",
+        "image models",
+        "SDXL",
+        0,
+        "# Custom AR table:  AR = W, H\n# 21:9 = 3072, 1312\n# 1:2 = 1024, 2048",
+        "# Manual MP grid:  X MP = WxH\n# Used when target_megapixels > 0\n# 1.0 MP = 1024x1024\n# 4.0 MP = 2048x2048",
+        "1:1",
+        "default",
+        ""
+      ],
+      "widgets_values_named": {
+        "ar_input": "1:1",
+        "model_profile": "Z-Image (turbo/base)",
+        "target_megapixels": 0,
+        "custom_table": "# Custom AR table:  AR = W, H\n# 21:9 = 3072, 1312\n# 1:2 = 1024, 2048",
+        "mp_grid": "# Manual MP grid:  X MP = WxH\n# Used when target_megapixels > 0\n# 1.0 MP = 1024x1024\n# 4.0 MP = 2048x2048",
+        "fallback_ar": "1:1",
+        "alignment": "default",
+        "direct_override": "",
+        "model_list": "image models"
+      },
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 7,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        1260,
+        -200
+      ],
+      "size": [
+        340,
+        100
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "ckpt_name",
+          "name": "ckpt_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "ckpt_name"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "MODEL",
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            11
+          ]
+        },
+        {
+          "localized_name": "CLIP",
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            12,
+            13
+          ]
+        },
+        {
+          "localized_name": "VAE",
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            18
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "sd_xl_base_1.0.safetensors"
+      ],
+      "widgets_values_named": {
+        "ckpt_name": "sd_xl_base_1.0.safetensors"
+      }
+    },
+    {
+      "id": 8,
+      "type": "CLIPTextEncode",
+      "pos": [
+        1260,
+        -60
+      ],
+      "size": [
+        360,
+        140
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "clip",
+          "name": "clip",
+          "type": "CLIP",
+          "link": 12
+        },
+        {
+          "localized_name": "text",
+          "name": "text",
+          "type": "STRING",
+          "widget": {
+            "name": "text"
+          },
+          "link": 7
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "CONDITIONING",
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            14
+          ]
+        }
+      ],
+      "title": "Positive (final prompt)",
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        ""
+      ],
+      "widgets_values_named": {
+        "text": ""
+      }
+    },
+    {
+      "id": 9,
+      "type": "CLIPTextEncode",
+      "pos": [
+        1260,
+        120
+      ],
+      "size": [
+        360,
+        110
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "clip",
+          "name": "clip",
+          "type": "CLIP",
+          "link": 13
+        },
+        {
+          "localized_name": "text",
+          "name": "text",
+          "type": "STRING",
+          "widget": {
+            "name": "text"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "CONDITIONING",
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            15
+          ]
+        }
+      ],
+      "title": "Negative",
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        ""
+      ],
+      "widgets_values_named": {
+        "text": ""
+      }
+    },
+    {
+      "id": 10,
+      "type": "EmptyLatentImage",
+      "pos": [
+        1260,
+        270
+      ],
+      "size": [
+        300,
+        110
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "width",
+          "name": "width",
+          "type": "INT",
+          "widget": {
+            "name": "width"
+          },
+          "link": 9
+        },
+        {
+          "localized_name": "height",
+          "name": "height",
+          "type": "INT",
+          "widget": {
+            "name": "height"
+          },
+          "link": 10
+        },
+        {
+          "localized_name": "batch_size",
+          "name": "batch_size",
+          "type": "INT",
+          "widget": {
+            "name": "batch_size"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "LATENT",
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            16
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyLatentImage"
+      },
+      "widgets_values": [
+        1024,
+        1024,
+        1
+      ],
+      "widgets_values_named": {
+        "width": 1024,
+        "height": 1024,
+        "batch_size": 1
+      }
+    },
+    {
+      "id": 11,
+      "type": "KSampler",
+      "pos": [
+        1660,
+        -200
+      ],
+      "size": [
+        320,
+        270
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "model",
+          "name": "model",
+          "type": "MODEL",
+          "link": 11
+        },
+        {
+          "localized_name": "positive",
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 14
+        },
+        {
+          "localized_name": "negative",
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 15
+        },
+        {
+          "localized_name": "latent_image",
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 16
+        },
+        {
+          "localized_name": "seed",
+          "name": "seed",
+          "type": "INT",
+          "widget": {
+            "name": "seed"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "steps",
+          "name": "steps",
+          "type": "INT",
+          "widget": {
+            "name": "steps"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "cfg",
+          "name": "cfg",
+          "type": "FLOAT",
+          "widget": {
+            "name": "cfg"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "sampler_name",
+          "name": "sampler_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "sampler_name"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "scheduler",
+          "name": "scheduler",
+          "type": "COMBO",
+          "widget": {
+            "name": "scheduler"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "denoise",
+          "name": "denoise",
+          "type": "FLOAT",
+          "widget": {
+            "name": "denoise"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "LATENT",
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            17
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        0,
+        "randomize",
+        20,
+        8,
+        "euler",
+        "simple",
+        1
+      ],
+      "widgets_values_named": {
+        "seed": 0,
+        "control_after_generate": "randomize",
+        "steps": 20,
+        "cfg": 8,
+        "sampler_name": "euler",
+        "scheduler": "simple",
+        "denoise": 1
+      }
+    },
+    {
+      "id": 12,
+      "type": "VAEDecode",
+      "pos": [
+        2020,
+        -200
+      ],
+      "size": [
+        200,
+        50
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "samples",
+          "name": "samples",
+          "type": "LATENT",
+          "link": 17
+        },
+        {
+          "localized_name": "vae",
+          "name": "vae",
+          "type": "VAE",
+          "link": 18
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "IMAGE",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            19
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      }
+    },
+    {
+      "id": 13,
+      "type": "SaveImage",
+      "pos": [
+        2020,
+        -100
+      ],
+      "size": [
+        420,
+        460
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 19
+        },
+        {
+          "localized_name": "filename_prefix",
+          "name": "filename_prefix",
+          "type": "STRING",
+          "widget": {
+            "name": "filename_prefix"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "KDX_all"
+      ],
+      "widgets_values_named": {
+        "filename_prefix": "KDX_Console"
+      }
+    },
+    {
+      "id": 14,
+      "type": "PreviewAny",
+      "pos": [
+        1660,
+        120
+      ],
+      "size": [
+        320,
+        240
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "source",
+          "name": "source",
+          "type": "*",
+          "link": 8
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "STRING",
+          "name": "STRING",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "Final prompt",
+      "properties": {
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "widgets_values_named": {}
+    }
+  ],
+  "links": [
+    [
+      1,
+      2,
+      0,
+      4,
+      7,
+      "STRING"
+    ],
+    [
+      2,
+      2,
+      1,
+      4,
+      29,
+      "STRING"
+    ],
+    [
+      3,
+      2,
+      6,
+      4,
+      28,
+      "BOOLEAN"
+    ],
+    [
+      4,
+      3,
+      0,
+      4,
+      0,
+      "KDX_LLM_CLIENT"
+    ],
+    [
+      5,
+      4,
+      0,
+      5,
+      0,
+      "STRING"
+    ],
+    [
+      6,
+      5,
+      1,
+      6,
+      0,
+      "STRING"
+    ],
+    [
+      7,
+      5,
+      0,
+      8,
+      1,
+      "STRING"
+    ],
+    [
+      8,
+      5,
+      0,
+      14,
+      0,
+      "STRING"
+    ],
+    [
+      9,
+      6,
+      0,
+      10,
+      0,
+      "INT"
+    ],
+    [
+      10,
+      6,
+      1,
+      10,
+      1,
+      "INT"
+    ],
+    [
+      11,
+      7,
+      0,
+      11,
+      0,
+      "MODEL"
+    ],
+    [
+      12,
+      7,
+      1,
+      8,
+      0,
+      "CLIP"
+    ],
+    [
+      13,
+      7,
+      1,
+      9,
+      0,
+      "CLIP"
+    ],
+    [
+      14,
+      8,
+      0,
+      11,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      15,
+      9,
+      0,
+      11,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      16,
+      10,
+      0,
+      11,
+      3,
+      "LATENT"
+    ],
+    [
+      17,
+      11,
+      0,
+      12,
+      0,
+      "LATENT"
+    ],
+    [
+      18,
+      7,
+      2,
+      12,
+      1,
+      "VAE"
+    ],
+    [
+      19,
+      12,
+      0,
+      13,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "Prompt — KDX Wildcard Studio + KDX LLM",
+      "bounding": [
+        -20,
+        -280,
+        820,
+        720
+      ],
+      "color": "#3f8f5e",
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "Size — KDX Resolution",
+      "bounding": [
+        800,
+        -280,
+        440,
+        1100
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "Image",
+      "bounding": [
+        1240,
+        -280,
+        1220,
+        720
+      ],
+      "color": "#444",
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.5,
+      "offset": [
+        200,
+        700
+      ]
+    }
+  },
+  "version": 0.4
+}

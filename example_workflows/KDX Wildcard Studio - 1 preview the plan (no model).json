@@ -1,0 +1,414 @@
+{
+  "id": "6085572b-ac51-4652-b538-a069610876c5",
+  "revision": 0,
+  "last_node_id": 7,
+  "last_link_id": 5,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        0,
+        0
+      ],
+      "size": [
+        520,
+        300
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Read me",
+      "properties": {},
+      "widgets_values": [
+        "## KDX Wildcard Studio – 1. Preview the plan (no model needed)\n\nThe quickest way to see the console work. No checkpoint is loaded; the outputs go to Preview nodes.\n\n1. Open the **KDX Wildcard Studio** tab in the left sidebar and click **Import templates** (Impact Pack `templates/` wildcards).\n2. Toggle categories and templates, set **repeat** (number next to a template) and **on_end** per category.\n3. Press **Run** a few times: every run moves the counter. `index` / `repeat_left` count inside a template.\n\nThe node body shows what comes next. **Skip** and **Reset** are in the panel."
+      ],
+      "widgets_values_named": {
+        "text": "## KDX Wildcard Studio – 1. Preview the plan (no model needed)\n\nThe quickest way to see the console work. No checkpoint is loaded; the outputs go to Preview nodes.\n\n1. Open the **KDX Wildcard Studio** tab in the left sidebar and click **Import templates** (Impact Pack `templates/` wildcards).\n2. Toggle categories and templates, set **repeat** (number next to a template) and **on_end** per category.\n3. Press **Run** a few times: every run moves the counter. `index` / `repeat_left` count inside a template.\n\nThe node body shows what comes next. **Skip** and **Reset** are in the panel."
+      },
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 2,
+      "type": "KDX_Console",
+      "pos": [
+        0,
+        340
+      ],
+      "size": [
+        340,
+        240
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "overrides",
+          "name": "overrides",
+          "shape": 7,
+          "type": "STRING",
+          "link": null
+        },
+        {
+          "localized_name": "pin",
+          "name": "pin",
+          "type": "STRING",
+          "widget": {
+            "name": "pin"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "prompt",
+          "name": "prompt",
+          "type": "STRING",
+          "links": [
+            1
+          ]
+        },
+        {
+          "localized_name": "system_prompt",
+          "name": "system_prompt",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "localized_name": "category",
+          "name": "category",
+          "type": "STRING",
+          "links": [
+            2
+          ]
+        },
+        {
+          "localized_name": "template",
+          "name": "template",
+          "type": "STRING",
+          "links": [
+            3
+          ]
+        },
+        {
+          "localized_name": "index",
+          "name": "index",
+          "type": "INT",
+          "links": [
+            4
+          ]
+        },
+        {
+          "localized_name": "repeat_left",
+          "name": "repeat_left",
+          "type": "INT",
+          "links": [
+            5
+          ]
+        },
+        {
+          "localized_name": "llm_enabled",
+          "name": "llm_enabled",
+          "type": "BOOLEAN",
+          "links": null
+        },
+        {
+          "localized_name": "state_json",
+          "name": "state_json",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {}
+        },
+        "cnr_id": "comfyui_fearnworksnodes",
+        "ver": "0.1.2",
+        "Node name for S&R": "KDX_Console"
+      },
+      "widgets_values": [
+        "",
+        ""
+      ],
+      "widgets_values_named": {
+        "pin": "",
+        "kdx_console_ui": ""
+      }
+    },
+    {
+      "id": 3,
+      "type": "PreviewAny",
+      "pos": [
+        420,
+        0
+      ],
+      "size": [
+        420,
+        260
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "source",
+          "name": "source",
+          "type": "*",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "STRING",
+          "name": "STRING",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "Preview prompt",
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {}
+        },
+        "cnr_id": "comfy-core",
+        "ver": "0.45.0",
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "widgets_values_named": {}
+    },
+    {
+      "id": 4,
+      "type": "PreviewAny",
+      "pos": [
+        420,
+        300
+      ],
+      "size": [
+        420,
+        90
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "source",
+          "name": "source",
+          "type": "*",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "STRING",
+          "name": "STRING",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "Preview category",
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {}
+        },
+        "cnr_id": "comfy-core",
+        "ver": "0.45.0",
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "widgets_values_named": {}
+    },
+    {
+      "id": 5,
+      "type": "PreviewAny",
+      "pos": [
+        420,
+        420
+      ],
+      "size": [
+        420,
+        90
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "source",
+          "name": "source",
+          "type": "*",
+          "link": 3
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "STRING",
+          "name": "STRING",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "Preview template",
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {}
+        },
+        "cnr_id": "comfy-core",
+        "ver": "0.45.0",
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "widgets_values_named": {}
+    },
+    {
+      "id": 6,
+      "type": "PreviewAny",
+      "pos": [
+        420,
+        540
+      ],
+      "size": [
+        420,
+        90
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "source",
+          "name": "source",
+          "type": "*",
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "STRING",
+          "name": "STRING",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "Preview index",
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {}
+        },
+        "cnr_id": "comfy-core",
+        "ver": "0.45.0",
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "widgets_values_named": {}
+    },
+    {
+      "id": 7,
+      "type": "PreviewAny",
+      "pos": [
+        420,
+        660
+      ],
+      "size": [
+        420,
+        90
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "source",
+          "name": "source",
+          "type": "*",
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "STRING",
+          "name": "STRING",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "Preview repeat_left",
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {}
+        },
+        "cnr_id": "comfy-core",
+        "ver": "0.45.0",
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "widgets_values_named": {}
+    }
+  ],
+  "links": [
+    [
+      1,
+      2,
+      0,
+      3,
+      0,
+      "STRING"
+    ],
+    [
+      2,
+      2,
+      2,
+      4,
+      0,
+      "STRING"
+    ],
+    [
+      3,
+      2,
+      3,
+      5,
+      0,
+      "STRING"
+    ],
+    [
+      4,
+      2,
+      4,
+      6,
+      0,
+      "INT"
+    ],
+    [
+      5,
+      2,
+      5,
+      7,
+      0,
+      "INT"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.42,
+      "offset": [
+        -850,
+        1000
+      ]
+    }
+  },
+  "version": 0.4
+}

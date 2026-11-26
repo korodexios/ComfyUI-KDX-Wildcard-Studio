@@ -1,0 +1,4 @@
+# SCENE BUNDLE outdoors: pose + place + shot + viewpoint picked together; the template adds the sky light or weather
+3::__pose/rest_grass__. The scene is __core/place_grass__. This is __core/shot_furniture__, shot __core/camera_angle_ground__
+2::__pose/rest_steps__. The scene is __core/place_steps__. This is __core/shot_furniture__, shot __core/camera_angle_ground__
+2::__pose/rest_rocks__. The scene is __core/place_rocks__. This is __core/shot_furniture__, shot __core/camera_angle_ground__

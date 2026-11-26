@@ -1,0 +1,13 @@
+# medium for empty places and landscape: no skin or portrait words
+12::a professional landscape photograph on medium format film, fine grain and deep tonal range, shot with __core/lens_scene__
+12::a large-format film photograph, sharp from the foreground to the horizon, shot with __core/lens_scene__
+8::a professional digital capture with clean fine detail, shot with __core/lens_scene__
+8::a documentary photograph shot on 35mm colour film, shot with __core/lens_scene__
+4::a hand-shot 35mm film photo, slightly soft and grainy
+4::a phone photo, slightly wide, natural light
+4::a 1990s colour film snapshot, warm faded dyes
+1::a medium format photograph on black and white film with rich blacks, shot with __core/lens_scene__
+1::a black and white large-format photograph with deep blacks, shot with __core/lens_scene__
+4::an aerial photograph from high above, crisp and wide
+4::a travel magazine photograph with rich colour, shot with __core/lens_scene__
+4::a fine art photograph with a quiet muted palette, shot with __core/lens_scene__

@@ -1,0 +1,3 @@
+# expression without the negative family (no tears, fear, anger or disgust): NSFW, boudoir and two-or-more-people templates
+3::__person/expression_positive__
+2::__person/expression_neutral__

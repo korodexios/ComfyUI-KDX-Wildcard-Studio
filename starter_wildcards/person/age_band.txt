@@ -1,0 +1,2 @@
+# age band for every people template: adults only, a band, not a number
+{3::__person/age_range_under40__|2::__person/age_range_over40__}

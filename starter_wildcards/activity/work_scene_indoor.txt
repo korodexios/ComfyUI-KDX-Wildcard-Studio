@@ -1,0 +1,17 @@
+# indoor workplace: place + workwear + action in one value (they must agree); pair with core/light_window or core/light_solo
+The scene is a bakery before dawn with trays stacked by the oven. She is wearing a baker's apron over a striped shirt, sliding a tray of loaves into the oven, flour drifting off her forearms.
+The scene is a hospital corridor with pale green walls. She is wearing light blue scrubs and a white coat, walking fast while reading a chart, the coat flaring behind her.
+The scene is a florist's workroom with buckets of cut stems. She is wearing a canvas apron, binding a bouquet with twine, petals falling around her hands.
+The scene is a restaurant kitchen with steel counters and hanging pans. She is wearing chef's whites, tossing vegetables in a pan, a burst of flame rising from it.
+The scene is a pottery studio with shelves of drying bowls. She is wearing a clay-stained smock, pulling up the wall of a pot on the wheel, slip running between her fingers.
+The scene is a car workshop with a lifted car and hanging tools. She is wearing grease-marked coveralls, tightening a bolt under the wheel arch, the wrench mid-turn.
+The scene is a veterinary clinic with a steel examination table. She is wearing teal scrubs, steadying a nervous dog with both hands while listening with a stethoscope.
+The scene is a carpentry workshop with sawdust on the floor. She is wearing a canvas work apron, planing a long board, curls of wood spilling off the blade.
+The scene is a hair salon with chairs in a row. She is wearing a black tunic, mixing hair colour in a bowl, the brush lifting a thick ribbon of dye.
+The scene is a laboratory with glass fume hoods and racks of tubes. She is wearing a lab coat and safety glasses, pipetting a clear liquid into a row of vials.
+The scene is a coffee bar with a chrome espresso machine. She is wearing a barista apron over a black tee, pouring milk into a cup, the pattern forming on the surface.
+The scene is a print workshop with a heavy press. She is wearing an ink-stained apron, pulling a fresh print off the plate, the paper peeling away.
+The scene is a tailor's atelier with bolts of cloth and a cutting bench. She is wearing a fitted shirt with a tape measure around her neck, cutting fabric with long shears.
+The scene is a library archive with tall rolling shelves. She is wearing a cardigan and white cotton gloves, lifting an old book from a box with both hands.
+The scene is a recording studio with a mixing desk. She is wearing headphones around her neck and a loose shirt, pushing a fader up, the levels jumping on the meters.
+The scene is a welding bay with sparks and steel offcuts. She is wearing a leather welding jacket and a raised mask, laying a bead along a seam, sparks spraying.

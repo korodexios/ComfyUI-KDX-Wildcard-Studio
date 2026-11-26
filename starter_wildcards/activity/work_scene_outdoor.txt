@@ -1,0 +1,10 @@
+# outdoor workplace: place + workwear + action in one value (they must agree); pair with core/light_sky or core/weather
+The scene is a building site with scaffolding and stacked bricks. She is wearing a hi-vis vest and a hard hat, guiding a swinging load with one gloved hand.
+The scene is a fishing harbour with nets and crates. She is wearing yellow oilskins and rubber boots, hauling a wet net over the side of a boat.
+The scene is a vineyard on a slope. She is wearing a wide hat and a work shirt, cutting a heavy bunch of grapes into a crate.
+The scene is an apiary at the edge of a meadow. She is wearing a white beekeeper's suit with the veil down, lifting a frame thick with bees from the hive.
+The scene is a mountain trail with a rescue stretcher. She is wearing a red mountain rescue jacket, coiling a rope over her shoulder, breath steaming.
+The scene is a park with a tall old tree. She is wearing a ranger's khaki shirt and a climbing harness, sawing a dead branch, sawdust falling.
+The scene is a street market with fruit stalls. She is wearing a market apron, tossing an orange from one hand to the other, the fruit in the air.
+The scene is an archaeological dig with string grids. She is wearing a field shirt and knee pads, brushing earth from a buried pot.
+The scene is a garden nursery with rows of seedlings. She is wearing dungarees and leather gloves, carrying two trays of plants, soil spilling from one corner.

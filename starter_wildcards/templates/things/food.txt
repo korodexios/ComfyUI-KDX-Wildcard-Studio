@@ -1,0 +1,1 @@
+The image is {__core/medium_object__}. It shows {__food/dish__}, {__food/setting__}. {__core/light_object__}. This is {__still/shot__}. {__core/realism_scene__}. {__core/palette_scene__}. The mood is {__core/mood_object__}.

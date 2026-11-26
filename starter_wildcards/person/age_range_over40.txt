@@ -1,0 +1,10 @@
+# adults from their 40s to their 70s: a band, not an exact number
+early 40s
+mid 40s
+late 40s
+early 50s
+late 50s
+early 60s
+mid 60s
+late 60s
+early 70s

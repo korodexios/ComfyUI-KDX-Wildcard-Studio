@@ -1,0 +1,1 @@
+The image is {__core/medium_scene__}. It shows {__core/place_nature__}, with nobody in it. {3::__core/light_landscape__|1::__core/weather__}. This is {__core/shot_scene__}. {__core/composition_scene__}. {__core/realism_scene__}. {__core/palette_scene__}. The mood is {__core/mood_place__}.

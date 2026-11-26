@@ -1,0 +1,10 @@
+4::diffused daylight from a large window, low contrast, the sun behind cloud
+2::hard light through a blind, hard bands of shadow across the subject
+1::bright window light from one side, the background falling into soft shadow behind
+2::window light from one side and a pale fill off the wall opposite, soft and even
+2::afternoon sun through a thin curtain, the light broken and gentle on the skin
+1::a low sun through an uncurtained window, a warm rectangle of light across the subject
+1::north light from a tall window, cool and shadowless with no hard edges
+1::window light with the subject half in it and half out, the split running down the body
+1::a bright window behind the subject, the face lit only by what bounces from the floor
+1::thin light from a small window, one bright edge on the body and the rest soft

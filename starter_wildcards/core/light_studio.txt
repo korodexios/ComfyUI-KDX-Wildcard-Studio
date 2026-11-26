@@ -1,0 +1,14 @@
+3::a large soft source close to the subject, wrap-around light, soft even falloff
+3::even flat light from the front, soft diffuse shadows on the subject
+2::butterfly lighting from high in front, a small shadow under the nose
+2::a single strong key, one side lit, the other falling to black
+2::rim light from behind and one side only, the front in shadow
+1::mixed sources, warm on one side and cool on the other, two shadow directions
+1::coloured light from two off-frame sources, cyan and magenta edges
+1::small bright catchlights in both eyes from a large soft source in front
+1::light raking across the surfaces so every texture casts a short shadow
+1::painted light, a warm pool with cool ambient fill, invented for the composition
+1::side light along one edge with a bright surface throwing light back
+1::flat frontal light that flattens the subject into an outline
+1::bright bounce from every direction, the subject evenly lit
+2::Rembrandt lighting, one side of the face lit and the far side in soft shadow

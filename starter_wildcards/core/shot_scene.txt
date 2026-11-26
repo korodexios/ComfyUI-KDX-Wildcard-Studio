@@ -1,0 +1,9 @@
+# shot size for a scene without a subject; the last value is the ratio
+3::a wide establishing frame, 16:9
+2::a tall vertical frame, 9:16
+1::a square frame on one corner of the scene, 1:1
+2::a landscape frame, 3:2
+1::a tall frame, 2:3
+2::a panoramic frame, 21:9
+1::a frame from a high viewpoint looking down over the scene, 4:3
+1::a low frame close to the ground looking along the scene, 3:2

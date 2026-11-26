@@ -1,0 +1,11 @@
+# light for objects and food: no face, eye, skin or body words (still_life, food)
+3::soft window light from one side, a gentle shadow falling away from the objects
+2::a large soft box above and slightly behind, a soft highlight along the top edges
+2::hard side light low across the surface, every texture casting a short shadow
+2::diffused daylight from a large window, low contrast, the sun behind cloud
+2::overhead daylight, soft and even, small shadows directly under each piece
+1::a low sun through an uncurtained window, a warm rectangle of light across the surface
+1::backlight through the objects, translucent edges glowing, the front in soft shade
+1::a single warm lamp to one side, the rest of the frame falling into dark
+1::cool morning light with a white card bouncing fill into the shadows
+1::dappled light through leaves, moving patches across the surface

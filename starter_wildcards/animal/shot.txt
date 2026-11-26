@@ -1,0 +1,8 @@
+3::a close portrait of the animal, 4:5
+3::a full-body frame of the animal, 3:2
+2::a wide frame with the animal small in the landscape, 16:9
+1::a tall frame, 2:3
+2::a head portrait of the animal, 1:1
+2::a three-quarter frame of the animal, 4:5
+1::a low frame at the animal's eye level, 3:2
+1::a tall frame of the animal from the side, 3:4

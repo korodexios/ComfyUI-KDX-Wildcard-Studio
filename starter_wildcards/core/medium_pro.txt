@@ -1,0 +1,12 @@
+12::a professional 35mm analog film editorial, shot with __core/lens__
+12::a studio photograph shot on large-format film, deep tonal range and fine grain, shot with __core/lens__
+8::a large-format film portrait, smooth tonal transitions, shot with __core/lens__
+1::a medium format photograph on Tri-X black and white film, shot with __core/lens__
+8::a professional digital capture with clean skin detail, shot with __core/lens__
+4::a magazine beauty shot on medium format colour film, shot with __core/lens__
+8::a fashion editorial photograph on medium format digital, shot with __core/lens__
+8::a high-end beauty photograph with a soft polished finish, shot with __core/lens__
+4::a cinematic still on 35mm colour film, shot with __core/lens__
+1::a black and white studio portrait with deep blacks and fine grain, shot with __core/lens__
+4::a documentary-style professional photograph in available light, shot with __core/lens__
+4::an editorial photograph on colour slide film with rich saturation, shot with __core/lens__

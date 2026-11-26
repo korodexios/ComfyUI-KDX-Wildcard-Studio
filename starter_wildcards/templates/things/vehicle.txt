@@ -1,0 +1,1 @@
+The image is {__core/medium_object__}. It shows {__vehicle/subject__}. The scene is {__core/place_city__|__core/place_outdoor__|__core/place_nature__}. {3::__core/light_scene__|1::__core/weather__}. This is {__vehicle/shot__}. {__core/realism_scene__}. {__core/palette_scene__}. The mood is {__core/mood_place__}.

@@ -1,0 +1,12 @@
+3::a phone snapshot, slightly wide
+3::a disposable camera photo, flat and grainy
+2::a compact digicam photo from the early 2000s
+2::a hand-shot 35mm film photo, off-centre and slightly blurred
+2::a home camcorder still, soft interlaced detail
+2::a grainy high-ISO digital photo, noise in the shadows
+1::a 1970s colour film snapshot, warm faded dyes
+1::a 1990s flash snapshot from a party, blown highlights
+1::a low-resolution front-camera photo, soft and slightly overexposed
+1::a phone photo taken through a window, the glass smudged, one subject in focus
+1::a tablet front-camera photo, wide and slightly warped at the edges
+1::a drugstore print from 35mm film, flat colour

@@ -1,0 +1,865 @@
+{
+  "id": "5de4033c-e37d-407c-83bb-adc2ea6484cc",
+  "revision": 0,
+  "last_node_id": 7,
+  "last_link_id": 10,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        0,
+        -420
+      ],
+      "size": [
+        620,
+        380
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Read me",
+      "properties": {},
+      "widgets_values": [
+        "## KDX Wildcard Studio – 3. Overrides and the LLM switch\n\n**Overrides** (the text box) change only the current run and never the saved settings:\n- `portrait=off` – skip a category\n- `*=off, art=on` – only one category\n- `portrait.selfie=off` – skip one template\n- `select=portrait.selfie` – one fixed template, new wildcard seed every run\n- `seed=123`, `mode=pin`, `llm=on`\n\nThe string can also come from a Set/Get pair or any other STRING source.\n\n**LLM switch:** the console's `llm_enabled` output goes into the Chat's `llm_enabled` input. LLM off (the LLM pill in the panel, or `llm=off`) → Chat makes no LLM call and passes the console prompt on unchanged. LLM on → Chat rewrites the prompt with the category's `system_prompt` profile. Either way, take the Chat's `response` to CLIP Text Encode. Requires ComfyUI-KDX-LLM 0.9.0 or newer; set your server and model in **KDX LLM Client**."
+      ],
+      "widgets_values_named": {
+        "text": "## KDX Wildcard Studio – 3. Overrides and the LLM switch\n\n**Overrides** (the text box) change only the current run and never the saved settings:\n- `portrait=off` – skip a category\n- `*=off, art=on` – only one category\n- `portrait.selfie=off` – skip one template\n- `select=portrait.selfie` – one fixed template, new wildcard seed every run\n- `seed=123`, `mode=pin`, `llm=on`\n\nThe string can also come from a Set/Get pair or any other STRING source.\n\n**LLM switch:** the console's `llm_enabled` output goes into the Chat's `llm_enabled` input. LLM off (the LLM pill in the panel, or `llm=off`) → Chat makes no LLM call and passes the console prompt on unchanged. LLM on → Chat rewrites the prompt with the category's `system_prompt` profile. Either way, take the Chat's `response` to CLIP Text Encode. Requires ComfyUI-KDX-LLM 0.9.0 or newer; set your server and model in **KDX LLM Client**."
+      },
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 2,
+      "type": "PrimitiveStringMultiline",
+      "pos": [
+        0,
+        0
+      ],
+      "size": [
+        360,
+        130
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "value",
+          "name": "value",
+          "type": "STRING",
+          "widget": {
+            "name": "value"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "STRING",
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            1
+          ]
+        }
+      ],
+      "title": "Overrides (this run only)",
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {}
+        },
+        "cnr_id": "comfy-core",
+        "ver": "0.45.0",
+        "Node name for S&R": "PrimitiveStringMultiline"
+      },
+      "widgets_values": [
+        ""
+      ],
+      "widgets_values_named": {
+        "value": ""
+      }
+    },
+    {
+      "id": 3,
+      "type": "KDX_Console",
+      "pos": [
+        0,
+        180
+      ],
+      "size": [
+        340,
+        240
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "overrides",
+          "name": "overrides",
+          "shape": 7,
+          "type": "STRING",
+          "link": 1
+        },
+        {
+          "localized_name": "pin",
+          "name": "pin",
+          "type": "STRING",
+          "widget": {
+            "name": "pin"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "prompt",
+          "name": "prompt",
+          "type": "STRING",
+          "links": [
+            3
+          ]
+        },
+        {
+          "localized_name": "system_prompt",
+          "name": "system_prompt",
+          "type": "STRING",
+          "links": [
+            4
+          ]
+        },
+        {
+          "localized_name": "category",
+          "name": "category",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "localized_name": "template",
+          "name": "template",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "localized_name": "index",
+          "name": "index",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "localized_name": "repeat_left",
+          "name": "repeat_left",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "localized_name": "llm_enabled",
+          "name": "llm_enabled",
+          "type": "BOOLEAN",
+          "links": [
+            9
+          ]
+        },
+        {
+          "localized_name": "state_json",
+          "name": "state_json",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {}
+        },
+        "cnr_id": "comfyui_fearnworksnodes",
+        "ver": "0.1.2",
+        "Node name for S&R": "KDX_Console"
+      },
+      "widgets_values": [
+        "",
+        ""
+      ],
+      "widgets_values_named": {
+        "pin": "",
+        "kdx_console_ui": ""
+      }
+    },
+    {
+      "id": 4,
+      "type": "KDX_LLM_Client",
+      "pos": [
+        400,
+        -60
+      ],
+      "size": [
+        360,
+        300
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "base_url",
+          "name": "base_url",
+          "type": "STRING",
+          "widget": {
+            "name": "base_url"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "model",
+          "name": "model",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "model"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "context_length",
+          "name": "context_length",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "context_length"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "api_key",
+          "name": "api_key",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "api_key"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "api_key_env",
+          "name": "api_key_env",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "api_key_env"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "timeout",
+          "name": "timeout",
+          "shape": 7,
+          "type": "INT",
+          "widget": {
+            "name": "timeout"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "max_retries",
+          "name": "max_retries",
+          "shape": 7,
+          "type": "INT",
+          "widget": {
+            "name": "max_retries"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "provider",
+          "name": "provider",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "provider"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "client",
+          "name": "client",
+          "type": "KDX_LLM_CLIENT",
+          "links": [
+            2
+          ]
+        }
+      ],
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {}
+        },
+        "aux_id": "korodexios/ComfyUI-KDX-LLM",
+        "ver": "aa180b84e33a8d42fb319bb0b4cf0d3fb66ba035",
+        "Node name for S&R": "KDX_LLM_Client"
+      },
+      "widgets_values": [
+        "http://127.0.0.1:8080",
+        "",
+        "4096",
+        "",
+        "KDX_LLM_API_KEY",
+        300,
+        2,
+        "auto",
+        "",
+        "",
+        ""
+      ],
+      "widgets_values_named": {
+        "base_url": "http://127.0.0.1:8080",
+        "model": "",
+        "context_length": "4096",
+        "api_key": "",
+        "api_key_env": "KDX_LLM_API_KEY",
+        "timeout": 300,
+        "max_retries": 2,
+        "provider": "auto",
+        "📡 select model": "",
+        "▶ load": "",
+        "⏹ unload": ""
+      },
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 5,
+      "type": "KDX_LLM_Chat",
+      "pos": [
+        800,
+        -60
+      ],
+      "size": [
+        380,
+        420
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "client",
+          "name": "client",
+          "shape": 7,
+          "type": "KDX_LLM_CLIENT",
+          "link": 2
+        },
+        {
+          "localized_name": "thinking_sampling",
+          "name": "thinking_sampling",
+          "shape": 7,
+          "type": "KDX_LLM_OPTIONS",
+          "link": null
+        },
+        {
+          "localized_name": "non_thinking_sampling",
+          "name": "non_thinking_sampling",
+          "shape": 7,
+          "type": "KDX_LLM_OPTIONS",
+          "link": null
+        },
+        {
+          "localized_name": "image",
+          "name": "image",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "localized_name": "media_settings",
+          "name": "media_settings",
+          "shape": 7,
+          "type": "KDX_LLM_MEDIA",
+          "link": null
+        },
+        {
+          "localized_name": "session",
+          "name": "session",
+          "shape": 7,
+          "type": "KDX_LLM_SESSION",
+          "link": null
+        },
+        {
+          "localized_name": "tools",
+          "name": "tools",
+          "shape": 7,
+          "type": "KDX_LLM_TOOLS",
+          "link": null
+        },
+        {
+          "localized_name": "prompt",
+          "name": "prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "prompt"
+          },
+          "link": 3
+        },
+        {
+          "localized_name": "model_preset",
+          "name": "model_preset",
+          "type": "COMBO",
+          "widget": {
+            "name": "model_preset"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "thinking",
+          "name": "thinking",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "thinking"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "reasoning_mode",
+          "name": "reasoning_mode",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "reasoning_mode"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "reasoning_custom",
+          "name": "reasoning_custom",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "reasoning_custom"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "system_prompt",
+          "name": "system_prompt",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "system_prompt"
+          },
+          "link": 4
+        },
+        {
+          "localized_name": "system_prompt_profile",
+          "name": "system_prompt_profile",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "system_prompt_profile"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "stream",
+          "name": "stream",
+          "shape": 7,
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "stream"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "media_mode",
+          "name": "media_mode",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "media_mode"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "reset_session",
+          "name": "reset_session",
+          "shape": 7,
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "reset_session"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "session_id",
+          "name": "session_id",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "session_id"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "max_history",
+          "name": "max_history",
+          "shape": 7,
+          "type": "INT",
+          "widget": {
+            "name": "max_history"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "max_prompt_tokens",
+          "name": "max_prompt_tokens",
+          "shape": 7,
+          "type": "INT",
+          "widget": {
+            "name": "max_prompt_tokens"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "token_counter",
+          "name": "token_counter",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "token_counter"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "sampling_json_thinking",
+          "name": "sampling_json_thinking",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "sampling_json_thinking"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "sampling_json_non_thinking",
+          "name": "sampling_json_non_thinking",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "sampling_json_non_thinking"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "extra_request_json",
+          "name": "extra_request_json",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "extra_request_json"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "json_mode",
+          "name": "json_mode",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "json_mode"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "load_before",
+          "name": "load_before",
+          "shape": 7,
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "load_before"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "unload_after",
+          "name": "unload_after",
+          "shape": 7,
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "unload_after"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "load_timeout",
+          "name": "load_timeout",
+          "shape": 7,
+          "type": "INT",
+          "widget": {
+            "name": "load_timeout"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "history_media",
+          "name": "history_media",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "history_media"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "llm_enabled",
+          "name": "llm_enabled",
+          "shape": 7,
+          "type": "BOOLEAN",
+          "link": 9
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "response",
+          "name": "response",
+          "type": "STRING",
+          "links": [
+            10
+          ]
+        },
+        {
+          "localized_name": "thinking",
+          "name": "thinking",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "localized_name": "json",
+          "name": "json",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "localized_name": "raw",
+          "name": "raw",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "localized_name": "model_used",
+          "name": "model_used",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "localized_name": "profile_key",
+          "name": "profile_key",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "localized_name": "profile_json",
+          "name": "profile_json",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "localized_name": "request_info",
+          "name": "request_info",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "localized_name": "response_obj",
+          "name": "response_obj",
+          "type": "ANY",
+          "links": null
+        },
+        {
+          "localized_name": "session",
+          "name": "session",
+          "type": "KDX_LLM_SESSION",
+          "links": null
+        },
+        {
+          "localized_name": "tool_calls",
+          "name": "tool_calls",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {}
+        },
+        "aux_id": "korodexios/ComfyUI-KDX-LLM",
+        "ver": "aa180b84e33a8d42fb319bb0b4cf0d3fb66ba035",
+        "Node name for S&R": "KDX_LLM_Chat"
+      },
+      "widgets_values": [
+        "",
+        "generic",
+        "auto",
+        "",
+        "",
+        "",
+        "",
+        true,
+        "auto",
+        true,
+        "",
+        40,
+        0,
+        "heuristic",
+        "",
+        "",
+        "",
+        "auto",
+        false,
+        false,
+        300,
+        "latest",
+        false,
+        ""
+      ],
+      "widgets_values_named": {
+        "prompt": "",
+        "model_preset": "generic",
+        "thinking": "auto",
+        "reasoning_mode": "",
+        "reasoning_custom": "",
+        "system_prompt": "",
+        "system_prompt_profile": "",
+        "stream": true,
+        "media_mode": "auto",
+        "reset_session": true,
+        "session_id": "",
+        "max_history": 40,
+        "max_prompt_tokens": 0,
+        "token_counter": "heuristic",
+        "sampling_json_thinking": "",
+        "sampling_json_non_thinking": "",
+        "extra_request_json": "",
+        "json_mode": "auto",
+        "load_before": false,
+        "unload_after": false,
+        "load_timeout": 300,
+        "history_media": "latest",
+        "🔧 advanced": false,
+        "🎲 new session": ""
+      },
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 7,
+      "type": "PreviewAny",
+      "pos": [
+        1240,
+        -60
+      ],
+      "size": [
+        420,
+        300
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "source",
+          "name": "source",
+          "type": "*",
+          "link": 10
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "STRING",
+          "name": "STRING",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "Final prompt (to CLIP Text Encode)",
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {}
+        },
+        "cnr_id": "comfy-core",
+        "ver": "0.45.0",
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "widgets_values_named": {}
+    }
+  ],
+  "links": [
+    [
+      1,
+      2,
+      0,
+      3,
+      0,
+      "STRING"
+    ],
+    [
+      2,
+      4,
+      0,
+      5,
+      0,
+      "KDX_LLM_CLIENT"
+    ],
+    [
+      3,
+      3,
+      0,
+      5,
+      7,
+      "STRING"
+    ],
+    [
+      4,
+      3,
+      1,
+      5,
+      12,
+      "STRING"
+    ],
+    [
+      9,
+      3,
+      6,
+      5,
+      29,
+      "BOOLEAN"
+    ],
+    [
+      10,
+      5,
+      0,
+      7,
+      0,
+      "STRING"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.42,
+      "offset": [
+        -850,
+        1000
+      ]
+    }
+  },
+  "version": 0.4
+}

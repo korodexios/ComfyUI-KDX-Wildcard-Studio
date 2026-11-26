@@ -1,0 +1,11 @@
+# whole-body framings for a figure on furniture or the floor; the value ends with the ratio
+4::a full-length horizontal shot with the whole body in the frame, 16:9
+3::a full-length shot with room around the figure, 3:2
+2::a full-body shot from head to feet, 4:5
+2::a full-body vertical shot with the whole figure and its support in the frame, 2:3
+2::a wide shot of the room with the figure whole in it, 16:9
+1::a full-length shot, the figure running from corner to corner of the frame, 3:2
+2::a full-length shot from a little distance, the figure and the whole support in the middle third, 3:2
+2::a full-body shot with the figure crossing the frame on a diagonal, 4:3
+1::a square full-body shot with the figure curled into the frame, 1:1
+1::a wide full-length shot with empty ground in the foreground, 16:9

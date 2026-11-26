@@ -1,0 +1,9 @@
+# rooms for a chair, table or bench scene: walls, floor and windows only (the pose names the chair or table)
+a kitchen with tiled walls and a stone floor
+a dining room with a long window and plain walls
+a studio flat with open shelves along one wall
+a workshop with a concrete floor and tools hanging on the wall
+a farmhouse kitchen with whitewashed walls
+an office room with a large window and grey carpet
+an empty café back room with brick walls
+a modern kitchen in white and pale oak

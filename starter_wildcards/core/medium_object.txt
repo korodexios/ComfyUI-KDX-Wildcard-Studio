@@ -1,0 +1,12 @@
+# medium for objects, food, animals and vehicles
+9::a professional photograph, sharp and clean
+6::a 35mm film photograph with fine grain
+6::a documentary photograph in natural light
+6::a medium format film photograph with a rich tonal range
+3::a phone photo in natural light
+3::a macro photograph with a shallow plane of focus
+6::a product-style photograph, clean and evenly lit
+3::a magazine still life photograph with rich colour
+1::a black and white film photograph with deep blacks
+3::a large-format photograph with fine detail on every surface
+3::a soft-colour film photograph with gentle grain

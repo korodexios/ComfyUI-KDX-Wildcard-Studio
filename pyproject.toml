@@ -1,0 +1,16 @@
+[project]
+name = "comfyui-kdx-wildcard-studio"
+version = "0.7.2"
+description = "Wildcard prompt control centre for ComfyUI: categories of templates with a persistent counter, built-in wildcard engine, gallery, drag-and-drop template builder, pool editor, shareable packs and your own prompt on the node"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/korodexios/ComfyUI-KDX-Wildcard-Studio"
+
+[tool.comfy]
+PublisherId = "korodexios"
+DisplayName = "KDX Wildcard Studio"
+Icon = ""

@@ -1,0 +1,13 @@
+# natural light for landscape and nature without people: no streets, lamps or neon
+4::soft overcast daylight, flat and even, muted colour
+3::low golden-hour sun at a shallow angle, long warm shadows across the land
+2::hard midday sun, short sharp shadows, bright highlights
+2::early morning mist, pale diffused light, a soft glow on the horizon
+2::sunrise light breaking through cloud, rays of light across the scene
+2::dappled sunlight through leaves, moving patches of light and shade
+1::a storm approaching, dark clouds with one shaft of sun breaking through
+1::moonlight, cold blue, long soft shadows
+1::blue-hour dusk, the sky deep blue and the land in soft shadow
+1::thick fog, everything beyond a few metres fading to white
+1::light after rain, the air clear and every surface wet and bright
+1::a red sunset glow on the high ground, the valley already in shade

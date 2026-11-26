@@ -1,0 +1,11 @@
+5::harsh on-camera flash, hard shadow edges, fine surface detail preserved
+4::hard top light from a single bare bulb, shadow under the brow and the nose
+4::cold fluorescent light from above with a faint green cast
+3::a strong ceiling light, hard short shadows under the cheekbone
+3::warm tungsten lamps at low height, mixed with dim ambient light
+2::a single warm lamp as the only source, deep shadows around the figure
+2::coloured light from several directions, reflections on the skin
+2::mixed interior light, one warm lamp and the cold glow of a screen
+2::flash bounce off a low surface, the near background blown out and the far side dark
+1::faint ambient light only, low contrast, the subject barely separated from the background
+1::one small warm source low to one side, the rest of the frame in shadow

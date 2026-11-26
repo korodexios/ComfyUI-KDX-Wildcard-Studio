@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.venv/
+user_data/
+uv.lock
+
+# Local working notes (not published)
+dev/

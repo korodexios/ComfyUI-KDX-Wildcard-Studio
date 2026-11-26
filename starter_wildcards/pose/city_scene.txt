@@ -1,0 +1,2 @@
+# SCENE BUNDLE in the city: steps, walls, benches; the template adds the light
+__pose/rest_steps__. The scene is __core/place_steps__. This is __core/shot_furniture__, shot __core/camera_angle_ground__

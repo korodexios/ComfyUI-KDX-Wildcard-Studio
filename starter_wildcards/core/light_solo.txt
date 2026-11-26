@@ -1,0 +1,10 @@
+# light for a solo indoor scene
+soft daylight from one side, gentle falloff into shadow on the far side
+diffused daylight from a large window, low contrast, the sun behind cloud
+a strong ceiling light, hard short shadows under the cheekbone
+warm tungsten lamps at low height, mixed with dim ambient light
+a single warm lamp as the only source, deep shadows around the figure
+coloured light from several directions, reflections on the skin
+hard light through a blind, hard bands of shadow across the subject
+low key with a single lit edge and the rest in darkness
+one small warm source low to one side, the rest of the frame in shadow

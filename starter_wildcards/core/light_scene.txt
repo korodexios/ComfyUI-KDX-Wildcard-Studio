@@ -1,0 +1,15 @@
+# light for empty places and landscape: time of day and weather, no figure
+4::soft overcast daylight, flat and even, muted colour
+3::low golden-hour sun at a shallow angle, long warm shadows
+3::blue-hour dusk, the first lamps and windows lit, deep blue sky
+2::hard midday sun, short sharp shadows, bright highlights
+2::early morning mist, pale diffused light, a soft glow on the horizon
+2::heavy rain, wet surfaces reflecting the light, a grey sky
+2::night, lit only by street lamps and a few warm windows
+2::sunrise light breaking through cloud, rays of light across the scene
+1::thick fog, everything beyond a few metres fading to white
+1::a storm approaching, dark clouds with one shaft of sun breaking through
+1::moonlight, cold blue, long soft shadows
+1::neon and signage light on wet ground, coloured reflections
+1::light snowfall, flat white light and quiet colours
+1::dappled sunlight through leaves, moving patches of light and shade

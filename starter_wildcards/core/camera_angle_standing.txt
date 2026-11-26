@@ -1,0 +1,13 @@
+# angles for clothed full-figure templates (fashion, fantasy, scifi): no top-down and no below-floor views
+at eye level, level with the subject's eyes
+at waist height, tilted gently upward
+at hip height, a low angle with the lens tilted up about 10 degrees
+at knee height, a low angle looking up along the body
+above eye level, tilted down about 20 degrees
+at eye level with a slight 5 degree dutch tilt
+from behind the subject's shoulder, the subject turned back toward the lens
+low and to one side, a three-quarter viewpoint at thigh height
+slightly below eye level, tilted up about 8 degrees
+from a three-quarter viewpoint at shoulder height
+straight on from across the space, level and flat
+at hip height, a low angle elongating the legs

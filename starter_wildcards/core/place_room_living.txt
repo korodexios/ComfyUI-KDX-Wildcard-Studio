@@ -1,0 +1,8 @@
+# rooms for a sofa, armchair or floor scene: walls, floor and windows only, no seating (the pose names it)
+a living room with large windows and wooden floors
+a small flat living room with a patterned rug
+a living room with dark green walls and shelves of books
+a lounge with white walls and a parquet floor
+a library room lined with bookshelves
+a hotel suite with carpet and long curtains
+a cabin room with wooden walls and a stone fireplace

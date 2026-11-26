@@ -1,0 +1,9 @@
+3::a wide three-quarter frame, 16:9
+3::a low side-on frame, 3:2
+2::a tall detail frame, 4:5
+1::a front-on frame, 1:1
+2::a rear three-quarter frame, 3:2
+2::a low front three-quarter frame, 16:9
+1::a high frame looking down on the roof and bonnet, 4:3
+1::a detail frame of a wheel and the bodywork, 1:1
+1::a side-on frame from a distance with the vehicle small, 21:9

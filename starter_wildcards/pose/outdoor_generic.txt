@@ -1,0 +1,21 @@
+# poses for outdoor templates without a tie to an object or place (derived from pose/outdoor)
+striding forward, one foot ahead of the other, weight shifting
+walking and turning the head back over the shoulder
+walking away with the torso turned slightly back
+relaxed standing, hands in pockets, weight even
+standing tall, arms at the sides, weight even
+crouching with one knee down
+walking toward the camera with a loose gait
+walking with a long stride
+standing with both arms stretched overhead
+sitting on the ground, legs extended forward
+walking along with a bag over one shoulder, mid-stride
+standing with the weight on one leg, one hand in a jacket pocket
+turning on the spot, the coat swinging
+standing with arms crossed, a relaxed lean to one side
+stepping forward with a loose, easy stride
+standing with hands behind the back, chin lifted
+pausing mid-step, one hand pushing back the hair
+standing side-on to the camera, shoulders relaxed
+half-turned, one hand lifted to shade the eyes
+walking with a slow, unhurried pace

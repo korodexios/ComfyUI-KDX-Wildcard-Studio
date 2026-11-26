@@ -1,0 +1,9 @@
+# shot for still life and food; the last value is the ratio
+3::a close frame on the arrangement, 4:5
+2::a top-down frame, 1:1
+2::a wide frame with space around, 3:2
+1::a tall frame, 2:3
+2::a three-quarter view from slightly above, 4:5
+1::a close macro frame on one detail of the arrangement, 1:1
+1::a straight-on frame with the objects on the lower third, 3:2
+1::a low frame level with the surface, 16:9

@@ -1,0 +1,4 @@
+# colour and tonal treatment of the photo: standalone fragments, the template says them as a sentence
+# black and white, sepia, colour; does not refer to the subject
+40::__core/palette_colour__
+1::__core/palette_mono__
