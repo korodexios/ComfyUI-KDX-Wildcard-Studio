@@ -1,7 +1,7 @@
 # The panel
 
 Open it with the **KDX Wildcard Studio** tab in ComfyUI's left sidebar (the slider icon), or with the ⚙ button on the node.
-Everything you set here is stored in `user/kdx_console/config.json`; changes take effect on the next run, no
+Everything you set here is stored in `user/kdx_wildcard_studio/config.json`; changes take effect on the next run, no
 restart and no refresh needed.
 
 ![The KDX Wildcard Studio panel](images/panel-overview.webp)
@@ -71,7 +71,7 @@ To move a template to another category: ✕ it here, then **＋ Add template…*
 - **Preview** lists the next five runs. **Show prompt** expands the next prompt exactly as the next run will use it
   (same seed), so you can read it before you queue.
 - **Wildcards** shows how many files and templates the library has and which folders are read. **Folders…** sets other
-  folders (several separated by `;`); empty = automatic (`user/kdx_console/wildcards/`). See [Wildcards](07-wildcards.md).
+  folders (several separated by `;`); empty = automatic (`user/kdx_wildcard_studio/wildcards/`). See [Wildcards](07-wildcards.md).
 
 ## Shared or per workflow
 

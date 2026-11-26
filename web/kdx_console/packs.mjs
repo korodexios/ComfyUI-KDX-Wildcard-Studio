@@ -3,9 +3,9 @@
 // Export (pick templates -> check -> download). The server checks and writes everything (packs.py); a pack is
 // text only and goes into its own namespace packs/<pack>/, so nothing of the user's library is overwritten.
 import { api } from "../../../scripts/api.js";
-import { ensureTheme } from "./theme.mjs?v=0.7.12";
-import { call, getSnap, refresh, toast } from "./client.mjs?v=0.7.12";
-import { askConfirm } from "./dialog.mjs?v=0.7.12";
+import { ensureTheme } from "./theme.mjs?v=0.7.13";
+import { call, getSnap, refresh, toast } from "./client.mjs?v=0.7.13";
+import { askConfirm } from "./dialog.mjs?v=0.7.13";
 
 const META_KEY = "kdx_console.packs.meta";
 let win = null;

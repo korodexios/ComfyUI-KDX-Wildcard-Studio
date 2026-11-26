@@ -4,7 +4,7 @@ No other custom node is imported or called. The wildcard *files* are read from f
 
 1. ``wildcard_dirs`` in config.json (set in the panel or via REST), else
 2. the environment variable ``KDX_CONSOLE_WILDCARD_DIRS`` (paths separated by ``os.pathsep``), else
-3. ``<ComfyUI user dir>/kdx_console/wildcards`` when it holds at least one ``.txt`` file — the
+3. ``<ComfyUI user dir>/kdx_wildcard_studio/wildcards`` when it holds at least one ``.txt`` file — the
    recommended place: it sits next to config.json/state.json and is backed up with the user folder, else
 4. the folders that exist among: ``<custom_nodes>/comfyui-impact-pack/custom_wildcards``,
    ``<custom_nodes>/comfyui-impact-pack/wildcards`` and ``<ComfyUI>/wildcards``. Only the files
@@ -49,7 +49,7 @@ def set_dirs_provider(fn: Callable[[], list] | None) -> None:
 
 
 def set_user_root_provider(fn: Callable[[], str] | None) -> None:
-    """KDX Wildcard Studio's data folder (``<user dir>/kdx_console``); wildcards live in its ``wildcards/``."""
+    """KDX Wildcard Studio's data folder (``<user dir>/kdx_wildcard_studio``); wildcards live in its ``wildcards/``."""
     global _user_root_provider
     _user_root_provider = fn
 
@@ -85,7 +85,7 @@ STARTER_DIR = os.path.join(_PACK_DIR, "starter_wildcards")
 
 
 def install_starter() -> str | None:
-    """First start: copy the bundled example library to ``<user dir>/kdx_console/wildcards``.
+    """First start: copy the bundled example library to ``<user dir>/kdx_wildcard_studio/wildcards``.
 
     Only when nothing would be found otherwise: no folders set by the user (config/env), the user folder
     has no ``.txt`` files and no other automatic folder has any. Returns the target folder or ``None``."""

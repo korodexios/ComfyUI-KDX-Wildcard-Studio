@@ -6,35 +6,35 @@ syntax those files use. Same text + same seed = same prompt.
 
 ## Where the files are
 
-**Recommended:** `<ComfyUI>/user/kdx_console/wildcards/`, next to `config.json` and `state.json`. ComfyUI's
+**Recommended:** `<ComfyUI>/user/kdx_wildcard_studio/wildcards/`, next to `config.json` and `state.json`. ComfyUI's
 user folder is the place for user data on every system (Windows, Linux, portable), it survives updates of
-the node pack, and backing up `user/kdx_console/` saves the whole setup (see README › *Your data and backups*).
+the node pack, and backing up `user/kdx_wildcard_studio/` saves the whole setup (see README › *Your data and backups*).
 
 The first of these that is set wins:
 
 1. **Panel › Wildcards › Folders…** (saved as `wildcard_dirs` in `config.json`). Several folders are
    separated by `;`. Empty = automatic.
 2. Environment variable `KDX_CONSOLE_WILDCARD_DIRS` (folders separated by `:` on Linux, `;` on Windows).
-3. Automatic: `user/kdx_console/wildcards/` as soon as it holds a `.txt` file.
+3. Automatic: `user/kdx_wildcard_studio/wildcards/` as soon as it holds a `.txt` file.
 4. Automatic fallback: the folders that exist among `custom_nodes/comfyui-impact-pack/custom_wildcards`,
    `custom_nodes/comfyui-impact-pack/wildcards` and `ComfyUI/wildcards`. Only the files are read there.
 
 ### Sharing the library with Impact Pack nodes
 
 If other workflows still use Impact Pack wildcard nodes, keep one copy of the files in
-`user/kdx_console/wildcards/` and let the Impact Pack read it through a link:
+`user/kdx_wildcard_studio/wildcards/` and let the Impact Pack read it through a link:
 
 ```bash
 # Linux
-mv  custom_nodes/comfyui-impact-pack/custom_wildcards  user/kdx_console/wildcards
-ln -s "$PWD/user/kdx_console/wildcards"  custom_nodes/comfyui-impact-pack/custom_wildcards
+mv  custom_nodes/comfyui-impact-pack/custom_wildcards  user/kdx_wildcard_studio/wildcards
+ln -s "$PWD/user/kdx_wildcard_studio/wildcards"  custom_nodes/comfyui-impact-pack/custom_wildcards
 ```
 
 On Windows use a directory junction (no admin rights needed):
-`mklink /J custom_nodes\comfyui-impact-pack\custom_wildcards user\kdx_console\wildcards`.
+`mklink /J custom_nodes\comfyui-impact-pack\custom_wildcards user\kdx_wildcard_studio\wildcards`.
 
 **First start:** when none of these folders has any `.txt` file, KDX Wildcard Studio copies its example library
-(`starter_wildcards/` in the node pack) to `user/kdx_console/wildcards/` and imports its templates. An
+(`starter_wildcards/` in the node pack) to `user/kdx_wildcard_studio/wildcards/` and imports its templates. An
 existing library is never touched.
 
 If a key exists in more than one folder, the first folder wins. Files are re-read automatically when one is

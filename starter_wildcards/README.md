@@ -1,7 +1,7 @@
 # KDX Wildcard Studio starter wildcards
 
 A safe-for-work example library: 16 templates and about 110 pools, a trimmed copy of the author's own library. On
-first start KDX Wildcard Studio copies it to `ComfyUI/user/kdx_console/wildcards/` (only when no wildcard library exists yet)
+first start KDX Wildcard Studio copies it to `ComfyUI/user/kdx_wildcard_studio/wildcards/` (only when no wildcard library exists yet)
 and imports the templates, so the node works right after installation. Edit the copy in the user folder, not this
 one; add your own files next to it. Syntax: `docs/07-wildcards.md`; the words: `docs/08-glossary.md`.
 

@@ -5,19 +5,19 @@ is a directory that holds pools.
 
 | Word | What it is | Example | Where it lives |
 |---|---|---|---|
-| **Library** | All your wildcard files together | — | `ComfyUI/user/kdx_console/wildcards/` |
+| **Library** | All your wildcard files together | — | `ComfyUI/user/kdx_wildcard_studio/wildcards/` |
 | **Folder** | A directory inside the library. It only groups pools; it is never picked from by itself | `auto/`, `person/`, `core/` | `wildcards/auto/` |
 | **Pool** (wildcard file) | One `.txt` file with one value per line. Each image picks one line | `auto/car_color.txt` | `wildcards/auto/car_color.txt` |
 | **Value** | One line of a pool, optionally with a weight `N::` in front | `cherry red`, `2::pearl white` | a line in the pool |
 | **Token** | How a template (or another pool) names a pool: the path without `.txt`, between double underscores | `__auto/car_color__` | inside a template line |
 | **Template** | One full prompt, written as one line of text with tokens and groups in it. A special pool: it lives in `templates/` | `templates/cars.txt` | `wildcards/templates/cars.txt` |
-| **Category** | A group of templates in the panel, with its own on/off switch and `on_end`. Categories are settings, not files | **Cars** (key `cars`) | `user/kdx_console/config.json` |
+| **Category** | A group of templates in the panel, with its own on/off switch and `on_end`. Categories are settings, not files | **Cars** (key `cars`) | `user/kdx_wildcard_studio/config.json` |
 | **Pack** | Templates plus every pool they need, as one `.zip` to share | `cars_demo.zip` | installed into `wildcards/packs/<pack>/` |
 
 ## How they fit together
 
 ```
-user/kdx_console/
+user/kdx_wildcard_studio/
   config.json                 categories: "Cars" → [cars]        ← panel settings
   wildcards/                  the library
     templates/

@@ -46,7 +46,7 @@ def get_store() -> Store:
 
 # The wildcard engine reads its folders from config.json (empty = automatic).
 wildcards.set_dirs_provider(lambda: get_store().load_config().get("wildcard_dirs") or [])
-# Recommended home of the wildcard files: <ComfyUI user dir>/kdx_console/wildcards.
+# Recommended home of the wildcard files: <ComfyUI user dir>/kdx_wildcard_studio/wildcards.
 wildcards.set_user_root_provider(lambda: get_store().root)
 
 

@@ -77,7 +77,7 @@ the fingerprint only depends on the pin, so an identical pinned prompt is served
 
 ## Files
 
-Stored in ComfyUI's user directory (`folder_paths.get_user_directory()`), folder `kdx_console/`:
+Stored in ComfyUI's user directory (`folder_paths.get_user_directory()`), folder `kdx_wildcard_studio/` (before 0.7.13 `kdx_console/`, moved there automatically on the first start):
 
 - `config.json` — written by the panel / REST (categories, templates, mode, LLM switch)
 - `state.json` — written by the node (cursor, run count, next seed, last used state)
@@ -85,7 +85,7 @@ Stored in ComfyUI's user directory (`folder_paths.get_user_directory()`), folder
   [07-wildcards.md](07-wildcards.md). Used automatically as soon as it holds a `.txt` file.
 
 Writes are atomic and locked. A damaged file is copied to `<name>.bak` and replaced by defaults, and the panel
-shows a warning. `KDX_CONSOLE_DIR` overrides the folder.
+shows a warning. `KDX_WILDCARD_STUDIO_DIR` overrides the folder.
 
 ```json
 {

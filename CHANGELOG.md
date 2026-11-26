@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.7.13 - 2026-11-26
+
+### Changed
+- **The data folder is `user/kdx_wildcard_studio/`** (was `user/kdx_console/`), matching the product name. The first
+  start renames the old folder (one rename: nothing is copied or deleted) and points wildcard folders in config.json
+  that lay inside it at the new place. When both folders exist, the new one is used and the old one is left alone.
+  A link into the old folder (for example Impact Pack's `custom_wildcards`) has to be pointed at the new one.
+  The node class, REST routes and image metadata keep their names, so workflows and images work as before.
+- The environment variable that overrides the folder is `KDX_WILDCARD_STUDIO_DIR` (was `KDX_CONSOLE_DIR`).
+
 ## 0.7.12 - 2026-11-26
 
 ### Added

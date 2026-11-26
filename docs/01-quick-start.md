@@ -8,7 +8,7 @@ Tip: the example workflows (**Templates → Custom nodes → ComfyUI-KDX-Wildcar
 ## 1. Templates
 
 KDX Wildcard Studio expands wildcards with its own engine ([07-wildcards.md](07-wildcards.md)). Put your `.txt`
-wildcard files in `ComfyUI/user/kdx_console/wildcards/` (other folders: panel › **Wildcards › Folders…**).
+wildcard files in `ComfyUI/user/kdx_wildcard_studio/wildcards/` (other folders: panel › **Wildcards › Folders…**).
 A **template** is a wildcard file under `templates/` (for example `templates/portrait.txt`), usually one full
 prompt built from other wildcards:
 
