@@ -42,6 +42,10 @@ html.kdx-light .kdx-root{--kdx-acc:${ACCENT.light.acc};--kdx-on-acc:${ACCENT.lig
 .kdx-pill.own{border:2px dashed var(--kdx-fg)}
 .kdx-cat{display:flex;flex-direction:column;gap:6px}
 .kdx-cat.off{opacity:.62}
+.kdx-fold{min-width:22px;padding:2px 4px}
+.kdx-fold-sum{cursor:pointer}
+.kdx-folded{padding-top:5px;padding-bottom:5px}
+.kdx-fold-all{padding:0 2px}
 .kdx-tpls{display:flex;flex-wrap:wrap;gap:6px}
 .kdx-tpl{display:inline-flex;align-items:center;gap:4px;border-radius:999px}
 .kdx-rep{width:38px;border:1px solid var(--kdx-border);background:var(--kdx-field);color:var(--kdx-fg);

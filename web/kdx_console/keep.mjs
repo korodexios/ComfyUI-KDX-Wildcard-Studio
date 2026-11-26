@@ -6,10 +6,10 @@
 // of every pick, checks it against the prompt stored in the image, and turns the kept parts into a template line
 // (kept parts as fixed text, the choices around them kept, everything else still wildcards). This view only shows
 // the parts and sends the ids that are kept. Writes to the node happen on the user's click only.
-import { ensureTheme } from "./theme.mjs?v=0.7.11";
-import { call, getSnap, refresh, toast } from "./client.mjs?v=0.7.11";
-import { askConfirm, askText } from "./dialog.mjs?v=0.7.11";
-import { restoreText, useTextOnNode } from "./nodewrite.mjs?v=0.7.11";
+import { ensureTheme } from "./theme.mjs?v=0.7.12";
+import { call, getSnap, refresh, toast } from "./client.mjs?v=0.7.12";
+import { askConfirm, askText } from "./dialog.mjs?v=0.7.12";
+import { restoreText, useTextOnNode } from "./nodewrite.mjs?v=0.7.12";
 
 let win = null;
 let poolCache = null; // the library's pools for Replace / Add (loaded on first use)
@@ -445,7 +445,7 @@ export async function openKeep(opts = {}) {
   async function toBuilder() {
     const text = v.built?.template;
     if (!text) return;
-    const { openBuilder } = await import("./builder.mjs?v=0.7.11");
+    const { openBuilder } = await import("./builder.mjs?v=0.7.12");
     close();
     openBuilder({ text, name: suggestName() });
   }
