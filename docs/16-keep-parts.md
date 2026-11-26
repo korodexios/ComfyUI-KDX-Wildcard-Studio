@@ -42,10 +42,14 @@ The template line that the image's seed picked is kept too.
 
 ## Actions
 
-- **Use on node** writes the template into `user_text` of the KDX Wildcard Studio node and switches
-  `use_user_text` on. From then on, every run picks the parts that are not kept again. When the workflow has several
-  Studio nodes, select one first. A connected `user_prompt` still wins over `user_text` (see
-  [Your own prompt](13-your-own-prompt.md)). Nothing is written until you click.
+- **Use on node** writes the template where the KDX Wildcard Studio node reads it. From then on, every run picks
+  the parts that are not kept again. When the workflow has several Studio nodes, select one first.
+  - Without a connection it goes into `user_text` and switches `use_user_text` on.
+  - With a text node connected to `user_prompt`, a small window lets you choose: that text node (it wins over
+    `user_text`, see [Your own prompt](13-your-own-prompt.md)) or `user_text`.
+  - When the chosen place already holds other text, the window shows it and the button says **Replace**; nothing
+    is overwritten without that click. Afterwards **↶ Restore previous text** (or Ctrl+Z in ComfyUI) puts the old
+    text back.
 - **Save as template…** writes `templates/<name>.txt`. **Save into** can add the template to a category of the
   panel. An existing file is replaced only after you confirm, and the old one is kept as `.bak`. A template is one
   line; a prompt of several lines can only be used on the node.
