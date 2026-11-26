@@ -36,6 +36,11 @@ Click a thumbnail to open it.
   file name and the full prompt. **copy** puts a value on the clipboard.
 - **Esc** or a click beside the image closes the viewer.
 
+### Keep parts
+
+**🔒 Keep parts** takes this image's prompt apart into the wildcard picks that made it. You keep the parts you like
+and the rest varies in the next images. See [Keep parts](16-keep-parts.md).
+
 ### Pin in Studio
 
 **Pin in Studio** switches the Studio to **Pin** mode with this image's template and seed. The next run makes the

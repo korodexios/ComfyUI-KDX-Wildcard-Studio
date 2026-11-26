@@ -9,7 +9,8 @@ kdx_console/
   store.py               config.json / state.json, atomic writes, run transaction, events
   overrides.py           the overrides grammar
   importer.py            templates -> categories
-  wildcard_engine.py     own wildcard engine (files, __tokens__, {options}) — pure, no ComfyUI
+  wildcard_engine.py     own wildcard engine (files, __tokens__, {options}, optional pick record) — pure
+  keep.py                Keep parts: a prompt as its picks, kept parts -> template line — pure
   wildcards.py           wildcard folders (config > env > auto), template list, NSFW filter
   profiles.py            KDX-LLM system-prompt profiles (read-only)
   embed.py               image metadata / pin
@@ -21,7 +22,7 @@ web/
 tests/                   pytest
 ```
 
-`engine.py`, `store.py`, `overrides.py` and `wildcard_engine.py` do not import ComfyUI, so the logic is tested on its own.
+`engine.py`, `store.py`, `overrides.py`, `wildcard_engine.py` and `keep.py` do not import ComfyUI, so the logic is tested on its own.
 
 ## Tests and lint
 

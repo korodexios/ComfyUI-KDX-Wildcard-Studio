@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.7.4 - 2026-11-26
+
+### Added
+- **🔒 Keep parts.** Keep the parts of an image's prompt you like (pose, clothing, place, light, style …) and let the
+  rest vary. It opens from the Gallery viewer and from a Template builder sample. The prompt is shown as clickable
+  wildcard picks, with quick choices for whole groups (Whole person, Face & hair, Clothing, Pose & action, Camera,
+  Environment & light, Style & mood …), ⇄ Invert and live variants. Keeping a part also keeps the choice around it
+  (a kept expression keeps its option, whose mood still varies); a pool value with wildcards inside can be kept
+  whole or in part. The result is a template line: kept parts as fixed text, the rest as wildcards. **Use on node**
+  writes it into `user_text` and switches `use_user_text` on; **Save as template…** writes `templates/<name>.txt`
+  (optionally into a category); **Open in Builder** loads it there. Works for your own prompts with wildcards too.
+  See docs/16-keep-parts.md.
+- The window runs the image's template and seed again and compares the result with the prompt stored in the
+  image. When a wildcard file has changed, it says so and keeps nothing unless you choose to work with today's
+  picks.
+- REST: `POST /kdx_console/keep`, `POST /kdx_console/keep/build`; `builder/save` also takes a finished `text`.
+  Gallery items carry `user_text` and `llm_enabled`.
+
+### Changed
+- The wildcard engine can record which pick made which part of a prompt (`Library.expand(..., trace=True)`). The
+  picks, their order and the text are exactly the same as without the record. A test checks this for every
+  bundled template.
+
 ## 0.7.3 - 2026-11-26
 
 ### Added

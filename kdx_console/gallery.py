@@ -118,6 +118,9 @@ def image_meta(path: str) -> dict | None:
         "repeat": used.get("repeat"),
         "mode": used.get("mode"),
         "prompt": prompt,
+        # what was expanded: the user's own text (template user_prompt), else the template itself
+        "user_text": used.get("user_text") if isinstance(used.get("user_text"), str) else "",
+        "llm_enabled": bool(used.get("llm_enabled")),
     }
     if size:
         out["width"], out["height"] = size

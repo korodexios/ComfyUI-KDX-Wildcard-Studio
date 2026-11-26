@@ -18,7 +18,10 @@ GET  /kdx_console/builder/pool         ?key=core/light_sky   values, description
 GET  /kdx_console/builder/template     ?name=   a template as bubbles (+ the categories it is in)
 POST /kdx_console/builder/parse        {text}   a line as bubbles
 POST /kdx_console/builder/preview      {nodes, name?, count?, seed?}   template line, checks, expansions
-POST /kdx_console/builder/save         {name, nodes, overwrite?, category?}   write templates/<name>.txt
+POST /kdx_console/builder/save         {name, nodes | text, overwrite?, category?}   write templates/<name>.txt
+POST /kdx_console/keep                 {template | text, seed, expected?}   an image's prompt as the picks that made it
+POST /kdx_console/keep/build           {template | text, seed, locks, fingerprint?, count?, sample_seed?}
+                                       the template with those parts kept + live samples
 GET  /kdx_console/builder/pool/edit    ?key=   a pool for the editor (description, lines, users, file)
 POST /kdx_console/builder/pool/check   {key, desc, lines, new?}   checks, users, 3 prompts with the edited pool
 POST /kdx_console/builder/pool/save    {key, desc, lines, new?}   write it (.bak; removed values to the archive)
@@ -37,7 +40,7 @@ import json
 import logging
 import os
 
-from . import builder, engine, gallery, importer, packs, pools, profiles, wildcards
+from . import builder, engine, gallery, importer, keep, packs, pools, profiles, wildcards
 from . import scope as scope_mod
 from .engine import ConsoleError
 from .store import Store
@@ -328,6 +331,8 @@ def post_builder_parse(store: Store, body: bytes) -> tuple[int, dict]:
 
 
 def _nodes_text(data: dict) -> str:
+    if data.get("nodes") is None and isinstance(data.get("text"), str):  # a finished line (Keep parts)
+        return builder.serialize(builder.parse_line(data["text"].strip()))
     return builder.serialize(builder.normalize_nodes(data.get("nodes")))
 
 
@@ -387,6 +392,72 @@ def post_builder_save(store: Store, body: bytes) -> tuple[int, dict]:
             store.save_config(raw)
     log.info("[KDX-Wildcard-Studio] builder saved templates/%s.txt%s", name, " (backup .bak)" if res["backup"] else "")
     return _ok(name=name, text=text, created=res["created"], backup=bool(res["backup"]), category=added)
+
+
+# ------------------------------------------------------------------------------------------- keep parts
+
+
+def _keep_input(store: Store, data: dict) -> keep.Decomposition:
+    """What made the image (a template name or the expanded text) + its seed, expanded again with a record."""
+    lib = _builder_lib()
+    template = str(data.get("template") or "").strip()
+    if template:
+        name = engine.template_name(template)
+        if wildcards.is_excluded(name) and not _show_nsfw(store):
+            raise ConsoleError("KDX Keep parts: NSFW templates are hidden (NSFW switch in the panel).")
+        text = engine.template_token(name)
+    else:
+        text = str(data.get("text") or "")
+        if not text.strip():
+            raise ConsoleError("KDX Keep parts: no template and no prompt text to take apart.")
+    seed = data.get("seed")
+    if not isinstance(seed, int) or isinstance(seed, bool):
+        raise ConsoleError("KDX Keep parts: the image has no seed, so its picks cannot be found again.")
+    return keep.decompose(lib, text, seed)
+
+
+def _wrap_keep(fn):
+    def wrapper(*a, **kw):
+        try:
+            return fn(*a, **kw)
+        except (keep.KeepError, builder.BuilderError) as e:
+            return _err(e)
+    return wrapper
+
+
+@guard
+@_wrap_keep
+def post_keep(store: Store, body: bytes) -> tuple[int, dict]:
+    """The prompt as clickable parts. ``matches`` compares it with the prompt stored in the image (None when the
+    image stored none); ``reliable`` is false when the record failed its self checks."""
+    data = parse_body(body)
+    d = _keep_input(store, data)
+    return _ok(text=d.text, seed=d.seed, prompt=d.prompt, missing=d.missing, fingerprint=d.fingerprint,
+               matches=keep.compare(data.get("expected"), d.prompt), reliable=d.reliable(_builder_lib()),
+               tree=d.view(), groups=d.groups())
+
+
+@guard
+@_wrap_keep
+def post_keep_build(store: Store, body: bytes) -> tuple[int, dict]:
+    """The template line with ``locks`` kept, its checks and a few expansions of it."""
+    data = parse_body(body)
+    d = _keep_input(store, data)
+    fp = data.get("fingerprint")
+    if fp and fp != d.fingerprint:
+        raise ConsoleError("KDX Keep parts: the wildcard files changed since this image was taken apart. "
+                           "Open it again.")
+    lib = _builder_lib()
+    if not d.reliable(lib):
+        raise ConsoleError("KDX Keep parts: the picks of this prompt cannot be told apart reliably "
+                           "(a wildcard value cuts through another one), so no part is kept.")
+    locks = d.clean_locks(data.get("locks"))
+    text = d.render(locks)
+    seed = data.get("sample_seed")
+    seed = seed if isinstance(seed, int) and not isinstance(seed, bool) else None
+    count = engine._int(data.get("count"), 3, 1, 10)
+    return _ok(template=text, locks=sorted(locks), samples=builder.preview(text, lib, count, seed),
+               warnings=builder.check(text, lib) if locks else [])
 
 
 # ------------------------------------------------------------------------------------------- pool editor

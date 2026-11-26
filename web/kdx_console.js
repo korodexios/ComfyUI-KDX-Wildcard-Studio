@@ -1,7 +1,7 @@
 // KDX Wildcard Studio - frontend entry: sidebar tab + node body. One small hook (client.mjs): the template picked with ▶ is attached to the next queued prompt.
 import { app } from "../../scripts/app.js";
-import { setupNode } from "./kdx_console/node.mjs?v=0.7.3";
-import { mountPanel } from "./kdx_console/panel.mjs?v=0.7.3";
+import { setupNode } from "./kdx_console/node.mjs?v=0.7.4";
+import { mountPanel } from "./kdx_console/panel.mjs?v=0.7.4";
 
 app.registerExtension({
   name: "KDX.Studio",

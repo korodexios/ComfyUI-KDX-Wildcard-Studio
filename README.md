@@ -153,6 +153,9 @@ template or prompt text, and keep only the newest N per template. A click on an 
 with what made it next to it (template, category, seed, image number, size, file, the full prompt with a copy button),
 ← → to move, a click on the image for 1:1 zoom, I to hide the details, Esc or a click beside the image to close.
 "Pin in Studio" switches the panel to pin mode with that template and seed to repeat the image exactly.
+"🔒 Keep parts" takes the prompt apart into its wildcard picks: keep the pose, the clothes, the place or the light, and
+the rest (face, hair, expression …) keeps varying. The result goes onto the node, into a new template or into the
+builder; see [Keep parts](docs/16-keep-parts.md).
 Images of NSFW templates (names starting with `nsfw`, `akt`, `sheer`) appear only while the panel's **NSFW** switch
 is on; the same switch lets you add and import those templates.
 
@@ -245,6 +248,7 @@ folder). The node pack itself holds no data, so updating or reinstalling it lose
 - [The panel](docs/09-panel.md) — categories, templates, LLM and NSFW pills, New category, Import
 - [Gallery and viewer](docs/10-gallery.md) — filters, details, Pin in Studio
 - [Template builder](docs/11-template-builder.md) — bubbles, groups, checks, Save / Save as…
+- [Keep parts](docs/16-keep-parts.md) — keep what you like in an image, let the rest vary
 - [Pool editor](docs/12-pool-editor.md) — new pools and folders, values and weights, archive and .bak
 - [Your own prompt on the node](docs/13-your-own-prompt.md) — `user_prompt`, `user_text` / `use_user_text`
 - [Packs: share and install](docs/14-packs-guide.md) — export, import, uninstall
