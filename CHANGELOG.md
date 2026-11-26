@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.6 - 2026-11-26
+
+### Changed
+- **Keep parts › Use on node never overwrites your text without asking.** With a text node connected to
+  `user_prompt` it offers to write into that node (it wins over `user_text`) or into `user_text`. When the chosen
+  place holds other text, it shows that text and writes only after **Replace**. **↶ Restore previous text** puts the
+  old text back (Ctrl+Z works too).
+
 ## 0.7.5 - 2026-11-26
 
 ### Fixed

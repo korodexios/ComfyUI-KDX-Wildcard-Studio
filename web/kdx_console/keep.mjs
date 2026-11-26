@@ -7,9 +7,9 @@
 // (kept parts as fixed text, the choices around them kept, everything else still wildcards). This view only shows
 // the parts and sends the ids that are kept. Writes to the node happen on the user's click only.
 import { app } from "../../../scripts/app.js";
-import { ensureTheme } from "./theme.mjs?v=0.7.5";
-import { call, consoleNodes, getSnap, refresh, toast } from "./client.mjs?v=0.7.5";
-import { askConfirm, askText } from "./dialog.mjs?v=0.7.5";
+import { ensureTheme } from "./theme.mjs?v=0.7.6";
+import { call, consoleNodes, getSnap, refresh, toast } from "./client.mjs?v=0.7.6";
+import { askConfirm, askPick, askText } from "./dialog.mjs?v=0.7.6";
 
 let win = null;
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -227,9 +227,10 @@ export async function openKeep(opts = {}) {
     const b = v.built;
     const cats = getSnap()?.config?.categories || [];
     const acts = `<div class="kdx-row"><b>Result</b><span class="kdx-sp"></span>
-        <button class="kdx-btn kdx-primary" data-k="node" ${b?.template ? "" : "disabled"} title="Write the template into user_text of the KDX Wildcard Studio node and switch use_user_text on (the selected node, or the only one)">Use on node</button>
+        <button class="kdx-btn kdx-primary" data-k="node" ${b?.template ? "" : "disabled"} title="Write the template where the Studio node reads it: user_text (use_user_text on) or the text node connected to user_prompt. Asks before replacing other text">Use on node</button>
         <button class="kdx-btn" data-k="save" ${b?.template ? "" : "disabled"} title="Write it as templates/<name>.txt">Save as template…</button>
         <button class="kdx-btn" data-k="builder" ${b?.template ? "" : "disabled"} title="Open it in the Template builder to edit it further">Open in Builder</button></div>
+      ${v.undo ? `<div class="kdx-row"><button class="kdx-btn" data-k="restore" title="Put back the text that ${esc(v.undo.label)} held before Use on node">↶ Restore previous text of ${esc(v.undo.label)}</button></div>` : ""}
       <label class="kdx-row" style="gap:4px" title="Save as template: also add it to this category of the panel">Save into
         <select class="kdx-sel" data-k="category"><option value="">no category</option>
         ${cats.map((c) => `<option value="${esc(c.key)}" ${c.key === v.category ? "selected" : ""}>${esc(c.name)}</option>`).join("")}</select></label>`;
@@ -291,25 +292,76 @@ export async function openKeep(opts = {}) {
     toast("Several KDX Wildcard Studio nodes: select the one to write into, then click again.");
     return null;
   }
-  function useOnNode() {
+  /** The text node wired into user_prompt, with the string widget it sends (null when there is none). */
+  function wiredSource(node) {
+    const slot = node.inputs?.findIndex((i) => i.name === "user_prompt" && i.link != null) ?? -1;
+    if (slot < 0) return null;
+    const src = node.getInputNode?.(slot);
+    if (!src) return { node: null, widget: null };
+    const strings = (src.widgets || []).filter((w) => typeof w.value === "string" && !w.hidden && w.type !== "combo");
+    const widget = strings.find((w) => ["text", "value", "string", "prompt"].includes(w.name)) || strings[0] || null;
+    return { node: src, widget, muted: src.mode === 2 || src.mode === 4 };
+  }
+  function writeWidget(node, w, value) {
+    w.value = value;
+    w.callback?.(value);
+    node.setDirtyCanvas?.(true, true);
+  }
+  function graphChanged() {
+    app.graph?.change?.();
+    try { app.extensionManager?.workflow?.activeWorkflow?.changeTracker?.checkState?.(); } catch (_e) { /* older frontend */ }
+  }
+  /** Write the result where the Studio reads it, never over other text without asking (old text can be restored). */
+  async function useOnNode() {
     const text = v.built?.template;
     const node = text && targetNode();
     if (!node) return;
-    const set = (name, value) => {
-      const w = node.widgets?.find((x) => x.name === name);
-      if (!w) return false;
-      w.value = value;
-      w.callback?.(value);
-      return true;
-    };
-    if (!set("user_text", text) || !set("use_user_text", true)) { toast("This node has no user_text / use_user_text widgets."); return; }
-    node.setDirtyCanvas?.(true, true);
-    app.graph?.change?.();
-    try { app.extensionManager?.workflow?.activeWorkflow?.changeTracker?.checkState?.(); } catch (_e) { /* older frontend */ }
+    const ut = node.widgets?.find((x) => x.name === "user_text");
+    const sw = node.widgets?.find((x) => x.name === "use_user_text");
+    if (!ut || !sw) { toast("This node has no user_text / use_user_text widgets."); return; }
+    const src = wiredSource(node);
+    const options = [];
+    if (src?.widget) {
+      options.push({ id: "source", label: `Connected text node "${src.node.title || src.node.type}" (#${src.node.id}), widget ${src.widget.name}`,
+        note: src.muted ? "It is muted or bypassed, so the Studio does not read it now." : "", current: src.widget.value });
+    }
+    options.push({ id: "user_text", label: `user_text of the Studio node (#${node.id}), use_user_text on`,
+      note: src && !src.muted ? "user_prompt is connected and wins over user_text: mute or bypass its source to use it." : "", current: ut.value });
+    const pick = options.find((o) => o.id === "source" && !src.muted) || options.find((o) => o.id === "user_text");
+    const differs = (o) => String(o.current || "").trim() && String(o.current).trim() !== text.trim();
+    let id = pick.id;
+    if (options.length > 1 || differs(pick)) {
+      id = await askPick({ title: "Use on node", options, value: pick.id,
+        text: "Where should the template go? Text that is there now is replaced; ↶ Restore previous text (or Ctrl+Z) brings it back.",
+        okLabel: (o) => (differs(o) ? "Replace" : "Write") });
+      if (!id) return;
+    }
+    if (id === "source") {
+      v.undo = { label: `"${src.node.title || src.node.type}"`, items: [[src.node, src.widget, src.widget.value]] };
+      writeWidget(src.node, src.widget, text);
+    } else {
+      v.undo = { label: "user_text", items: [[node, ut, ut.value], [node, sw, sw.value]] };
+      writeWidget(node, ut, text);
+      writeWidget(node, sw, true);
+    }
+    graphChanged();
     node._kdxRender?.();
-    const wired = node.inputs?.find((i) => i.name === "user_prompt" && i.link != null);
-    toast(wired ? "Written to user_text, but user_prompt is connected and wins: mute or bypass its source node."
-      : `Written to user_text of node #${node.id}; use_user_text is on. Every run now varies only the parts not kept.`, wired ? "warn" : "success");
+    paint("right", rightHtml);
+    const ignored = id === "source" ? src.muted : src && !src.muted;
+    toast(id === "source"
+      ? `Written to the connected text node #${src.node.id}.${src.muted ? " It is muted or bypassed: unmute it so the Studio reads it." : " Every run now varies only the parts not kept."}`
+      : `Written to user_text of node #${node.id}; use_user_text is on.${ignored ? " user_prompt is connected and still wins." : " Every run now varies only the parts not kept."}`,
+    ignored ? "warn" : "success");
+  }
+  function restore() {
+    const u = v.undo;
+    if (!u) return;
+    for (const [n, w, val] of u.items) if (n.graph) writeWidget(n, w, val);
+    v.undo = null;
+    graphChanged();
+    for (const [n] of u.items) n._kdxRender?.();
+    paint("right", rightHtml);
+    toast(`Previous text of ${u.label} restored.`, "success");
   }
   function suggestName() {
     const base = String(opts.name || "kept").toLowerCase().replace(/^templates\//, "").replace(/[^a-z0-9_]+/g, "_").replace(/^_+|_+$/g, "") || "kept";
@@ -336,7 +388,7 @@ export async function openKeep(opts = {}) {
   async function toBuilder() {
     const text = v.built?.template;
     if (!text) return;
-    const { openBuilder } = await import("./builder.mjs?v=0.7.5");
+    const { openBuilder } = await import("./builder.mjs?v=0.7.6");
     close();
     openBuilder({ text, name: suggestName() });
   }
@@ -356,6 +408,7 @@ export async function openKeep(opts = {}) {
     if (k === "again") { v.sampleSeed = newSeed(); build(); return; }
     if (k === "copy") { try { await navigator.clipboard.writeText(v.built?.template || ""); toast("Copied.", "success"); } catch (_e) { toast("Copy failed."); } return; }
     if (k === "node") { useOnNode(); return; }
+    if (k === "restore") { restore(); return; }
     if (k === "save") { save(); return; }
     if (k === "builder") { toBuilder(); return; }
     const p = e.target.closest(".kdx-kp-p");
