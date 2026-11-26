@@ -5,9 +5,10 @@
 // take bubbles too. The palette on the left offers pools, ready sentences and shapes; drag them in or click ＋.
 // The server owns the syntax: it turns a line into bubbles, writes bubbles back as a line, checks and expands it.
 // No external libraries; no polling (the preview is asked for after a change, debounced).
-import { ensureTheme } from "./theme.mjs?v=0.7.8";
-import { call, getSnap, refresh, toast } from "./client.mjs?v=0.7.8";
-import { askConfirm, askText } from "./dialog.mjs?v=0.7.8";
+import { ensureTheme } from "./theme.mjs?v=0.7.9";
+import { call, getSnap, refresh, toast } from "./client.mjs?v=0.7.9";
+import { askConfirm, askText } from "./dialog.mjs?v=0.7.9";
+import { restoreText, useTextOnNode } from "./nodewrite.mjs?v=0.7.9";
 
 let win = null;
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -252,6 +253,7 @@ export async function openBuilder(opts = {}) {
     const warns = pv.warnings || [];
     return `<div class="kdx-row"><b>Checks</b>${warns.length ? "" : ` <span class="kdx-ok">✅ all rules met</span>`}</div>
       ${warns.map((w) => `<div class="${w.level === "error" ? "kdx-err" : "kdx-warn"}">${w.level === "error" ? "⛔" : "⚠"} ${esc(w.msg)}</div>`).join("")}
+      ${v.undo ? `<div class="kdx-row"><button class="kdx-btn" data-b="restore" title="Put back the text that ${esc(v.undo.label)} held before Use on node">↶ Restore previous text of ${esc(v.undo.label)}</button></div>` : ""}
       <div class="kdx-row"><b>3 random images</b><span class="kdx-sp"></span><button class="kdx-btn" data-b="again" title="Expand again with new random seeds">⟳ Again</button></div>
       ${(pv.samples || []).map((s, i) => `<div class="kdx-bb-sample"><div class="kdx-row kdx-muted">seed ${s.seed}${s.missing?.length ? ` · <span class="kdx-err">unknown: ${esc(s.missing.join(", "))}</span>` : ""}
         <span class="kdx-sp"></span><button class="kdx-btn" data-b="keep" data-i="${i}" title="Keep parts of this sample (pose, clothing, place …) and let the rest vary">🔒 Keep parts</button></div>${esc(s.text)}</div>`).join("")}
@@ -449,7 +451,7 @@ export async function openBuilder(opts = {}) {
 
   // ------------------------------------------------------------------ pool editor (phase 2)
   async function editPool(key, dir = "") {
-    const m = await import("./pooledit.mjs?v=0.7.8");
+    const m = await import("./pooledit.mjs?v=0.7.9");
     const folders = [...new Set(cat.pools.map((p) => dirOf(p.key)))].filter((d) => !d.startsWith("packs/") && d !== "(top)").sort();
     const folder = dir || (v.pool && !key ? dirOf(v.pool.key) : ""); // the folder it was opened from, else none
     m.openPoolEditor({ key, folder, folders, onSaved: (saved) => reloadPalette(saved) });
@@ -490,11 +492,12 @@ export async function openBuilder(opts = {}) {
     return `<button class="kdx-btn ${replace ? "" : "kdx-primary"}" data-b="save" title="${replace
       ? `Write over templates/${esc(v.loaded)}.txt (asks first; the old file is kept as .bak)`
       : "Write templates/<name>.txt (asks before replacing a file; the old one is kept as .bak)"}">${replace ? "Save (replace)" : "Save"}</button>
-      <button class="kdx-btn ${replace ? "kdx-primary" : ""}" data-b="saveas" title="Save under a new name; the open template stays as it is">Save as…</button>`;
+      <button class="kdx-btn ${replace ? "kdx-primary" : ""}" data-b="saveas" title="Save under a new name; the open template stays as it is">Save as…</button>
+      <button class="kdx-btn" data-b="node" title="Send this line to the KDX Wildcard Studio node as your own prompt, without saving a template (asks before replacing text there)">Use on node</button>`;
   }
   const paintSaveButtons = () => {
     const h = el.querySelector(".kdx-gal-head");
-    h?.querySelectorAll('[data-b="save"],[data-b="saveas"]').forEach((b, i) => { if (i === 0) b.outerHTML = saveButtons(); else b.remove(); });
+    h?.querySelectorAll('[data-b="save"],[data-b="saveas"],[data-b="node"]').forEach((b, i) => { if (i === 0) b.outerHTML = saveButtons(); else b.remove(); });
   };
   /** A free name for a copy: portrait_woman -> portrait_copy_woman, portrait_copy2_woman, …; the sex stays last. */
   function copyName(name) {
@@ -554,6 +557,15 @@ export async function openBuilder(opts = {}) {
     if (b && (b.tagName === "SELECT" || (b.tagName === "INPUT"))) return;
     if (act === "save") { save(); return; }
     if (act === "saveas") { saveAs(); return; }
+    if (act === "node") {
+      clearTimeout(timer);
+      await runPreview();
+      if (v.preview?.error || !v.preview?.text?.trim()) { toast(v.preview?.error || "The template is empty."); return; }
+      const undo = await useTextOnNode(v.preview.text);
+      if (undo) { v.undo = undo; paintPreview(); }
+      return;
+    }
+    if (act === "restore") { restoreText(v.undo); v.undo = null; paintPreview(); return; }
     if (act === "tab") { v.tab = b.dataset.m; paintPalette(); return; }
     if (act === "pedit" || act === "pnew") { e.preventDefault(); editPool(act === "pedit" ? b.dataset.key : null, b.dataset.dir || ""); return; } // preventDefault: a ＋ in a folder title must not fold it
     if (act === "sex") { v.sex = b.dataset.m; paintPalette(); return; }
@@ -573,7 +585,7 @@ export async function openBuilder(opts = {}) {
     if (act === "keep") {
       const s = v.preview?.samples?.[Number(b.dataset.i)];
       if (!s || !v.preview?.text) return;
-      const { openKeep } = await import("./keep.mjs?v=0.7.8");
+      const { openKeep } = await import("./keep.mjs?v=0.7.9");
       openKeep({ text: v.preview.text, seed: s.seed, expected: s.text, from: "builder", name: v.name || v.loaded, category: v.category });
       return;
     }

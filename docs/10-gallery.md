@@ -41,6 +41,12 @@ Click a thumbnail to open it.
 **🔒 Keep parts** takes this image's prompt apart into the wildcard picks that made it. You keep the parts you like
 and the rest varies in the next images. See [Keep parts](16-keep-parts.md).
 
+### Save as template
+
+Images made from your own text (`user_text` / `user_prompt`, template `user_prompt`) have **Save as template…**: it
+writes that text, wildcards included, as `templates/<name>.txt`. Lines are joined into one. Add the new template
+to a category in the panel.
+
 ### Pin in Studio
 
 **Pin in Studio** switches the Studio to **Pin** mode with this image's template and seed. The next run makes the

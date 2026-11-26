@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.7.9 - 2026-11-26
+
+### Added
+- **Keep parts › ⇄ Replace…**: put another pool, wildcards or your own words in place of a part (search the library's
+  pools or type), **↺ Original** undoes it. The choices around it are kept. **＋ Add at the end** adds text or a
+  pool after the prompt.
+- **Template builder › Use on node**: send the line to the Studio node as your own prompt without saving a template
+  (asks before replacing text, ↶ Restore previous text).
+- **Gallery › Save as template…** for images made from your own text: its prompt, wildcards included, becomes
+  `templates/<name>.txt`.
+- REST: `keep/build` takes `swaps` and `append`.
+
 ## 0.7.8 - 2026-11-26
 
 ### Docs

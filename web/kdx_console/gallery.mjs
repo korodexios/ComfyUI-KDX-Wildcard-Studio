@@ -2,9 +2,10 @@
 // template. Opens full window from the panel; a click on an image opens the shared KDX lightbox with what made
 // it (template, seed, file, prompt). Loads on open and on ⟳ / filter change; no polling.
 import { api } from "../../../scripts/api.js";
-import { ACCENT, ensureTheme } from "./theme.mjs?v=0.7.8";
-import { call, getSnap, toast } from "./client.mjs?v=0.7.8";
-import { openLightbox } from "./lightbox.mjs?v=0.7.8";
+import { ACCENT, ensureTheme } from "./theme.mjs?v=0.7.9";
+import { call, getSnap, toast } from "./client.mjs?v=0.7.9";
+import { openLightbox } from "./lightbox.mjs?v=0.7.9";
+import { askConfirm, askText } from "./dialog.mjs?v=0.7.9";
 
 const VIEW_KEY = "kdx_console.gallery";
 const RANGES = [["1h", "last hour", 3600], ["6h", "last 6 hours", 6 * 3600], ["today", "today", 0],
@@ -46,6 +47,24 @@ function sinceOf(v) {
 const fmtTime = (t) => new Date(t * 1000).toLocaleString([], { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
 
 export function closeGallery() { win?.close(); }
+
+/** An image made from your own text: save that text (wildcards included) as a template. */
+async function saveOwnPrompt(it) {
+  const text = String(it.user_text || "").split(/\r?\n/).map((l) => l.trim()).filter((l) => l && !l.startsWith("#")).join(" ");
+  if (!text) return;
+  const name = await askText({ title: "Save as template", value: "own_prompt",
+    text: `templates/<name>.txt (a-z, 0-9, _). The text of this image${/\n/.test(it.user_text) ? ", its lines joined into one" : ""}:\n${text.slice(0, 300)}${text.length > 300 ? "…" : ""}`,
+    okLabel: "Save" });
+  if (name == null) return;
+  const clean = name.trim().toLowerCase().replace(/\.txt$/, "");
+  let r = await call("POST", "/kdx_console/builder/save", { name: clean, text });
+  if (!r.ok && r.exists) {
+    if (!(await askConfirm({ title: `Replace templates/${clean}.txt?`, text: `A template with this name exists. The old version is kept as templates/${clean}.txt.bak.`, okLabel: "Replace", danger: true }))) return;
+    r = await call("POST", "/kdx_console/builder/save", { name: clean, text, overwrite: true });
+  }
+  if (!r.ok) { toast(r.error); return; }
+  toast(`Saved templates/${r.name}.txt${r.backup ? " (old file kept as .bak)" : ""}. Add it to a category in the panel.`, "success");
+}
 
 /** Open the gallery; `opts.template` / `opts.category` start with that filter. */
 export async function openGallery(opts = {}) {
@@ -167,17 +186,19 @@ export async function openGallery(opts = {}) {
       ],
       actions: (it) => [
         keepInput(it) ? { id: "keep", label: "🔒 Keep parts", primary: true, title: "Keep the parts of this prompt you like (pose, clothing, place, light …) and let the rest vary" } : null,
+        it.template === "user_prompt" && it.user_text ? { id: "saveas", label: "Save as template…", title: "Save the prompt of this image (your own text, wildcards included) as templates/<name>.txt" } : null,
         { id: "pin", label: "Pin in Studio", title: "Switch the Studio to pin mode with this template and seed (exact repeat). Switch the mode back in the panel afterwards." },
       ].filter(Boolean),
       onKey: () => keepIsOpen(), // the Keep parts window on top owns the keys
       onAction: async (id, it) => {
         if (id === "keep") {
-          const { openKeep, keepOpen } = await import("./keep.mjs?v=0.7.8");
+          const { openKeep, keepOpen } = await import("./keep.mjs?v=0.7.9");
           keepIsOpen = keepOpen;
           openKeep({ ...keepInput(it), seed: it.seed, expected: it.prompt || "", llm: !!it.llm_enabled, category: it.category,
             name: it.template === "user_prompt" ? "own_prompt" : it.template, image: viewUrl(it), from: "gallery" });
           return;
         }
+        if (id === "saveas") { saveOwnPrompt(it); return; }
         if (id !== "pin") return;
         const d = await call("POST", "/kdx_console/select", { category: it.category, template: it.template, mode: "pin", pin_seed: it.seed });
         if (!d.ok) toast(d.error); else toast(`Pinned ${it.template} · seed ${it.seed}`, "success");

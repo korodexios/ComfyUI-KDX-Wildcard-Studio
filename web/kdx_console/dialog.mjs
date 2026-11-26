@@ -4,7 +4,7 @@
 // askConfirm(...) -> Promise<boolean>
 // askPick(...)    -> Promise<id | null>      (choose a target, see what it holds now)
 // Enter confirms (single line), Ctrl+Enter confirms (multi line), Esc or a click outside cancels.
-import { ensureTheme } from "./theme.mjs?v=0.7.8";
+import { ensureTheme } from "./theme.mjs?v=0.7.9";
 
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
