@@ -43,18 +43,18 @@ Update: `git pull` in that folder, restart ComfyUI, then reload the browser tab.
 
 ## Wildcard library
 
-On the first start KDX Wildcard Studio copies its example library to `ComfyUI/user/kdx_console/wildcards/` and imports
+On the first start KDX Wildcard Studio copies its example library to `ComfyUI/user/kdx_wildcard_studio/wildcards/` and imports
 its templates, so the node works right away: 16 safe-for-work templates in three categories (people: portrait,
 street, everyday, outdoor and work, each for a woman and a man; places: landscape, architecture; things: still life,
 food, animal, vehicle) and the pools they use. The Template builder's ready sentences work with it too. It does this
 only when no wildcard library exists yet. Replace or extend it with your own files.
 
-Put your wildcard files in `ComfyUI/user/kdx_console/wildcards/`. Each `.txt` file is one wildcard, one
+Put your wildcard files in `ComfyUI/user/kdx_wildcard_studio/wildcards/`. Each `.txt` file is one wildcard, one
 value per line; the path is its name. Templates — the full prompts KDX Wildcard Studio switches between — go in
 `templates/`:
 
 ```
-user/kdx_console/wildcards/
+user/kdx_wildcard_studio/wildcards/
   templates/
     portrait.txt          The image is {__core/medium__}. It shows a woman in her __person/age__ ...
     art/cubism.txt        sub-folder = category "art" on import
@@ -233,15 +233,19 @@ template in a pack that says `nsfw: false`. NSFW packs follow the NSFW switch. D
 
 ## Your data and backups
 
-Everything KDX Wildcard Studio keeps is in one folder, `<ComfyUI>/user/kdx_console/` (ComfyUI's user directory,
+Everything KDX Wildcard Studio keeps is in one folder, `<ComfyUI>/user/kdx_wildcard_studio/` (ComfyUI's user directory,
 the same on Windows, Linux and the portable build):
 
 ```
-user/kdx_console/
+user/kdx_wildcard_studio/
   config.json     categories, templates, repeat, on_end, mode, LLM switch, wildcard folders
   state.json      the counter (where the sequence is, run count, next seed)
   wildcards/      your wildcard library: templates/*.txt and the files they use
 ```
+
+Before 0.7.13 the folder was `user/kdx_console/`. The first start of 0.7.13 renames it (nothing is copied or
+deleted); a link that pointed into the old folder, for example Impact Pack's `custom_wildcards`, has to be pointed
+at the new one.
 
 To back up or move your setup, copy this folder (it is also included when you back up ComfyUI's `user`
 folder). The node pack itself holds no data, so updating or reinstalling it loses nothing.

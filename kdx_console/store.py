@@ -1,6 +1,6 @@
 """Persistent config/state for KDX Wildcard Studio (no ComfyUI imports).
 
-Files in ``<root>`` (default ``<ComfyUI user dir>/kdx_console``):
+Files in ``<root>`` (default ``<ComfyUI user dir>/kdx_wildcard_studio``, ``kdx_console`` before 0.7.13):
   * ``config.json`` — written by the user (panel / REST)
   * ``state.json``  — written by the engine (cursor per channel)
 
@@ -33,16 +33,64 @@ Expander = Callable[[str, int], str]  # (template token, seed) -> prompt
 Listener = Callable[[str, dict], None]  # (event kind, payload)
 
 
+DATA_DIR = "kdx_wildcard_studio"  # <ComfyUI user dir>/kdx_wildcard_studio
+OLD_DATA_DIR = "kdx_console"  # the folder's name before 0.7.13; moved once, see migrate_root
+ENV_DIR = "KDX_WILDCARD_STUDIO_DIR"
+
+
+def migrate_root(user_dir: str) -> str:
+    """``<user_dir>/kdx_wildcard_studio``. On the first start after the rename, the old ``<user_dir>/kdx_console``
+    is renamed to it (one ``os.rename``: nothing is copied or deleted), and folder paths in its config.json that
+    pointed into the old folder are pointed at the new one. When both folders exist, the new one is used and the old
+    one is left alone (logged)."""
+    new = os.path.join(user_dir, DATA_DIR)
+    old = os.path.join(user_dir, OLD_DATA_DIR)
+    if os.path.lexists(new) or not os.path.isdir(old):
+        if os.path.isdir(old) and not os.path.islink(old) and os.path.isdir(new):
+            log.warning("[KDX-Wildcard-Studio] both %s and %s exist; using %s, the old folder is not touched",
+                        new, old, new)
+        return new
+    os.rename(old, new)
+    log.info("[KDX-Wildcard-Studio] data folder moved: %s -> %s", old, new)
+    cfg_path = os.path.join(new, CONFIG_FILE)
+    try:
+        with open(cfg_path, encoding="utf-8") as f:
+            cfg = json.load(f)
+        dirs = cfg.get("wildcard_dirs") if isinstance(cfg, dict) else None
+        if isinstance(dirs, list) and any(isinstance(d, str) and _inside(d, old) for d in dirs):
+            cfg["wildcard_dirs"] = [new + d[len(old):] if isinstance(d, str) and _inside(d, old) else d for d in dirs]
+            tmp = cfg_path + ".migrate.tmp"
+            with open(tmp, "w", encoding="utf-8") as f:
+                json.dump(cfg, f, ensure_ascii=False, indent=2)
+                f.write("\n")
+            os.replace(tmp, cfg_path)
+            log.info("[KDX-Wildcard-Studio] wildcard folders in config.json now point into %s", new)
+    except (OSError, ValueError) as e:
+        log.warning("[KDX-Wildcard-Studio] config.json not updated after the move: %s", e)
+    return new
+
+
+def _inside(path: str, folder: str) -> bool:
+    p = os.path.normpath(os.path.expanduser(path))
+    return p == folder or p.startswith(folder + os.sep)
+
+
 def default_root() -> str:
-    env = os.environ.get("KDX_CONSOLE_DIR", "").strip()
+    env = os.environ.get(ENV_DIR, "").strip()
     if env:
         return os.path.expanduser(env)
     try:
         import folder_paths  # type: ignore
 
-        return os.path.join(folder_paths.get_user_directory(), "kdx_console")
+        user_dir = folder_paths.get_user_directory()
     except Exception:
         return os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "user_data")
+    try:
+        return migrate_root(user_dir)
+    except OSError as e:  # never fail loading over the move; the old folder stays as it was
+        log.warning("[KDX-Wildcard-Studio] could not move the data folder: %s", e)
+        old = os.path.join(user_dir, OLD_DATA_DIR)
+        return old if os.path.isdir(old) else os.path.join(user_dir, DATA_DIR)
 
 
 @dataclass
