@@ -7,9 +7,9 @@
 // (kept parts as fixed text, the choices around them kept, everything else still wildcards). This view only shows
 // the parts and sends the ids that are kept. Writes to the node happen on the user's click only.
 import { app } from "../../../scripts/app.js";
-import { ensureTheme } from "./theme.mjs?v=0.7.7";
-import { call, consoleNodes, getSnap, refresh, toast } from "./client.mjs?v=0.7.7";
-import { askConfirm, askPick, askText } from "./dialog.mjs?v=0.7.7";
+import { ensureTheme } from "./theme.mjs?v=0.7.8";
+import { call, consoleNodes, getSnap, refresh, toast } from "./client.mjs?v=0.7.8";
+import { askConfirm, askPick, askText } from "./dialog.mjs?v=0.7.8";
 
 let win = null;
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -397,7 +397,7 @@ export async function openKeep(opts = {}) {
   async function toBuilder() {
     const text = v.built?.template;
     if (!text) return;
-    const { openBuilder } = await import("./builder.mjs?v=0.7.7");
+    const { openBuilder } = await import("./builder.mjs?v=0.7.8");
     close();
     openBuilder({ text, name: suggestName() });
   }

@@ -114,6 +114,10 @@ In ComfyUI: **Templates → Custom nodes → ComfyUI-KDX-Wildcard-Studio** (or o
 - Connect a text node (a String / Text node) to the `user_prompt` input. While it sends text, that text is the
   `prompt`; **mute or bypass** the text node, or leave it empty, and the template prompt comes back. No switch needed.
 - Or type into the node's `user_text` box and turn `use_user_text` on ("user text"); off = templates again.
+  The newer frontend also shows a socket on the box: a text node wired there replaces what is typed, and the
+  switch still has to be on.
+- Which text wins: **1.** a text on `user_prompt`; **2.** `user_text` (typed or wired) while `use_user_text` is on;
+  **3.** the template. Details: [Your own prompt on the node](docs/13-your-own-prompt.md).
 - Wildcards work in your text: `a portrait, __core/light_sky__, {red|blue} dress`.
 - The template counter waits meanwhile. Outputs: `category` = `user`, `template` = `user_prompt` (handy in
   KDX Filename and the Gallery). Dragging such an image back repeats its prompt.
@@ -250,7 +254,7 @@ folder). The node pack itself holds no data, so updating or reinstalling it lose
 - [Template builder](docs/11-template-builder.md) — bubbles, groups, checks, Save / Save as…
 - [Keep parts](docs/16-keep-parts.md) — keep what you like in an image, let the rest vary
 - [Pool editor](docs/12-pool-editor.md) — new pools and folders, values and weights, archive and .bak
-- [Your own prompt on the node](docs/13-your-own-prompt.md) — `user_prompt`, `user_text` / `use_user_text`
+- [Your own prompt on the node](docs/13-your-own-prompt.md) — `user_prompt`, `user_text` / `use_user_text`, which text wins
 - [Packs: share and install](docs/14-packs-guide.md) — export, import, uninstall
 - [Your own theme from scratch](docs/15-tutorial-own-theme.md) — a step-by-step example (parked cars)
 

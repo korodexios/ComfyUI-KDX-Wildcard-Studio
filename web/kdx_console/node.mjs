@@ -4,9 +4,9 @@
 // or while a workflow loads. The only writes are the user's own clicks: "Clear pin" clears the
 // hidden `pin` widget, the panel's per-workflow settings fill the hidden `scope` widget.
 // The body only renders server state.
-import { editConfig, getSnap, onRun, subscribe } from "./client.mjs?v=0.7.7";
-import { mountPanel } from "./panel.mjs?v=0.7.7";
-import { ensureTheme } from "./theme.mjs?v=0.7.7";
+import { editConfig, getSnap, onRun, subscribe } from "./client.mjs?v=0.7.8";
+import { mountPanel } from "./panel.mjs?v=0.7.8";
+import { ensureTheme } from "./theme.mjs?v=0.7.8";
 
 const BODY_H = 74;
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));

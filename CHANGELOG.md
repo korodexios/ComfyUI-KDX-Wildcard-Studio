@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.8 - 2026-11-26
+
+### Docs
+- README: which text the node uses (`user_prompt`, then `user_text` typed or wired while `use_user_text` is on,
+  then the template) and the socket on the `user_text` box.
+
 ## 0.7.7 - 2026-11-26
 
 ### Fixed
