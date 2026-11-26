@@ -28,6 +28,19 @@ to the `user_prompt` input. While it sends text, that text is the `prompt` outpu
 
 - A connected `user_prompt` wins over the `user_text` box.
 
+## Which text is used
+
+The Studio node takes the first of these that has text:
+
+1. **`user_prompt`**, a text wired into this socket (no switch; mute or bypass the source to stop it);
+2. **`user_text`** while **use_user_text** is on. The newer ComfyUI frontend also shows a socket on the `user_text`
+   box. If you wire a text node there, the wired text is used instead of what is typed in the box, and the switch
+   still has to be on;
+3. the template from the panel.
+
+**Keep parts › Use on node** follows the same order. It writes into the text node wired to `user_prompt` or to
+`user_text`, or into the `user_text` box, and it asks before it replaces text (see [Keep parts](16-keep-parts.md)).
+
 ## Your own prompt through the LLM
 
 The **LLM** button on the node is the same switch as the LLM pill in the panel (an `llm=on|off` override still

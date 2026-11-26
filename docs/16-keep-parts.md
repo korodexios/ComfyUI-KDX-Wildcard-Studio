@@ -45,8 +45,9 @@ The template line that the image's seed picked is kept too.
 - **Use on node** writes the template where the KDX Wildcard Studio node reads it. From then on, every run picks
   the parts that are not kept again. When the workflow has several Studio nodes, select one first.
   - Without a connection it goes into `user_text` and switches `use_user_text` on.
-  - With a text node connected to `user_prompt`, a small window lets you choose: that text node (it wins over
-    `user_text`, see [Your own prompt](13-your-own-prompt.md)) or `user_text`.
+  - With a text node connected to `user_prompt` or to the `user_text` socket, a small window lets you choose where
+    it goes: into that text node (the box's typed value is ignored while its socket is wired) or into the
+    `user_text` box. A text on `user_prompt` wins over `user_text` (see [Your own prompt](13-your-own-prompt.md)).
   - When the chosen place already holds other text, the window shows it and the button says **Replace**; nothing
     is overwritten without that click. Afterwards **↶ Restore previous text** (or Ctrl+Z in ComfyUI) puts the old
     text back.

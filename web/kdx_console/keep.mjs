@@ -7,9 +7,9 @@
 // (kept parts as fixed text, the choices around them kept, everything else still wildcards). This view only shows
 // the parts and sends the ids that are kept. Writes to the node happen on the user's click only.
 import { app } from "../../../scripts/app.js";
-import { ensureTheme } from "./theme.mjs?v=0.7.6";
-import { call, consoleNodes, getSnap, refresh, toast } from "./client.mjs?v=0.7.6";
-import { askConfirm, askPick, askText } from "./dialog.mjs?v=0.7.6";
+import { ensureTheme } from "./theme.mjs?v=0.7.7";
+import { call, consoleNodes, getSnap, refresh, toast } from "./client.mjs?v=0.7.7";
+import { askConfirm, askPick, askText } from "./dialog.mjs?v=0.7.7";
 
 let win = null;
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -293,14 +293,16 @@ export async function openKeep(opts = {}) {
     return null;
   }
   /** The text node wired into user_prompt, with the string widget it sends (null when there is none). */
-  function wiredSource(node) {
-    const slot = node.inputs?.findIndex((i) => i.name === "user_prompt" && i.link != null) ?? -1;
+  /** The node wired into the input `name` (user_prompt, or user_text shown as a socket), with the string widget
+   * that holds its text; null when nothing is wired, widget null when that node has no text to write into. */
+  function wiredSource(node, name) {
+    const slot = node.inputs?.findIndex((i) => i.name === name && i.link != null) ?? -1;
     if (slot < 0) return null;
     const src = node.getInputNode?.(slot);
-    if (!src) return { node: null, widget: null };
+    if (!src) return null;
     const strings = (src.widgets || []).filter((w) => typeof w.value === "string" && !w.hidden && w.type !== "combo");
     const widget = strings.find((w) => ["text", "value", "string", "prompt"].includes(w.name)) || strings[0] || null;
-    return { node: src, widget, muted: src.mode === 2 || src.mode === 4 };
+    return { node: src, widget, muted: src.mode === 2 || src.mode === 4, title: src.title || src.type };
   }
   function writeWidget(node, w, value) {
     w.value = value;
@@ -311,7 +313,9 @@ export async function openKeep(opts = {}) {
     app.graph?.change?.();
     try { app.extensionManager?.workflow?.activeWorkflow?.changeTracker?.checkState?.(); } catch (_e) { /* older frontend */ }
   }
-  /** Write the result where the Studio reads it, never over other text without asking (old text can be restored). */
+  /** Write the result where the Studio reads it, never over other text without asking (old text can be restored).
+   * The Studio reads, in this order: a text wired into user_prompt; user_text (typed, or wired into its socket) while
+   * use_user_text is on; the template. A wired input ignores the typed value, so the text goes into the wired node. */
   async function useOnNode() {
     const text = v.built?.template;
     const node = text && targetNode();
@@ -319,39 +323,44 @@ export async function openKeep(opts = {}) {
     const ut = node.widgets?.find((x) => x.name === "user_text");
     const sw = node.widgets?.find((x) => x.name === "use_user_text");
     if (!ut || !sw) { toast("This node has no user_text / use_user_text widgets."); return; }
-    const src = wiredSource(node);
+    const up = wiredSource(node, "user_prompt");
+    const tw = wiredSource(node, "user_text");
+    const wins = up && !up.muted ? "user_prompt is connected and wins over user_text: mute or bypass its source to use this." : "";
     const options = [];
-    if (src?.widget) {
-      options.push({ id: "source", label: `Connected text node "${src.node.title || src.node.type}" (#${src.node.id}), widget ${src.widget.name}`,
-        note: src.muted ? "It is muted or bypassed, so the Studio does not read it now." : "", current: src.widget.value });
+    if (up?.widget) {
+      options.push({ id: "prompt", label: `Text node "${up.title}" (#${up.node.id}) on user_prompt`, current: up.widget.value,
+        note: up.muted ? "It is muted or bypassed, so the Studio does not read it now." : "", items: [[up.node, up.widget, text]] });
     }
-    options.push({ id: "user_text", label: `user_text of the Studio node (#${node.id}), use_user_text on`,
-      note: src && !src.muted ? "user_prompt is connected and wins over user_text: mute or bypass its source to use it." : "", current: ut.value });
-    const pick = options.find((o) => o.id === "source" && !src.muted) || options.find((o) => o.id === "user_text");
+    if (tw?.widget) {
+      options.push({ id: "text_src", label: `Text node "${tw.title}" (#${tw.node.id}) on user_text, use_user_text on`, current: tw.widget.value,
+        note: wins || (tw.muted ? "It is muted or bypassed, so user_text receives nothing now." : ""), items: [[tw.node, tw.widget, text], [node, sw, true]] });
+    }
+    if (!tw) {
+      options.push({ id: "user_text", label: `user_text field of the Studio node (#${node.id}), use_user_text on`, current: ut.value,
+        note: wins, items: [[node, ut, text], [node, sw, true]] });
+    }
+    if (!options.length) {
+      toast(`user_text gets its text from "${tw.title}", which has no text field to write into. Disconnect it or wire a text node.`);
+      return;
+    }
+    const pick = options.find((o) => !o.note) || options[0];
     const differs = (o) => String(o.current || "").trim() && String(o.current).trim() !== text.trim();
-    let id = pick.id;
+    let chosen = pick;
     if (options.length > 1 || differs(pick)) {
-      id = await askPick({ title: "Use on node", options, value: pick.id,
+      const id = await askPick({ title: "Use on node", options, value: pick.id,
         text: "Where should the template go? Text that is there now is replaced; ↶ Restore previous text (or Ctrl+Z) brings it back.",
         okLabel: (o) => (differs(o) ? "Replace" : "Write") });
       if (!id) return;
+      chosen = options.find((o) => o.id === id);
     }
-    if (id === "source") {
-      v.undo = { label: `"${src.node.title || src.node.type}"`, items: [[src.node, src.widget, src.widget.value]] };
-      writeWidget(src.node, src.widget, text);
-    } else {
-      v.undo = { label: "user_text", items: [[node, ut, ut.value], [node, sw, sw.value]] };
-      writeWidget(node, ut, text);
-      writeWidget(node, sw, true);
-    }
+    const where = chosen.id === "user_text" ? "user_text" : `"${chosen.id === "prompt" ? up.title : tw.title}"`;
+    v.undo = { label: where, items: chosen.items.map(([n, w]) => [n, w, w.value]) };
+    for (const [n, w, val] of chosen.items) writeWidget(n, w, val);
     graphChanged();
     node._kdxRender?.();
     paint("right", rightHtml);
-    const ignored = id === "source" ? src.muted : src && !src.muted;
-    toast(id === "source"
-      ? `Written to the connected text node #${src.node.id}.${src.muted ? " It is muted or bypassed: unmute it so the Studio reads it." : " Every run now varies only the parts not kept."}`
-      : `Written to user_text of node #${node.id}; use_user_text is on.${ignored ? " user_prompt is connected and still wins." : " Every run now varies only the parts not kept."}`,
-    ignored ? "warn" : "success");
+    toast(chosen.note ? `Written to ${where}. ${chosen.note}` : `Written to ${where}. Every run now varies only the parts not kept.`,
+      chosen.note ? "warn" : "success");
   }
   function restore() {
     const u = v.undo;
@@ -388,7 +397,7 @@ export async function openKeep(opts = {}) {
   async function toBuilder() {
     const text = v.built?.template;
     if (!text) return;
-    const { openBuilder } = await import("./builder.mjs?v=0.7.6");
+    const { openBuilder } = await import("./builder.mjs?v=0.7.7");
     close();
     openBuilder({ text, name: suggestName() });
   }

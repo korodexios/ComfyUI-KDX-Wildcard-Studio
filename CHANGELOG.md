@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.7.7 - 2026-11-26
+
+### Fixed
+- **Keep parts › Use on node with a text node wired to the `user_text` socket.** It wrote into the box, whose typed
+  value ComfyUI ignores while the socket is wired, so the wired text node kept its old text. Now it writes into
+  that text node and switches `use_user_text` on.
+
+### Docs
+- docs/13-your-own-prompt.md: **Which text is used** — `user_prompt`, then `user_text` (typed or wired) while
+  `use_user_text` is on, then the template.
+
 ## 0.7.6 - 2026-11-26
 
 ### Changed
