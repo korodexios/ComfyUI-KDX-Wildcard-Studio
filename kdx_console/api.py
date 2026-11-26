@@ -21,7 +21,7 @@ POST /kdx_console/builder/preview      {nodes, name?, count?, seed?}   template 
 POST /kdx_console/builder/save         {name, nodes | text, overwrite?, category?}   write templates/<name>.txt
 POST /kdx_console/keep                 {template | text, seed, expected?}   an image's prompt as the picks that made it
 POST /kdx_console/keep/build           {template | text, seed, locks, swaps?, append?, fingerprint?, count?,
-                                       sample_seed?}
+                                       sample_seed?, marks?, drop_text?}
                                        the template with those parts kept / replaced + live samples
 GET  /kdx_console/builder/pool/edit    ?key=   a pool for the editor (description, lines, users, file)
 POST /kdx_console/builder/pool/check   {key, desc, lines, new?}   checks, users, 3 prompts with the edited pool
@@ -454,11 +454,13 @@ def post_keep_build(store: Store, body: bytes) -> tuple[int, dict]:
                            "(a wildcard value cuts through another one), so no part is kept.")
     locks = d.clean_locks(data.get("locks"))
     swaps = d.clean_swaps(data.get("swaps"), locks)
-    text = d.render(locks, swaps, str(data.get("append") or ""))
+    marks = data.get("marks") if isinstance(data.get("marks"), list) else []
+    drop = bool(data.get("drop_text"))
+    text = d.render(locks, swaps, str(data.get("append") or ""), marks, drop)
     seed = data.get("sample_seed")
     seed = seed if isinstance(seed, int) and not isinstance(seed, bool) else None
     count = engine._int(data.get("count"), 3, 1, 10)
-    changed = bool(locks or swaps or text != d.text)
+    changed = bool(locks or swaps or marks or drop or text != d.text)
     return _ok(template=text, locks=sorted(locks), swaps={str(k): v for k, v in swaps.items()},
                samples=builder.preview(text, lib, count, seed), warnings=builder.check(text, lib) if changed else [])
 

@@ -232,13 +232,31 @@ class Decomposition:
         ps = pieces(part.segs[si])
         return (pid, si, k) if 0 <= k < len(ps) and ps[k][1] else None
 
-    def render(self, locks, swaps=None, append: str = "") -> str:
+    def top_plain(self) -> set[int]:
+        """Parts whose own text is plain text outside any pick: the prompt, the chosen template line and ``{x}``
+        wrappers, when everything around them is plain as well."""
+        out = set()
+        for p in self.walk():
+            if is_plain(p) and all(is_plain(self.parts[a]) for a in self.ancestors(p.id)):
+                out.add(p.id)
+        return out
+
+    def render(self, locks, swaps=None, append: str = "", marks=None, drop_text: bool = False) -> str:
         """The template line with ``locks`` kept and ``swaps`` put in place of parts or pieces of text; the choices
-        around a kept or replaced part (or text) are kept. ``append`` goes at the end (see the module docstring)."""
+        around a kept or replaced part (or text) are kept. ``marks`` are pieces of plain text you keep; with
+        ``drop_text`` every other piece of plain text (outside the picks) is left out, so only the wildcards, the
+        kept parts and the marked text stay. ``append`` goes at the end (see the module docstring)."""
         swapped = self.clean_swaps(swaps, locks)
         part_sw = {k: v for k, v in swapped.items() if isinstance(k, int)}
         text_sw = {k: v for k, v in swapped.items() if isinstance(k, str)}
-        text_parts = {int(k.split(".")[0]) for k in text_sw}
+
+        def free_of_swaps(pid: int) -> bool:
+            return pid not in part_sw and not any(a in part_sw for a in self.ancestors(pid))
+
+        marked = {k for k in (str(x) for x in marks or [])
+                  if self._piece(k) is not None and k not in text_sw and free_of_swaps(int(k.split(".")[0]))}
+        dropping = {p for p in self.top_plain() if free_of_swaps(p)} if drop_text else set()
+        text_parts = {int(k.split(".")[0]) for k in [*text_sw, *marked]} | dropping
         holds_text = set(text_parts)
         for tp in text_parts:
             holds_text.update(self.ancestors(tp))
@@ -249,12 +267,19 @@ class Decomposition:
             pinned.update(self.ancestors(i))
 
         def lit_seg(p: Part, si: int, seg: str) -> str:
-            if not any(k.startswith(f"{p.id}.{si}.") for k in text_sw):
+            drop = p.id in dropping
+            if not drop and not any(k.startswith(f"{p.id}.{si}.") for k in text_sw):
                 return _lit(seg)
             out = []
             for k, (lead, core, trail) in enumerate(pieces(seg)):
-                rep = text_sw.get(f"{p.id}.{si}.{k}")
-                out.append(_lit(lead) + (rep if rep is not None else _lit(core)) + _lit(trail))
+                key = f"{p.id}.{si}.{k}"
+                rep = text_sw.get(key)
+                if rep is not None:
+                    out.append(_lit(lead) + rep + _lit(trail))
+                elif drop and core and key not in marked:
+                    out.append(" ")  # left out; the punctuation pieces between picks stay
+                else:
+                    out.append(_lit(lead + core + trail))
             return "".join(out)
 
         def out(p: Part) -> str:
@@ -267,6 +292,8 @@ class Decomposition:
             return _src(p.source)
 
         text = out(self.root)
+        if dropping:
+            text = tidy(text)
         extra = " ".join(str(append or "").splitlines()).strip()[:MAX_SWAP]
         return f"{text.rstrip()} {extra}" if extra else text
 
@@ -343,6 +370,65 @@ def pieces(text: str) -> list[tuple[str, str, str]]:
         lead = chunk[: len(chunk) - len(chunk.lstrip())]
         out.append((lead, core, chunk[len(chunk.rstrip()):]))
     return out
+
+
+_SYNTAX_TOKEN = re.compile(r"__[\w.\-+/*\\ ]+?__")
+
+
+def _protect(text: str) -> tuple[str, list[str]]:
+    """Swap ``{…}`` groups (balanced, escapes skipped) and ``__tokens__`` for placeholders, so text edits never
+    touch wildcard syntax."""
+    held: list[str] = []
+    out: list[str] = []
+    i = 0
+    while i < len(text):
+        c = text[i]
+        if c == "\\" and i + 1 < len(text):
+            out.append(text[i:i + 2])
+            i += 2
+            continue
+        if c == "{":
+            depth, j = 0, i
+            while j < len(text):
+                if text[j] == "\\":
+                    j += 2
+                    continue
+                depth += {"{": 1, "}": -1}.get(text[j], 0)
+                j += 1
+                if depth == 0:
+                    break
+            if depth == 0:
+                held.append(text[i:j])
+                out.append(f"{len(held) - 1}")
+                i = j
+                continue
+        out.append(c)
+        i += 1
+    joined = "".join(out)
+
+    def hold(m: re.Match) -> str:
+        held.append(m.group(0))
+        return f"{len(held) - 1}"
+
+    return _SYNTAX_TOKEN.sub(hold, joined), held
+
+
+def tidy(text: str) -> str:
+    """Spaces and punctuation after text was left out: one space, no space before punctuation, no doubled,
+    leading or trailing commas. Wildcard syntax is left as it is."""
+    text, held = _protect(text)
+    text = re.sub(r"[ \t]{2,}", " ", text)
+    text = re.sub(r" +([,.;:!?])", r"\1", text)
+    text = re.sub(r"([,;:])(?:\s*[,;:])+", r"\1", text)
+    text = re.sub(r"([.!?])(?:\s*[,;:.])+", r"\1", text)
+    text = re.sub(r"[\s,;:]+$", "", text)
+    text = re.sub(r"^[\s,.;:]+", "", text).strip()
+    return re.sub("(\\d+)", lambda m: held[int(m.group(1))], text)
+
+
+def is_plain(p: Part) -> bool:
+    """A part whose own words are plain text (not a pick): the prompt, a template line, ``{x}``."""
+    return p.kind == "root" or is_solo(p) or (p.kind == "token" and p.name.lower().startswith("templates/"))
 
 
 def is_solo(p: Part) -> bool:

@@ -38,8 +38,15 @@ replaced part are kept, the same as for a kept part.
 
 **Plain text can be replaced too.** Text that is not a pick (the fixed words of the template line, or a prompt
 you made from kept parts before, where the kept parts are plain text now) is split into pieces at `, . ; : ! ?`.
-Hover over a piece to see it, click it, then **⇄ Replace…** puts wildcards or other words in its place; the commas
-and full stops around it stay. A number like `4:5` or `1.5` stays one piece. Words inside a pick (an option of a
+Hover over a piece to see it. A click **marks it as kept** (blue); click more pieces to keep several, click
+again to unmark. **⇄ Replace…** in the row above puts wildcards or other words in place of the piece you clicked;
+the commas and full stops around it stay.
+
+**✂ Remove unmarked text** leaves out all the plain text you did not mark (shown struck through): only the
+wildcards, the kept parts, the marked text and your replacements stay, with the spaces and commas tidied up. Then
+add new wildcards with **⇄ Replace** or **＋ Add at the end**. Example: an image made from a kept prompt, where
+"standing in a bright loft" and "soft window light" are plain text now: mark "a linen tunic in sage green", switch
+on Remove unmarked text, and add `__core/place_city__, __core/light_sky__` at the end. A number like `4:5` or `1.5` stays one piece. Words inside a pick (an option of a
 `{…|…}` group) are not split: a click there keeps the pick, as before. This also works for a prompt with no
 wildcards at all.
 
