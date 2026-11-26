@@ -188,37 +188,82 @@ class Decomposition:
                 ids.add(i)
         return {i for i in ids if not any(a in ids for a in self.ancestors(i))}
 
-    def clean_swaps(self, swaps, locks) -> dict[int, str]:
-        """Known ids -> replacement text (one line, wildcards allowed, empty = drop the part). A swap inside a kept or
-        another swapped part is dropped."""
+    def clean_swaps(self, swaps, locks) -> dict:
+        """Replacements: part id -> text, or ``"<part>.<seg>.<piece>"`` -> text for a piece of literal text (see
+        :func:`pieces`). One line each, wildcards allowed, empty = drop it. A replacement inside a kept or another
+        replaced part is dropped."""
         locked = self.clean_locks(locks)
-        out: dict[int, str] = {}
+        part_sw: dict[int, str] = {}
+        text_sw: dict[str, str] = {}
         for k, val in (swaps or {}).items() if isinstance(swaps, dict) else []:
-            try:
-                i = int(k)
-            except (TypeError, ValueError):
+            if not isinstance(val, str):
                 continue
-            if i in self.parts and i != 0 and isinstance(val, str):
-                out[i] = " ".join(val.split()).strip()[:MAX_SWAP] if val.strip() else ""
-        out = {i: t for i, t in out.items() if i not in locked and not any(a in locked for a in self.ancestors(i))}
-        return {i: t for i, t in out.items() if not any(a in out for a in self.ancestors(i))}
+            text = " ".join(val.split())[:MAX_SWAP]
+            key = str(k)
+            if "." in key:
+                if self._piece(key) is not None:
+                    text_sw[key] = text
+                continue
+            try:
+                i = int(key)
+            except ValueError:
+                continue
+            if i in self.parts and i != 0:
+                part_sw[i] = text
+        part_sw = {i: t for i, t in part_sw.items()
+                   if i not in locked and not any(a in locked for a in self.ancestors(i))}
+        part_sw = {i: t for i, t in part_sw.items() if not any(a in part_sw for a in self.ancestors(i))}
+        out: dict = dict(part_sw)
+        for key, t in text_sw.items():
+            pid = int(key.split(".")[0])
+            if pid not in part_sw and not any(a in part_sw for a in self.ancestors(pid)):
+                out[key] = t
+        return out
+
+    def _piece(self, key: str) -> tuple[int, int, int] | None:
+        """``"<part>.<seg>.<piece>"`` -> numbers, when that piece exists and has words."""
+        try:
+            pid, si, k = (int(x) for x in key.split("."))
+        except ValueError:
+            return None
+        part = self.parts.get(pid)
+        if part is None or not (0 <= si < len(part.segs)) or not isinstance(part.segs[si], str):
+            return None
+        ps = pieces(part.segs[si])
+        return (pid, si, k) if 0 <= k < len(ps) and ps[k][1] else None
 
     def render(self, locks, swaps=None, append: str = "") -> str:
-        """The template line with ``locks`` kept and ``swaps`` (id -> wildcard text) put in place of those parts; the
-        choices around a kept or swapped part are kept. ``append`` goes at the end (see the module docstring)."""
+        """The template line with ``locks`` kept and ``swaps`` put in place of parts or pieces of text; the choices
+        around a kept or replaced part (or text) are kept. ``append`` goes at the end (see the module docstring)."""
         swapped = self.clean_swaps(swaps, locks)
-        locked = {i for i in self.clean_locks(locks) if not any(a in swapped for a in self.ancestors(i))}
-        pinned: set[int] = set()
-        for i in [*locked, *swapped]:
+        part_sw = {k: v for k, v in swapped.items() if isinstance(k, int)}
+        text_sw = {k: v for k, v in swapped.items() if isinstance(k, str)}
+        text_parts = {int(k.split(".")[0]) for k in text_sw}
+        holds_text = set(text_parts)
+        for tp in text_parts:
+            holds_text.update(self.ancestors(tp))
+        locked = {i for i in self.clean_locks(locks)
+                  if i not in holds_text and not any(a in part_sw for a in self.ancestors(i))}
+        pinned: set[int] = set(holds_text)
+        for i in [*locked, *part_sw]:
             pinned.update(self.ancestors(i))
 
+        def lit_seg(p: Part, si: int, seg: str) -> str:
+            if not any(k.startswith(f"{p.id}.{si}.") for k in text_sw):
+                return _lit(seg)
+            out = []
+            for k, (lead, core, trail) in enumerate(pieces(seg)):
+                rep = text_sw.get(f"{p.id}.{si}.{k}")
+                out.append(_lit(lead) + (rep if rep is not None else _lit(core)) + _lit(trail))
+            return "".join(out)
+
         def out(p: Part) -> str:
-            if p.id in swapped:
-                return swapped[p.id]
+            if p.id in part_sw:
+                return part_sw[p.id]
             if p.id in locked:
                 return _lit(self.text_of(p))
             if p.id in pinned or p.id == 0:
-                return "".join(_lit(s) if isinstance(s, str) else out(s) for s in p.segs)
+                return "".join(lit_seg(p, si, s) if isinstance(s, str) else out(s) for si, s in enumerate(p.segs))
             return _src(p.source)
 
         text = out(self.root)
@@ -242,8 +287,14 @@ class Decomposition:
         d = {"id": p.id, "kind": p.kind, "label": label(p), "src": _show(_src(p.source)) if p.id else "",
              "text": _show(self.text_of(p)), "group": group_of(p.name) if p.kind == "token" else None,
              "solo": is_solo(p), "missing": p.missing,
-             "segs": [_show(s) if isinstance(s, str) else self.view(s) for s in p.segs]}
+             "segs": [self._text_view(p, si, s) if isinstance(s, str) else self.view(s) for si, s in enumerate(p.segs)]}
         return d
+
+    def _text_view(self, p: Part, si: int, seg: str) -> dict:
+        """Literal text as pieces that can be replaced: ``{kind: "text", pieces: [{id, lead, core, trail}]}``."""
+        return {"kind": "text", "pieces": [
+            {"id": f"{p.id}.{si}.{k}", "lead": _show(a), "core": _show(c), "trail": _show(t)}
+            for k, (a, c, t) in enumerate(pieces(seg))]}
 
     def groups(self) -> list[dict]:
         """Quick choices that have parts in this prompt: ``[{id, label, ids}]`` (outermost parts only)."""
@@ -262,6 +313,36 @@ class Decomposition:
             if found.get(gid):
                 out.append({"id": gid, "label": lab, "ids": found[gid]})
         return out
+
+
+# words (a . , or : between digits stays inside: 4:5, 1.5) | the punctuation after them
+_PIECE_RE = re.compile(r"(?:[^,.;:!?\n]|(?<=\d)[.,:](?=\d))+|[,.;:!?\n]+")
+
+
+def pieces(text: str) -> list[tuple[str, str, str]]:
+    """Literal text -> ``(lead, core, trail)`` pieces, split after ``, . ; : ! ?`` and line breaks. ``core`` is the
+    words, ``lead`` / ``trail`` the spaces and punctuation around them; joined, the pieces give ``text`` again."""
+    out: list[tuple[str, str, str]] = []
+    for m in _PIECE_RE.finditer(text):
+        chunk = m.group(0)
+        if chunk[0] in ",.;:!?\n":
+            if out:
+                lead, core, trail = out[-1]
+                out[-1] = (lead, core, trail + chunk)
+            else:
+                out.append(("", "", chunk))
+            continue
+        core = chunk.strip()
+        if not core:  # only spaces: they belong to the piece before
+            if out:
+                lead, c, trail = out[-1]
+                out[-1] = (lead, c, trail + chunk)
+            else:
+                out.append((chunk, "", ""))
+            continue
+        lead = chunk[: len(chunk) - len(chunk.lstrip())]
+        out.append((lead, core, chunk[len(chunk.rstrip()):]))
+    return out
 
 
 def is_solo(p: Part) -> bool:
