@@ -19,7 +19,6 @@ import tempfile
 from .wildcard_engine import Library
 
 SEXES = ("woman", "man", "none")
-NSFW_PREFIXES = ("nsfw", "akt", "sheer")
 MAX_POOLS = 24
 MAX_WEIGHT = 99
 NAME_RE = re.compile(r"^[a-z0-9][a-z0-9_]{0,63}$")
@@ -118,7 +117,10 @@ class BuilderError(ValueError):
 
 
 def is_nsfw(name: str) -> bool:
-    return any(p.lower().startswith(NSFW_PREFIXES) for p in str(name or "").replace("\\", "/").split("/") if p)
+    """The NSFW rule of the whole pack (wildcards.is_excluded): one rule for hiding and for the checks."""
+    from .wildcards import is_excluded
+
+    return is_excluded(name)
 
 
 # --------------------------------------------------------------------------------------------- spec

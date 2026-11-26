@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.5 - 2026-11-26
+
+### Fixed
+- **NSFW switch: names with `nsfw` at the end are hidden too.** A template counted as NSFW only when its name started
+  with `nsfw`, `akt` or `sheer`, so `outdoor_nsfw`, `sport_nsfw` or `atelier_nsfw` showed in the Gallery, the
+  Builder, Keep parts, Add template and Import with the switch off. Now any word of the name (split at `/ _ - .`)
+  that starts with one of them counts. The builder's checks use the same rule.
+
 ## 0.7.4 - 2026-11-26
 
 ### Added

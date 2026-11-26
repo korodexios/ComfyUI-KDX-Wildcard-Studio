@@ -252,7 +252,7 @@ def output_dir() -> str | None:
 @guard
 def get_gallery(query: dict, root: str | None = None, store: Store | None = None) -> tuple[int, dict]:
     """Images made by KDX Wildcard Studio in the output folder, newest first (see gallery.py). NSFW templates
-    (names starting with nsfw, akt, sheer) are left out unless the config says show_nsfw."""
+    (a word of the name starts with nsfw, akt or sheer) are left out unless the config says show_nsfw."""
     root = root or output_dir()
     if not root:
         raise ConsoleError("KDX Wildcard Studio: the ComfyUI output folder is not known.")

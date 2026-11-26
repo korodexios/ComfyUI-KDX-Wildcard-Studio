@@ -33,7 +33,7 @@ restart and no refresh needed.
 - **LLM** pill: on = the category's system prompt goes to the `system_prompt` output and `llm_enabled` is true, so a
   connected KDX-LLM Chat rewrites the prompt. Off = the prompt passes unchanged. The node body has the same switch;
   for [your own prompt](13-your-own-prompt.md) the system prompt is picked on the node.
-- **NSFW** pill: off = templates whose names start with `nsfw`, `akt` or `sheer` stay out of Add template, Import, the
+- **NSFW** pill: off = templates with a word in the name that starts with `nsfw`, `akt` or `sheer` (`outdoor_nsfw` too) stay out of Add template, Import, the
   Gallery, the builder's pool users and Packs. Templates already in a category keep running either way.
 
 A pill with a strike-through is off.

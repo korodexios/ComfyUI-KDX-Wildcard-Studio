@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import logging
 import os
+import re
 import shutil
 from typing import Callable
 
@@ -164,9 +165,13 @@ def info(configured=None) -> dict:
     }
 
 
+_WORD_SPLIT = re.compile(r"[/\\_\-\s.]+")
+
+
 def is_excluded(name: str) -> bool:
-    parts = [p.lower() for p in name.replace("\\", "/").split("/") if p]
-    return any(p.startswith(EXCLUDED_PREFIXES) for p in parts)
+    """An NSFW name: a word of it (split at ``/ _ - .``) starts with nsfw, akt or sheer, so ``nsfw_detail``,
+    ``akt_back`` and ``outdoor_nsfw`` all count."""
+    return any(w.startswith(EXCLUDED_PREFIXES) for w in _WORD_SPLIT.split(str(name or "").lower()) if w)
 
 
 def filter_templates(keys, *, include_excluded: bool = False) -> list[str]:

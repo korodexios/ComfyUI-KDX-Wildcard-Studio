@@ -249,3 +249,21 @@ def test_rest_save_takes_a_line(server):
     path = os.path.join(wildcards.resolve_dirs()[0][0], "templates", "kept_one.txt")
     with open(path, encoding="utf-8") as f:
         assert f.read().strip() == "a \\{x\\} and __person/hair__"
+
+
+def test_nsfw_rule_counts_every_word_of_the_name():
+    """Any word of the name (split at / _ - .) that starts with nsfw, akt or sheer makes it NSFW."""
+    for name in ["nsfw_detail", "akt_back", "sheer_duo", "outdoor_nsfw", "sport_nsfw", "atelier_nsfw",
+                 "templates/akt", "packs/x/nsfw_a", "street-akt", r"a\sheer"]:
+        assert wildcards.is_excluded(name), name
+    for name in ["portrait_woman", "lounge_woman", "architecture", "backdrop", "street_woman", ""]:
+        assert not wildcards.is_excluded(name), name
+
+
+def test_rest_hides_a_template_with_nsfw_at_the_end(server, tmp_path):
+    root = wildcards.resolve_dirs()[0][0]
+    with open(os.path.join(root, "templates", "outdoor_nsfw.txt"), "w", encoding="utf-8") as f:
+        f.write("__person/hair__\n")
+    st, d = _post(api.post_keep, server, {"template": "outdoor_nsfw", "seed": 1})
+    assert st == 400 and "NSFW" in d["error"]
+    assert "outdoor_nsfw" not in api.get_templates(server)[1]["templates"]

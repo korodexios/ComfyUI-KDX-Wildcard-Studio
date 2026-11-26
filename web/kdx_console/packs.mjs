@@ -3,9 +3,9 @@
 // Export (pick templates -> check -> download). The server checks and writes everything (packs.py); a pack is
 // text only and goes into its own namespace packs/<pack>/, so nothing of the user's library is overwritten.
 import { api } from "../../../scripts/api.js";
-import { ensureTheme } from "./theme.mjs?v=0.7.4";
-import { call, getSnap, refresh, toast } from "./client.mjs?v=0.7.4";
-import { askConfirm } from "./dialog.mjs?v=0.7.4";
+import { ensureTheme } from "./theme.mjs?v=0.7.5";
+import { call, getSnap, refresh, toast } from "./client.mjs?v=0.7.5";
+import { askConfirm } from "./dialog.mjs?v=0.7.5";
 
 const META_KEY = "kdx_console.packs.meta";
 let win = null;
@@ -149,7 +149,7 @@ export async function openPacks(opts = {}) {
         <label>License</label><select class="kdx-field" data-m="license">${lic.map((l) => `<option ${l === (mm.license || v.defaultLicense) ? "selected" : ""}>${esc(l)}</option>`).join("")}</select>
         <label>Description</label><textarea class="kdx-field" data-m="description" rows="3" maxlength="2000" placeholder="What the templates make; what to connect">${esc(mm.description)}</textarea>
         <label>NSFW</label><label class="kdx-row" style="color:inherit"><input type="checkbox" data-m="nsfw" ${mm.nsfw ? "checked" : ""}>
-          marks the pack NSFW (set by itself when a template's name starts with nsfw, akt or sheer)</label>
+          marks the pack NSFW (set by itself when a word of a template's name starts with nsfw, akt or sheer)</label>
       </div>
       <div class="kdx-muted">CC0-1.0 (default) = anyone may use it for anything, no credit needed; CC-BY-4.0 = the same, with credit to you. Packs describe adults only.</div>
     </div>

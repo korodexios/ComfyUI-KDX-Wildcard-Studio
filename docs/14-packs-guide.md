@@ -11,8 +11,8 @@ A pack is a `.zip` with templates and every pool they need. **📦 Packs** in th
    You never pick pools: every pool the templates reach comes along by itself, also pools used inside other pools.
 2. **About the pack**: **Name** (`a-z 0-9 _`, it becomes the install folder and the prefix of the templates),
    **Title**, **Author** (a nickname is fine), **Version**, **License** (default `CC0-1.0` = anyone may use it for anything, no credit needed;
-   `CC-BY-4.0` = the same with credit to you) and a short **Description**. **NSFW** is ticked by itself when a template's
-   name starts with `nsfw`, `akt` or `sheer`.
+   `CC-BY-4.0` = the same with credit to you) and a short **Description**. **NSFW** is ticked by itself when a word of a
+   template's name starts with `nsfw`, `akt` or `sheer`.
 3. **Check** runs the same checks an import runs and lists the files; **⇩ Download .zip** saves the pack. A pack with
    errors is not exported.
 

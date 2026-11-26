@@ -113,5 +113,5 @@ an unknown profile then stops the run with a clear message.
 
 ## NSFW
 
-Template names starting with `nsfw`, `akt` or `sheer` (in any path part) are never listed, imported or offered.
+Template names with a word that starts with `nsfw`, `akt` or `sheer` (words are split at `/ _ - .`, so `nsfw_detail`, `akt_back` and `outdoor_nsfw` all count) are never listed, imported or offered.
 If you add such a template to the configuration yourself, import keeps it and does not report it as missing.

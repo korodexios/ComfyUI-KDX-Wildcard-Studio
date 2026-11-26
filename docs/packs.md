@@ -45,7 +45,7 @@ person/age_band.txt
 | `version` | three numbers, `1.0.0` |
 | `author` | required, at most 64 characters (a nickname is fine) |
 | `license` | default `CC0-1.0`; `CC0-1.0`, `CC-BY-4.0`, `CC-BY-SA-4.0` or `MIT` pass without a warning |
-| `nsfw` | `true` or `false`; must be `true` when a template name starts with `nsfw`, `akt` or `sheer` |
+| `nsfw` | `true` or `false`; must be `true` when a word of a template name starts with `nsfw`, `akt` or `sheer` |
 | `templates` | exactly the files in `templates/` |
 | `files` | every `.txt` file of the zip with the md5 of its text (`\n` line ends, one final newline) |
 
@@ -142,7 +142,7 @@ layout, so a reviewer reads plain text diffs.
   `python -m kdx_console.packs validate <folder>` entry point that wraps `read`/`parse_meta`/`validate`; to be added
   with this phase). The same code as the Studio import, so CI and Studio can never disagree.
 - Extra rules for the public index:
-  - `nsfw` must be `false`, no template name starting with `nsfw`, `akt`, `sheer`, and a word list for nudity and
+  - `nsfw` must be `false`, no template name with a word starting with `nsfw`, `akt`, `sheer`, and a word list for nudity and
     sexual content over the values and 1,000 expansions per template;
   - the minor words and ages under 18 at 1,000 expansions per template (Studio uses 60);
   - the license must be one of the four, the folder must be `packs/<PR author's login>/` (maintainers may move

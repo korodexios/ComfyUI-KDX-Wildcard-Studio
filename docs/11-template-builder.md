@@ -72,7 +72,7 @@ Under **Checks** the builder tests the template on 200 random expansions:
 - one line only,
 - `core/light_sky` only next to places that are always outdoors,
 - an expression always together with its mood,
-- NSFW names (`nsfw…`, `akt…`, `sheer…`) without clothing,
+- NSFW names (a word starting with `nsfw`, `akt` or `sheer`, e.g. `outdoor_nsfw`) without clothing,
 - a name ending in `_woman` / `_man` matches the pronouns of the text.
 
 A warning looks like this; the template can still be saved, but read it first:

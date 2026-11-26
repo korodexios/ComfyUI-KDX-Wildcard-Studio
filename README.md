@@ -156,7 +156,7 @@ with what made it next to it (template, category, seed, image number, size, file
 "🔒 Keep parts" takes the prompt apart into its wildcard picks: keep the pose, the clothes, the place or the light, and
 the rest (face, hair, expression …) keeps varying. The result goes onto the node, into a new template or into the
 builder; see [Keep parts](docs/16-keep-parts.md).
-Images of NSFW templates (names starting with `nsfw`, `akt`, `sheer`) appear only while the panel's **NSFW** switch
+Images of NSFW templates (a word of the name starts with `nsfw`, `akt` or `sheer`: `nsfw_detail`, `outdoor_nsfw`) appear only while the panel's **NSFW** switch
 is on; the same switch lets you add and import those templates.
 
 The gallery reads only the text chunks of the PNG files in the ComfyUI output folder (never the pixels) and needs no
