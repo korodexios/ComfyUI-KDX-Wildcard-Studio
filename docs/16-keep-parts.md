@@ -36,6 +36,13 @@ one, or type wildcards or words (`{oil|ink} painting`, `__art/style__`) and pres
 removes the part. The part then shows with a dashed border; **↺ Original** brings it back. The choices around a
 replaced part are kept, the same as for a kept part.
 
+**Plain text can be replaced too.** Text that is not a pick (the fixed words of the template line, or a prompt
+you made from kept parts before, where the kept parts are plain text now) is split into pieces at `, . ; : ! ?`.
+Hover over a piece to see it, click it, then **⇄ Replace…** puts wildcards or other words in its place; the commas
+and full stops around it stay. A number like `4:5` or `1.5` stays one piece. Words inside a pick (an option of a
+`{…|…}` group) are not split: a click there keeps the pick, as before. This also works for a prompt with no
+wildcards at all.
+
 **＋ Add at the end** puts text or wildcards after the prompt (**＋ Pool…** picks a pool). Use it for what the
 prompt has no place for yet, such as `in the style of __art/style__`.
 

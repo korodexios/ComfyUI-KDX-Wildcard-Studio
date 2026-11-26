@@ -318,5 +318,44 @@ def test_rest_build_with_swaps_and_append(server):
 def _walk_view(n):
     yield n
     for s in n["segs"]:
-        if isinstance(s, dict):
+        if isinstance(s, dict) and s["kind"] != "text":
             yield from _walk_view(s)
+
+
+# ------------------------------------------------------------------ pieces of plain text
+
+
+def test_pieces_split_at_punctuation_and_join_back():
+    for text in [". It shows a woman, red shoes, 4:5. ", "a 1.5 m wall. ", " lead", "", "a, b; c! d? e:f\nnext"]:
+        ps = keep.pieces(text)
+        assert "".join(a + c + t for a, c, t in ps) == text
+    assert [c for _a, c, _t in keep.pieces("a woman, red shoes, 4:5.")] == ["a woman", "red shoes", "4:5"]
+
+
+def test_replace_a_piece_of_plain_text_with_wildcards():
+    lb = lib()
+    d = keep.decompose(lb, "a woman in a red coat, standing in rain, __core/place__", 1)
+    tv = d.view()["segs"][0]
+    assert tv["kind"] == "text" and [p["core"] for p in tv["pieces"]] == ["a woman in a red coat", "standing in rain"]
+    key = tv["pieces"][0]["id"]
+    t = d.render([], {key: "__clothing/top__"})
+    assert t == "__clothing/top__, standing in rain, __core/place__"
+    assert d.render([], {key: ""}).startswith(", standing in rain")
+
+
+def test_text_piece_inside_a_template_line_keeps_that_line():
+    lb = lib()
+    seed = _seed_with(lb, "__templates/portrait__", ["Her hair is"])
+    d = keep.decompose(lb, "__templates/portrait__", seed)
+    line = next(p for p in d.walk() if p.kind == "token" and p.name == "templates/portrait")
+    si = next(i for i, s in enumerate(line.segs) if isinstance(s, str) and "Her hair is" in s)
+    k = next(i for i, (_a, c, _t) in enumerate(keep.pieces(line.segs[si])) if c.startswith("Her hair is"))
+    t = d.render([], {f"{line.id}.{si}.{k}": "Her hair is __core/place__"})
+    assert "Her hair is __core/place__" in t and "a second line" not in t
+    assert "__person/hair__" not in t.split("Her hair is __core/place__")[0][-20:]
+
+
+def test_bad_text_keys_are_dropped():
+    lb = lib()
+    d = keep.decompose(lb, "plain words, more", 1)
+    assert d.clean_swaps({"0.0.9": "x", "0.5.0": "x", "a.b.c": "x", "0.0.0": "ok"}, []) == {"0.0.0": "ok"}

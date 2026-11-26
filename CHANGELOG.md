@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.10 - 2026-11-26
+
+### Added
+- **Keep parts: replace plain text.** Text that is not a pick (the fixed words of the template line, or kept parts
+  that are plain text now) is split into pieces at `, . ; : ! ?`; click a piece and **⇄ Replace…** puts wildcards or
+  other words in its place, the punctuation around it stays. Works for prompts without any wildcards too.
+- REST: `keep` returns plain text as pieces (`{kind: "text", pieces}`); `keep/build` takes piece ids (`"<node>.<seg>.<piece>"`) as `swaps` keys.
+
 ## 0.7.9 - 2026-11-26
 
 ### Added
