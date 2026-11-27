@@ -1,12 +1,12 @@
-// KDX Wildcard Studio - small node body + floating gear window.
+﻿// KDX Wildcard Studio - small node body + floating gear window.
 //
 // Rules: nothing serialized is written during a Run
 // or while a workflow loads. The only writes are the user's own clicks: "Clear pin" clears the
 // hidden `pin` widget, the panel's per-workflow settings fill the hidden `scope` widget.
 // The body only renders server state.
-import { editConfig, getSnap, onRun, subscribe } from "./client.mjs?v=0.7.13";
-import { mountPanel } from "./panel.mjs?v=0.7.13";
-import { ensureTheme } from "./theme.mjs?v=0.7.13";
+import { editConfig, getSnap, onRun, subscribe } from "./client.mjs?v=0.7.14";
+import { mountPanel } from "./panel.mjs?v=0.7.14";
+import { ensureTheme } from "./theme.mjs?v=0.7.14";
 
 const BODY_H = 74;
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));

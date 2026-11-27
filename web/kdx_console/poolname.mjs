@@ -1,4 +1,4 @@
-// KDX Wildcard Studio - the folder and name of a new pool, as the New pool window builds them (pure, no imports, so it can be
+﻿// KDX Wildcard Studio - the folder and name of a new pool, as the New pool window builds them (pure, no imports, so it can be
 // tested on its own). The server checks the same rules again (kdx_console/pools.py check_key) before writing.
 
 export const NEW_FOLDER = "__new__";

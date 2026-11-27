@@ -1,14 +1,14 @@
-// KDX Wildcard Studio - Template builder: a template as a row of bubbles you drag, drop and click together.
+﻿// KDX Wildcard Studio - Template builder: a template as a row of bubbles you drag, drop and click together.
 //
 // The canvas shows the template line as it reads, left to right: text bubbles (type anything), pool bubbles
 // (__folder/file__) and group boxes (one of {a|b}, sometimes {a|}, pick several {1-2$$ $$a|b}) whose option lanes
 // take bubbles too. The palette on the left offers pools, ready sentences and shapes; drag them in or click ＋.
 // The server owns the syntax: it turns a line into bubbles, writes bubbles back as a line, checks and expands it.
 // No external libraries; no polling (the preview is asked for after a change, debounced).
-import { ensureTheme } from "./theme.mjs?v=0.7.13";
-import { call, getSnap, refresh, toast } from "./client.mjs?v=0.7.13";
-import { askConfirm, askText } from "./dialog.mjs?v=0.7.13";
-import { restoreText, useTextOnNode } from "./nodewrite.mjs?v=0.7.13";
+import { ensureTheme } from "./theme.mjs?v=0.7.14";
+import { call, getSnap, refresh, toast } from "./client.mjs?v=0.7.14";
+import { askConfirm, askText } from "./dialog.mjs?v=0.7.14";
+import { restoreText, useTextOnNode } from "./nodewrite.mjs?v=0.7.14";
 
 let win = null;
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -451,7 +451,7 @@ export async function openBuilder(opts = {}) {
 
   // ------------------------------------------------------------------ pool editor (phase 2)
   async function editPool(key, dir = "") {
-    const m = await import("./pooledit.mjs?v=0.7.13");
+    const m = await import("./pooledit.mjs?v=0.7.14");
     const folders = [...new Set(cat.pools.map((p) => dirOf(p.key)))].filter((d) => !d.startsWith("packs/") && d !== "(top)").sort();
     const folder = dir || (v.pool && !key ? dirOf(v.pool.key) : ""); // the folder it was opened from, else none
     m.openPoolEditor({ key, folder, folders, onSaved: (saved) => reloadPalette(saved) });
@@ -585,7 +585,7 @@ export async function openBuilder(opts = {}) {
     if (act === "keep") {
       const s = v.preview?.samples?.[Number(b.dataset.i)];
       if (!s || !v.preview?.text) return;
-      const { openKeep } = await import("./keep.mjs?v=0.7.13");
+      const { openKeep } = await import("./keep.mjs?v=0.7.14");
       openKeep({ text: v.preview.text, seed: s.seed, expected: s.text, from: "builder", name: v.name || v.loaded, category: v.category });
       return;
     }

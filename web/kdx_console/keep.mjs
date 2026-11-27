@@ -1,4 +1,4 @@
-// KDX Wildcard Studio - Keep parts: take an image's prompt apart into the picks that made it, keep the parts you like
+﻿// KDX Wildcard Studio - Keep parts: take an image's prompt apart into the picks that made it, keep the parts you like
 // (pose, clothing, place, light, style …) and let the rest vary. One window for the Gallery (image details) and the
 // Template builder (a preview sample).
 //
@@ -6,10 +6,10 @@
 // of every pick, checks it against the prompt stored in the image, and turns the kept parts into a template line
 // (kept parts as fixed text, the choices around them kept, everything else still wildcards). This view only shows
 // the parts and sends the ids that are kept. Writes to the node happen on the user's click only.
-import { ensureTheme } from "./theme.mjs?v=0.7.13";
-import { call, getSnap, refresh, toast } from "./client.mjs?v=0.7.13";
-import { askConfirm, askText } from "./dialog.mjs?v=0.7.13";
-import { restoreText, useTextOnNode } from "./nodewrite.mjs?v=0.7.13";
+import { ensureTheme } from "./theme.mjs?v=0.7.14";
+import { call, getSnap, refresh, toast } from "./client.mjs?v=0.7.14";
+import { askConfirm, askText } from "./dialog.mjs?v=0.7.14";
+import { restoreText, useTextOnNode } from "./nodewrite.mjs?v=0.7.14";
 
 let win = null;
 let poolCache = null; // the library's pools for Replace / Add (loaded on first use)
@@ -445,7 +445,7 @@ export async function openKeep(opts = {}) {
   async function toBuilder() {
     const text = v.built?.template;
     if (!text) return;
-    const { openBuilder } = await import("./builder.mjs?v=0.7.13");
+    const { openBuilder } = await import("./builder.mjs?v=0.7.14");
     close();
     openBuilder({ text, name: suggestName() });
   }

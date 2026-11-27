@@ -1,4 +1,4 @@
-// KDX lightbox - one image viewer for every KDX pack (the same file lives in each pack; packs stay independent).
+﻿// KDX lightbox - one image viewer for every KDX pack (the same file lives in each pack; packs stay independent).
 //
 // Large image(s) on the left, a details panel on the right (what made the image: template, seed, file, prompt …),
 // ← → to move, Esc or a click outside the image to close, a click on the image toggles 1:1 zoom, I hides the details.

@@ -1,11 +1,11 @@
-// KDX Wildcard Studio - the settings panel (sidebar tab and gear window render the same thing).
+﻿// KDX Wildcard Studio - the settings panel (sidebar tab and gear window render the same thing).
 //
 // Everything shown comes from the server snapshot; every change goes back over REST and
 // the server's event repaints all open views. No timers, no polling.
 import { action, call, consoleNodes, editConfig, getScope, getSnap, newChannel, previewPrompt, setPick, setScope, subscribe,
-  toast } from "./client.mjs?v=0.7.13";
-import { askConfirm, askText } from "./dialog.mjs?v=0.7.13";
-import { ensureTheme } from "./theme.mjs?v=0.7.13";
+  toast } from "./client.mjs?v=0.7.14";
+import { askConfirm, askText } from "./dialog.mjs?v=0.7.14";
+import { ensureTheme } from "./theme.mjs?v=0.7.14";
 
 const MODES = [["sequential", "Sequential"], ["manual", "Manual"], ["pin", "Pin"]];
 const ON_END = [["next", "next category"], ["loop", "loop category"], ["stop", "stop"]];
@@ -272,9 +272,9 @@ export function mountPanel(el) {
     const ti = Number(b.dataset.ti);
     const cfg = getSnap()?.config;
     if (!cfg) return;
-    if (act === "gallery") { import("./gallery.mjs?v=0.7.13").then((m) => m.openGallery()); return; }
-    if (act === "builder") { import("./builder.mjs?v=0.7.13").then((m) => m.openBuilder()); return; }
-    if (act === "packs") { import("./packs.mjs?v=0.7.13").then((m) => m.openPacks()); return; }
+    if (act === "gallery") { import("./gallery.mjs?v=0.7.14").then((m) => m.openGallery()); return; }
+    if (act === "builder") { import("./builder.mjs?v=0.7.14").then((m) => m.openBuilder()); return; }
+    if (act === "packs") { import("./packs.mjs?v=0.7.14").then((m) => m.openPacks()); return; }
     if (act === "fold") {
       const k = b.dataset.key;
       if (folded.has(k)) folded.delete(k); else folded.add(k);

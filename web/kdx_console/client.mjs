@@ -1,4 +1,4 @@
-// KDX Wildcard Studio - data layer shared by the sidebar tab, the node body and the gear window.
+﻿// KDX Wildcard Studio - data layer shared by the sidebar tab, the node body and the gear window.
 //
 // One snapshot from the server ({config, state, preview, warnings}); the server is the
 // only source of truth. Updates arrive as `kdx_console.state` events (send_sync), so

@@ -1,11 +1,11 @@
-// KDX Wildcard Studio - Gallery: the images KDX Wildcard Studio made, grouped by category and template, any number per
+﻿// KDX Wildcard Studio - Gallery: the images KDX Wildcard Studio made, grouped by category and template, any number per
 // template. Opens full window from the panel; a click on an image opens the shared KDX lightbox with what made
 // it (template, seed, file, prompt). Loads on open and on ⟳ / filter change; no polling.
 import { api } from "../../../scripts/api.js";
-import { ACCENT, ensureTheme } from "./theme.mjs?v=0.7.13";
-import { call, getSnap, toast } from "./client.mjs?v=0.7.13";
-import { openLightbox } from "./lightbox.mjs?v=0.7.13";
-import { askConfirm, askText } from "./dialog.mjs?v=0.7.13";
+import { ACCENT, ensureTheme } from "./theme.mjs?v=0.7.14";
+import { call, getSnap, toast } from "./client.mjs?v=0.7.14";
+import { openLightbox } from "./lightbox.mjs?v=0.7.14";
+import { askConfirm, askText } from "./dialog.mjs?v=0.7.14";
 
 const VIEW_KEY = "kdx_console.gallery";
 const RANGES = [["1h", "last hour", 3600], ["6h", "last 6 hours", 6 * 3600], ["today", "today", 0],
@@ -192,7 +192,7 @@ export async function openGallery(opts = {}) {
       onKey: () => keepIsOpen(), // the Keep parts window on top owns the keys
       onAction: async (id, it) => {
         if (id === "keep") {
-          const { openKeep, keepOpen } = await import("./keep.mjs?v=0.7.13");
+          const { openKeep, keepOpen } = await import("./keep.mjs?v=0.7.14");
           keepIsOpen = keepOpen;
           openKeep({ ...keepInput(it), seed: it.seed, expected: it.prompt || "", llm: !!it.llm_enabled, category: it.category,
             name: it.template === "user_prompt" ? "own_prompt" : it.template, image: viewUrl(it), from: "gallery" });

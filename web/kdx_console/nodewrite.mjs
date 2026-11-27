@@ -1,12 +1,12 @@
-// KDX Wildcard Studio - write a prompt where the Studio node reads it (Keep parts, Template builder).
+﻿// KDX Wildcard Studio - write a prompt where the Studio node reads it (Keep parts, Template builder).
 //
 // The node reads, in this order: a text wired into user_prompt; user_text (typed, or wired into its socket) while
 // use_user_text is on; the template. A wired input ignores the typed value, so the text goes into the wired node.
 // Nothing is written without the user's click, and nothing is replaced without asking; the old values are returned
 // so the caller can offer "Restore previous text" (Ctrl+Z works as well).
 import { app } from "../../../scripts/app.js";
-import { consoleNodes, toast } from "./client.mjs?v=0.7.13";
-import { askPick } from "./dialog.mjs?v=0.7.13";
+import { consoleNodes, toast } from "./client.mjs?v=0.7.14";
+import { askPick } from "./dialog.mjs?v=0.7.14";
 
 function targetNode() {
   const nodes = consoleNodes();
