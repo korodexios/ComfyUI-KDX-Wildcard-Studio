@@ -14,3 +14,10 @@ Repository = "https://github.com/korodexios/ComfyUI-KDX-Wildcard-Studio"
 PublisherId = "korodexios"
 DisplayName = "KDX Wildcard Studio"
 Icon = ""
+
+# Local dev tools (uv sync). Not part of the ComfyUI install.
+[dependency-groups]
+dev = [
+  "pytest>=8",
+  "ruff>=0.6",
+]
