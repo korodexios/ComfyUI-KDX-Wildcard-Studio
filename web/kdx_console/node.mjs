@@ -1,4 +1,4 @@
-﻿// KDX Wildcard Studio - small node body + floating gear window.
+// KDX Wildcard Studio - small node body + floating gear window.
 //
 // Rules: nothing serialized is written during a Run
 // or while a workflow loads. The only writes are the user's own clicks: "Clear pin" clears the

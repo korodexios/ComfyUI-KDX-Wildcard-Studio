@@ -1,4 +1,4 @@
-﻿[project]
+[project]
 name = "comfyui-kdx-wildcard-studio"
 version = "0.7.14"
 description = "Wildcard prompt control centre for ComfyUI: categories of templates with a persistent counter, built-in wildcard engine, gallery, drag-and-drop template builder, pool editor, shareable packs and your own prompt on the node"

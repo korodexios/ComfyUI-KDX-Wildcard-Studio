@@ -1,4 +1,4 @@
-﻿// KDX Wildcard Studio - the settings panel (sidebar tab and gear window render the same thing).
+// KDX Wildcard Studio - the settings panel (sidebar tab and gear window render the same thing).
 //
 // Everything shown comes from the server snapshot; every change goes back over REST and
 // the server's event repaints all open views. No timers, no polling.

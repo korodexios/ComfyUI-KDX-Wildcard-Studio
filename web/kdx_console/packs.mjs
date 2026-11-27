@@ -1,4 +1,4 @@
-﻿// KDX Wildcard Studio - Packs: share templates with every pool they need as one .zip, and install packs from others.
+// KDX Wildcard Studio - Packs: share templates with every pool they need as one .zip, and install packs from others.
 // Full window from the panel, three tabs: Installed (uninstall), Import (upload -> checks + preview -> install),
 // Export (pick templates -> check -> download). The server checks and writes everything (packs.py); a pack is
 // text only and goes into its own namespace packs/<pack>/, so nothing of the user's library is overwritten.

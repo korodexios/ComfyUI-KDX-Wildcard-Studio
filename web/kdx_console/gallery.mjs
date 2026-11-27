@@ -1,4 +1,4 @@
-﻿// KDX Wildcard Studio - Gallery: the images KDX Wildcard Studio made, grouped by category and template, any number per
+// KDX Wildcard Studio - Gallery: the images KDX Wildcard Studio made, grouped by category and template, any number per
 // template. Opens full window from the panel; a click on an image opens the shared KDX lightbox with what made
 // it (template, seed, file, prompt). Loads on open and on ⟳ / filter change; no polling.
 import { api } from "../../../scripts/api.js";

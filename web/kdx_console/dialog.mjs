@@ -1,4 +1,4 @@
-﻿// KDX Wildcard Studio - small in-app dialogs (replace the browser's window.prompt / window.confirm).
+// KDX Wildcard Studio - small in-app dialogs (replace the browser's window.prompt / window.confirm).
 //
 // askText(...)    -> Promise<string | null>   (null = cancelled)
 // askConfirm(...) -> Promise<boolean>

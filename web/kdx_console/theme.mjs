@@ -1,4 +1,4 @@
-﻿// KDX Wildcard Studio - KDX blue accent + light/dark tokens (one injected stylesheet).
+// KDX Wildcard Studio - KDX blue accent + light/dark tokens (one injected stylesheet).
 //
 // Light or dark is decided like Pixaroma's light_theme.mjs: compare the luminance of
 // the page background with the page text (both written by ComfyUI from the active

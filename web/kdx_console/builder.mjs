@@ -1,4 +1,4 @@
-﻿// KDX Wildcard Studio - Template builder: a template as a row of bubbles you drag, drop and click together.
+// KDX Wildcard Studio - Template builder: a template as a row of bubbles you drag, drop and click together.
 //
 // The canvas shows the template line as it reads, left to right: text bubbles (type anything), pool bubbles
 // (__folder/file__) and group boxes (one of {a|b}, sometimes {a|}, pick several {1-2$$ $$a|b}) whose option lanes

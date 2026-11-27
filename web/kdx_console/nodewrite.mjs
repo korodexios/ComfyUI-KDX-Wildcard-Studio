@@ -1,4 +1,4 @@
-﻿// KDX Wildcard Studio - write a prompt where the Studio node reads it (Keep parts, Template builder).
+// KDX Wildcard Studio - write a prompt where the Studio node reads it (Keep parts, Template builder).
 //
 // The node reads, in this order: a text wired into user_prompt; user_text (typed, or wired into its socket) while
 // use_user_text is on; the template. A wired input ignores the typed value, so the text goes into the wired node.

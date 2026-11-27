@@ -1,4 +1,4 @@
-﻿// KDX Wildcard Studio - Keep parts: take an image's prompt apart into the picks that made it, keep the parts you like
+// KDX Wildcard Studio - Keep parts: take an image's prompt apart into the picks that made it, keep the parts you like
 // (pose, clothing, place, light, style …) and let the rest vary. One window for the Gallery (image details) and the
 // Template builder (a preview sample).
 //
